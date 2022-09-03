@@ -161,6 +161,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DanceCommon.cpp" />
+    <ClCompile Include="NoteLength.ixx" />
     <ClCompile Include="NotePos.ixx" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

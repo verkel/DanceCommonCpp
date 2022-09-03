@@ -26,5 +26,8 @@
     <ClCompile Include="NotePos.ixx">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="NoteLength.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
