@@ -26,7 +26,7 @@ export namespace DanceCommon
 	private:
 		static constexpr auto GetMeasureNoteLengths()
 		{
-			std::array<NoteLength, (int)NoteLength::Measure> measureNoteLengths;
+			std::array<NoteLength, (int)NoteLength::Measure> measureNoteLengths {};
 
 			for (auto length : NoteLengths::Values)
 			{
