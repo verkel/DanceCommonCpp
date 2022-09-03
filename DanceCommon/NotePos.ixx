@@ -24,7 +24,8 @@ export namespace DanceCommon
 	export class NotePositions 
 	{
 	private:
-		static constexpr auto GetMeasureNoteLengths() {
+		static constexpr auto GetMeasureNoteLengths()
+		{
 			std::array<NoteLength, (int)NoteLength::Measure> measureNoteLengths;
 
 			for (auto length : NoteLengths::Values)
@@ -70,7 +71,8 @@ export namespace DanceCommon
 		 * @param noteLength
 		 * @return
 		 */
-		static NotePos Floor(NotePos notePos, NoteLength noteLength) {
+		static NotePos Floor(NotePos notePos, NoteLength noteLength)
+		{
 			return noteLength * (notePos / noteLength);
 		}
 
@@ -81,7 +83,8 @@ export namespace DanceCommon
 		 * @param noteLength
 		 * @return
 		 */
-		static NotePos Ceil(NotePos notePos, NoteLength noteLength) {
+		static NotePos Ceil(NotePos notePos, NoteLength noteLength)
+		{
 			if (notePos % (int)noteLength == 0) 
 				return notePos;
 			else 
