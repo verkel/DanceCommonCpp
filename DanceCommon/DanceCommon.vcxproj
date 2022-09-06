@@ -160,9 +160,16 @@
     <ClInclude Include="framework.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Chart.ixx" />
+    <ClCompile Include="ChartInfo.ixx" />
     <ClCompile Include="DanceCommon.cpp" />
+    <ClCompile Include="Difficulty.ixx" />
+    <ClCompile Include="NoteData.ixx" />
     <ClCompile Include="NoteLength.ixx" />
     <ClCompile Include="NotePos.ixx" />
+    <ClCompile Include="Parser.ixx" />
+    <ClCompile Include="PlayStyle.ixx" />
+    <ClCompile Include="Song.ixx" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
