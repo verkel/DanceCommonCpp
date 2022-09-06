@@ -46,8 +46,8 @@ public:
 	* @throws NoSuchChartException If no chart with the given difficulty is
 	*            found
 	*/
-	Chart(std::istream& stream, ChartInfo& matchInfo) :
-		Chart{matchInfo.Style, matchInfo.Difficulty}
+	Chart(std::istream& stream, const ChartInfo& matchInfo) :
+		Chart{matchInfo.style, matchInfo.difficulty}
 	{
 		Parser parser{ stream, 1 };
 

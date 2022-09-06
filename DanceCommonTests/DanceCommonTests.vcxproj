@@ -33,10 +33,20 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
   <ItemGroup>
+    <ClCompile Include="TestChart.cpp" />
     <ClCompile Include="TestNotePos.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="songs\ayutrance2.sm" />
+    <None Include="songs\Bad Boy.sm" />
+    <None Include="songs\It%27s In Your Melody Hard 8 Single (Verkel).play" />
+    <None Include="songs\It%27s In Your Melody.sm" />
+    <None Include="songs\silikon.sm" />
+    <CopyFileToFolders Include="songs\Vertex_Delta.sm">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
+      <FileType>Document</FileType>
+    </CopyFileToFolders>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DanceCommon\DanceCommon.vcxproj">

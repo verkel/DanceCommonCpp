@@ -5,8 +5,14 @@ import Difficulty;
 
 export struct ChartInfo
 {
-	PlayStyle Style;
-	std::string Description;
-	Difficulty Difficulty;
-	double Rating;
+	PlayStyle style;
+	std::string description;
+	Difficulty difficulty;
+	double rating;
+
+	ChartInfo(PlayStyle style, Difficulty difficulty) :
+		style{ style },
+		difficulty{ difficulty }
+	{
+	}
 };
