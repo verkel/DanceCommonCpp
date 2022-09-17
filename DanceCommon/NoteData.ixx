@@ -1,11 +1,22 @@
 export module NoteData;
 import PlayStyle;
 
-export class NoteData
+export namespace DanceCommon
 {
-public:
-	NoteData(PlayStyle style)
+	export class NoteData
 	{
+	private:
+		PlayStyle style;
 
-	}
-};
+	public:
+		NoteData(PlayStyle style)
+		{
+
+		}
+
+		PlayStyle GetStyle() const
+		{
+			return style;
+		}
+	};
+}

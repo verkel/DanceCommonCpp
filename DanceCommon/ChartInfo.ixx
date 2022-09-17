@@ -1,18 +1,38 @@
 export module ChartInfo;
 import <string>;
+import <optional>;
 import PlayStyle;
 import Difficulty;
+
+export struct ChartMatchInfo
+{
+	std::optional<PlayStyle> style;
+	std::optional<Difficulty> difficulty;
+	std::optional<int> rating;
+	std::optional<std::string> description;
+};
 
 export struct ChartInfo
 {
 	PlayStyle style;
-	std::string description;
 	Difficulty difficulty;
-	double rating;
+	int rating;
+	std::string description;
 
-	ChartInfo(PlayStyle style, Difficulty difficulty) :
-		style{ style },
-		difficulty{ difficulty }
+	bool Matches(const ChartMatchInfo& matchInfo)
 	{
+		if (matchInfo.style && style != matchInfo.style)
+			return false;
+
+		if (matchInfo.difficulty && difficulty != matchInfo.difficulty)
+			return false;
+
+		if (matchInfo.rating && rating != matchInfo.rating)
+			return false;
+
+		if (matchInfo.description && description != matchInfo.description)
+			return false;
+
+		return true;
 	}
 };

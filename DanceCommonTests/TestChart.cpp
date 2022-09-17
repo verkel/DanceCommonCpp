@@ -7,13 +7,14 @@ import ChartInfo;
 import PlayStyle;
 import Difficulty;
 import <fstream>;
+import <optional>;
 
 using namespace DanceCommon;
 
 TEST(Chart, Load_ExistingChart)
 {
 	std::ifstream stream{ "Vertex_Delta.sm" };
-	Chart chart{ stream, ChartInfo{ PlayStyle::Single, Difficulty::Hard } };
+	Chart chart{ stream, ChartMatchInfo{ PlayStyle::Single, Difficulty::Hard, std::nullopt, std::nullopt } };
 	EXPECT_EQ(Difficulty::Hard, chart.GetDifficulty());
 	EXPECT_EQ(9, chart.GetRating());
 	EXPECT_EQ("Verkel", chart.GetDescription());

@@ -170,6 +170,7 @@
     <ClCompile Include="Parser.ixx" />
     <ClCompile Include="PlayStyle.ixx" />
     <ClCompile Include="Song.ixx" />
+    <ClCompile Include="StringUtils.ixx" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
