@@ -21,4 +21,9 @@ export namespace DanceCommon
 		auto [ptr, ec] = std::from_chars(input.data(), input.data() + input.size(), result, std::chars_format::general);
 		return ec != std::errc();
 	}
+
+	bool Contains(std::string_view input, char c)
+	{
+		return input.find(c) != std::string::npos;
+	}
 }

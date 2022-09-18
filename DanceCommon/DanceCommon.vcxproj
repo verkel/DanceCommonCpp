@@ -167,6 +167,8 @@
     <ClCompile Include="NoteData.ixx" />
     <ClCompile Include="NoteLength.ixx" />
     <ClCompile Include="NotePos.ixx" />
+    <ClCompile Include="NoteRow.ixx" />
+    <ClCompile Include="NoteType.ixx" />
     <ClCompile Include="Parser.ixx" />
     <ClCompile Include="PlayStyle.ixx" />
     <ClCompile Include="Song.ixx" />

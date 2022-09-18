@@ -1,5 +1,6 @@
 export module NoteLength;
 import <array>;
+import <stdexcept>;
 
 export namespace DanceCommon
 {
@@ -59,5 +60,46 @@ export namespace DanceCommon
 			NoteLength::Note_96th,
 			NoteLength::Note_192nd
 		};
+
+
+		static int GetResolution(NoteLength length)
+		{
+			switch (length)
+			{
+				case NoteLength::Measure: return 1;
+				case NoteLength::Note_4th: return 4;
+				case NoteLength::Note_8th: return 8;
+				case NoteLength::Note_12th: return 12;
+				case NoteLength::Note_16th: return 16;
+				case NoteLength::Note_24th: return 24;
+				case NoteLength::Note_32nd: return 32;
+				case NoteLength::Note_48th: return 48;
+				case NoteLength::Note_64th: return 64;
+				case NoteLength::Note_96th: return 96;
+				case NoteLength::Note_192nd: return 192;
+			}
+
+			throw std::invalid_argument("length");
+		}
+
+		static NoteLength FromResolution(int resolution)
+		{
+			switch (resolution)
+			{
+				case 1: return NoteLength::Measure;
+				case 4: return NoteLength::Note_4th;
+				case 8: return NoteLength::Note_4th;
+				case 12: return NoteLength::Note_12th;
+				case 16: return NoteLength::Note_16th;
+				case 24: return NoteLength::Note_24th;
+				case 32: return NoteLength::Note_32nd;
+				case 48: return NoteLength::Note_48th;
+				case 64: return NoteLength::Note_64th;
+				case 96: return NoteLength::Note_96th;
+				case 192: return NoteLength::Note_192nd;
+			}
+
+			throw std::invalid_argument("resolution");
+		}
 	};
 }

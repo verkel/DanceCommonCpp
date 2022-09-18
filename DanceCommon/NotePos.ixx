@@ -21,27 +21,31 @@ export namespace DanceCommon
 		return notePos + (int)noteLength;
 	}
 
-	export class NotePositions 
+	struct MeasureNoteLengths
 	{
-	private:
-		static constexpr auto GetMeasureNoteLengths()
-		{
-			std::array<NoteLength, (int)NoteLength::Measure> measureNoteLengths {};
+		std::array<NoteLength, (int)NoteLength::Measure> data;
 
+		constexpr MeasureNoteLengths() : data{}
+		{
 			for (auto length : NoteLengths::Values)
 			{
-				NotePos pos = 0;
-				for (int n = 0; (pos = length * n) < (int)NoteLength::Measure; n++)
+				int pos = 0;
+				for (int n = 0; (pos = (int)length * n) < (int)NoteLength::Measure; n++)
 				{
-					if (measureNoteLengths[pos] == NoteLength::None)
+					if (data[pos] == NoteLength::None)
 					{
-						measureNoteLengths[pos] = length;
+						data[pos] = length;
 					}
 				}
 			}
-
-			return measureNoteLengths;
 		}
+	};
+
+	constexpr MeasureNoteLengths measureNoteLengths;
+
+	export class NotePositions 
+	{
+	private:
 
 	public:
 		const NotePos Invalid = -1;
@@ -55,7 +59,7 @@ export namespace DanceCommon
 		static NoteLength GetNoteLength(NotePos notePos)
 		{
 			int localPosition = notePos % (int)NoteLength::Measure;
-			return GetMeasureNoteLengths()[localPosition];
+			return measureNoteLengths.data[localPosition];
 		}
 
 		/**
@@ -91,5 +95,4 @@ export namespace DanceCommon
 				return Floor(notePos, noteLength) + noteLength;
 		}
 	};
-
 }

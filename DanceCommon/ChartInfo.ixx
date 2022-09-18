@@ -4,35 +4,38 @@ import <optional>;
 import PlayStyle;
 import Difficulty;
 
-export struct ChartMatchInfo
+namespace DanceCommon
 {
-	std::optional<PlayStyle> style;
-	std::optional<Difficulty> difficulty;
-	std::optional<int> rating;
-	std::optional<std::string> description;
-};
-
-export struct ChartInfo
-{
-	PlayStyle style;
-	Difficulty difficulty;
-	int rating;
-	std::string description;
-
-	bool Matches(const ChartMatchInfo& matchInfo)
+	export struct ChartMatchInfo
 	{
-		if (matchInfo.style && style != matchInfo.style)
-			return false;
+		std::optional<PlayStyle> style;
+		std::optional<Difficulty> difficulty;
+		std::optional<int> rating;
+		std::optional<std::string> description;
+	};
 
-		if (matchInfo.difficulty && difficulty != matchInfo.difficulty)
-			return false;
+	export struct ChartInfo
+	{
+		PlayStyle style;
+		Difficulty difficulty;
+		int rating;
+		std::string description;
 
-		if (matchInfo.rating && rating != matchInfo.rating)
-			return false;
+		bool Matches(const ChartMatchInfo& matchInfo)
+		{
+			if (matchInfo.style && style != matchInfo.style)
+				return false;
 
-		if (matchInfo.description && description != matchInfo.description)
-			return false;
+			if (matchInfo.difficulty && difficulty != matchInfo.difficulty)
+				return false;
 
-		return true;
-	}
-};
+			if (matchInfo.rating && rating != matchInfo.rating)
+				return false;
+
+			if (matchInfo.description && description != matchInfo.description)
+				return false;
+
+			return true;
+		}
+	};
+}

@@ -4,17 +4,23 @@ import Song;
 import <string>;
 import <memory>;
 import <iostream>;
+import <format>;
 import Difficulty;
 import NoteData;
+import NoteRow;
+import NoteLength;
 import ChartInfo;
 import Parser;
 import StringUtils;
+import PlayStyle;
 
 export namespace DanceCommon
 {
 	export class Chart
 	{
 	private:
+		typedef NoteRow<SizeSingle> TNoteRow;
+
 		enum class ReadMode
 		{
 			/**
@@ -32,10 +38,25 @@ export namespace DanceCommon
 			ReadNotes
 		};
 
+		class ParseException : public std::exception
+		{
+		private:
+			std::string message;
+
+		public:
+			ParseException(std::string message) : message{message}
+			{ }
+
+			const char* what()
+			{
+				return message.c_str();
+			}
+		};
+
 		static inline const std::string SinglesChartType = "dance-single";
 		static inline const std::string DoublesChartType = "dance-double";
 
-		NoteData noteData;
+		NoteData<SizeSingle> noteData;
 		std::string description;
 		Difficulty difficulty;
 		int rating;
@@ -47,7 +68,7 @@ export namespace DanceCommon
 		* Public constructor for creating empty stepcharts
 		*/
 		Chart(PlayStyle style, Difficulty difficulty) :
-			noteData{ style },
+			noteData{ },
 			difficulty{ difficulty },
 			rating{ 0 },
 			parent{ nullptr }
@@ -94,7 +115,7 @@ export namespace DanceCommon
 
 		bool DoLoad(Parser parser, const ChartMatchInfo& matchInfo, ReadMode readMode)
 		{
-			auto style = noteData.GetStyle();
+			constexpr auto style = PlayStyles::GetStyle(SizeSingle);
 
 			if (readMode == ReadMode::ReadFirstChart || readMode == ReadMode::ReadMatchingChart)
 			{
@@ -131,7 +152,46 @@ export namespace DanceCommon
 			}
 
 			// Now read the actual steps data
-			// TODO
+			std::string line;
+			std::string_view lineView;
+			size_t measureCount = 0;
+			std::vector<TNoteRow> measureRows;
+			int expectedRowLength = PlayStyles::ButtonCount(style);
+
+			while (parser.ReadLine(line))
+			{
+				lineView = line;
+				Trim(lineView);
+				
+				if (lineView.empty() || lineView.starts_with("//"))
+					continue;
+
+				size_t len = lineView.size();
+				bool isChartTerminator = Contains(lineView, ';');
+				bool isMeasureTerminator = Contains(lineView, ',');
+
+				if (len != expectedRowLength && !isMeasureTerminator && !isChartTerminator)
+					throw ParseException(std::format("Malformed note row at line {}", parser.LineNumber));
+
+				if (isMeasureTerminator || isChartTerminator)
+				{
+					size_t rowsCount = measureRows.size();
+
+					if (rowsCount > 0)
+					{
+						NotePos posOffset = NoteLength::Measure * (int)measureCount;
+						NoteLength noteLength = NoteLengths::FromResolution((int)rowsCount);
+						if (noteLength == NoteLength::None)
+							throw ParseException(std::format("Unsupported measure resolution {}", rowsCount));
+
+						for (int i = 0; i < rowsCount; i++)
+						{
+							NotePos pos = posOffset + noteLength * i;
+							SetNoteRow(pos, measureRows[i], false);
+						}
+					}
+				}
+			}
 
 			return false;
 		}
@@ -159,6 +219,11 @@ export namespace DanceCommon
 		NotePos GetLength() const
 		{
 			return -1;
+		}
+
+		void SetNoteRow(NotePos pos, TNoteRow newRow, bool cleanupHolds)
+		{
+			noteData.SetNoteRow(pos, newRow, cleanupHolds);
 		}
 
 	private:
