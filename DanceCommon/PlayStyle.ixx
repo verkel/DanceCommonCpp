@@ -10,10 +10,11 @@ export namespace DanceCommon
 		Double = 2,
 	};
 
+	// cannot use scoped enums as template parameters
 	export enum NoteRowSize : size_t
 	{
-		SizeSingle = 4,
-		SizeDouble = 8
+		NoteRowSizeSingle = 4,
+		NoteRowSizeDouble = 8
 	};
 
 	export class PlayStyles
@@ -37,8 +38,8 @@ export namespace DanceCommon
 		{
 			switch (size)
 			{
-				case SizeSingle: return PlayStyle::Single;
-				case SizeDouble: return PlayStyle::Double;
+				case NoteRowSizeSingle: return PlayStyle::Single;
+				case NoteRowSizeDouble: return PlayStyle::Double;
 				default: return PlayStyle::Single;
 			}
 		}

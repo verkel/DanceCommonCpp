@@ -16,10 +16,11 @@ import PlayStyle;
 
 export namespace DanceCommon
 {
-	export class Chart
+	template<NoteRowSize rowSize>
+	class Chart
 	{
 	private:
-		typedef NoteRow<SizeSingle> TNoteRow;
+		typedef NoteRow<rowSize> TNoteRow;
 
 		enum class ReadMode
 		{
@@ -56,7 +57,7 @@ export namespace DanceCommon
 		static inline const std::string SinglesChartType = "dance-single";
 		static inline const std::string DoublesChartType = "dance-double";
 
-		NoteData<SizeSingle> noteData;
+		NoteData<rowSize> noteData;
 		std::string description;
 		Difficulty difficulty;
 		int rating;
@@ -115,7 +116,7 @@ export namespace DanceCommon
 
 		bool DoLoad(Parser parser, const ChartMatchInfo& matchInfo, ReadMode readMode)
 		{
-			constexpr auto style = PlayStyles::GetStyle(SizeSingle);
+			constexpr auto style = PlayStyles::GetStyle(rowSize);
 
 			if (readMode == ReadMode::ReadFirstChart || readMode == ReadMode::ReadMatchingChart)
 			{
@@ -255,4 +256,7 @@ export namespace DanceCommon
 			return false;
 		}
 	};
+
+	export typedef Chart<NoteRowSizeSingle> SinglesChart;
+	export typedef Chart<NoteRowSizeDouble> DoublesChart;
 }
