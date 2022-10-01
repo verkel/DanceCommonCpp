@@ -103,3 +103,13 @@ TEST(Chart, GetNoteRow_IterateOverChart_Backwards)
 
 	EXPECT_EQ(18745, count);
 }
+
+TEST(Chart, GetNoteRow_IterateOverChart_BackwardsSkipEmpty)
+{
+	FAIL(); // TODO implement
+}
+
+TEST(Chart, PreviousPosition)
+{
+	FAIL(); // TODO implement
+}
