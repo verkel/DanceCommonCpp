@@ -88,7 +88,7 @@ export namespace DanceCommon
 			{
 				case 1: return NoteLength::Measure;
 				case 4: return NoteLength::Note_4th;
-				case 8: return NoteLength::Note_4th;
+				case 8: return NoteLength::Note_8th;
 				case 12: return NoteLength::Note_12th;
 				case 16: return NoteLength::Note_16th;
 				case 24: return NoteLength::Note_24th;
