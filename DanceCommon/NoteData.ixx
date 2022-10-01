@@ -37,7 +37,7 @@ export namespace DanceCommon
 			if (cleanupHolds) CleanupHolds(notePosition, oldRow, newRow);
 		}
 
-		bool Contains(NotePos position)
+		inline bool Contains(NotePos position)
 		{
 			return position >= 0 && position < noteRows.size();
 		}

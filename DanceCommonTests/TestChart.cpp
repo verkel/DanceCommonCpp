@@ -17,10 +17,15 @@ import <string_view>;
 
 using namespace DanceCommon;
 
-TEST(Chart, Load_ExistingChart)
+SinglesChart GetVertexDeltaHard()
 {
 	std::ifstream stream{ "Vertex_Delta.sm" };
-	SinglesChart chart{ stream, ChartMatchInfo{ PlayStyle::Single, Difficulty::Hard, std::nullopt, std::nullopt } };
+	return SinglesChart{ stream, ChartMatchInfo{ PlayStyle::Single, Difficulty::Hard, std::nullopt, std::nullopt } };
+}
+
+TEST(Chart, Load_ExistingChart)
+{
+	SinglesChart chart = GetVertexDeltaHard();
 	EXPECT_EQ(Difficulty::Hard, chart.GetDifficulty());
 	EXPECT_EQ(9, chart.GetRating());
 	EXPECT_EQ("Verkel", chart.GetDescription());
@@ -44,4 +49,25 @@ TEST(Chart, Load_NonExistentChart)
 	}
 
 	FAIL() << "Reading non-existent chart did not throw exception properly";
+}
+
+TEST(Chart, GetNoteRow_IterateOverChart)
+{
+	SinglesChart chart = GetVertexDeltaHard();
+
+	int count = 0;
+	int nonEmptyCount = 0;
+
+	for (NotePos position = 0; chart.Contains(position); position++)
+	{
+		auto noteRow = chart.GetNoteRow(position);
+		
+		if (!noteRow.IsEmptyRow())
+			nonEmptyCount++;
+
+		count++;
+	}
+
+	EXPECT_GT(nonEmptyCount, 0);
+	EXPECT_EQ(18793, count);
 }

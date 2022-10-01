@@ -22,6 +22,17 @@ export namespace DanceCommon
 			}
 		}
 
+		bool IsEmptyRow()
+		{
+			for (size_t i = 0; i < rowSize; i++)
+			{
+				if (notes[i] != NoteType::Empty)
+					return false;
+			}
+
+			return true;
+		}
+
 		bool operator==(const NoteRow& rhs) const
 		{
 			for (size_t i = 0; i < rowSize; i++)

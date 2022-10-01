@@ -115,7 +115,7 @@ export namespace DanceCommon
 				parser.ReadLine(skippedLine); // Skip groove radar data
 
 				int rating;
-				if (!TryParseInt(ratingStrView, rating))
+				if (!StringUtils::TryParseInt(ratingStrView, rating))
 					throw ParseException(std::format("Cannot parse rating: {}", ratingStrView));
 
 				Difficulty difficulty = Difficulties::FromFormatString(difficultyClassStrView);
@@ -149,8 +149,8 @@ export namespace DanceCommon
 					continue;
 
 				size_t len = lineView.size();
-				bool isChartTerminator = Contains(lineView, ';');
-				bool isMeasureTerminator = Contains(lineView, ',');
+				bool isChartTerminator = StringUtils::Contains(lineView, ';');
+				bool isMeasureTerminator = StringUtils::Contains(lineView, ',');
 
 				if (len != expectedRowLength && !isMeasureTerminator && !isChartTerminator)
 					throw ParseException(std::format("Malformed note row at line {}", parser.LineNumber));
@@ -209,19 +209,24 @@ export namespace DanceCommon
 			return parent;
 		}
 
-		NotePos GetLength() const
+		inline NotePos GetLength() const
 		{
 			return noteData.GetLength();
 		}
 
-		void SetNoteRow(NotePos pos, TNoteRow newRow, bool cleanupHolds)
+		inline void SetNoteRow(NotePos pos, TNoteRow newRow, bool cleanupHolds)
 		{
 			noteData.SetNoteRow(pos, newRow, cleanupHolds);
 		}
 
-		TNoteRow GetNoteRow(NotePos pos)
+		inline TNoteRow GetNoteRow(NotePos pos)
 		{
 			return noteData.GetNoteRow(pos);
+		}
+
+		inline bool Contains(NotePos pos)
+		{
+			return noteData.Contains(pos);
 		}
 
 	private:
@@ -246,7 +251,7 @@ export namespace DanceCommon
 				Trim(result);
 				size_t end = result.length() - 1;
 				if (result[end] == ':')
-					SubstrStartEnd(result, 0, end);
+					StringUtils::SubstrStartEnd(result, 0, end);
 				return result;
 			}
 
