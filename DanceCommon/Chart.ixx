@@ -227,6 +227,11 @@ export namespace DanceCommon
 			noteData.SetNoteRow(pos, newRow, cleanupHolds);
 		}
 
+		TNoteRow GetNoteRow(NotePos pos)
+		{
+			return noteData.GetNoteRow(pos);
+		}
+
 	private:
 
 		static void Trim(std::string_view& s)

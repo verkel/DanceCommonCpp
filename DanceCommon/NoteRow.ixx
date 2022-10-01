@@ -22,14 +22,20 @@ export namespace DanceCommon
 			}
 		}
 
-		/*static constexpr size_t GetSize(PlayStyle style)
+		bool operator==(const NoteRow& rhs) const
 		{
-			switch (style)
+			for (size_t i = 0; i < rowSize; i++)
 			{
-				case PlayStyle::Single: return 4;
-				case PlayStyle::Double: return 8;
-				default: return 0;
+				if (notes[i] != rhs.notes[i])
+					return false;
 			}
-		}*/
+
+			return true;
+		}
+
+		bool operator!=(const NoteRow& rhs) const
+		{
+			return !operator==(rhs);
+		}
 	};
 }
