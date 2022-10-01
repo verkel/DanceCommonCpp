@@ -22,7 +22,7 @@ export namespace DanceCommon
 			}
 		}
 
-		bool IsEmptyRow()
+		bool IsEmpty()
 		{
 			for (size_t i = 0; i < rowSize; i++)
 			{

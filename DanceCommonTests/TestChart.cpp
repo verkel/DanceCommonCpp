@@ -62,7 +62,7 @@ TEST(Chart, GetNoteRow_IterateOverChart)
 	{
 		auto noteRow = chart.GetNoteRow(position);
 		
-		if (!noteRow.IsEmptyRow())
+		if (!noteRow.IsEmpty())
 			nonEmptyCount++;
 
 		count++;
@@ -70,4 +70,20 @@ TEST(Chart, GetNoteRow_IterateOverChart)
 
 	EXPECT_GT(nonEmptyCount, 0);
 	EXPECT_EQ(18793, count);
+}
+
+TEST(Chart, GetNoteRow_IterateOverChart_SkipEmpty)
+{
+	SinglesChart chart = GetVertexDeltaHard();
+
+	int count = 0;
+
+	for (NotePos position = 0; chart.Contains(position); position = chart.NextPosition(position))
+	{
+		auto noteRow = chart.GetNoteRow(position);
+
+		count++;
+	}
+
+	EXPECT_EQ(670, count);
 }

@@ -42,6 +42,17 @@ export namespace DanceCommon
 			return position >= 0 && position < noteRows.size();
 		}
 
+		inline NotePos NextPosition(NotePos position)
+		{
+			int pos = position + 1;
+			NotePos upperBound = (NotePos)noteRows.size();
+			while (pos < upperBound && noteRows[pos].IsEmpty())
+			{
+				pos++;
+			}
+			return pos;
+		}
+
 		void EnsureNoteRowsCapacity(NotePos notePosition)
 		{
 			size_t expectedSize = (size_t)notePosition + 1;
