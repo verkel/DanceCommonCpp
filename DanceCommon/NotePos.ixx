@@ -48,8 +48,8 @@ export namespace DanceCommon
 	private:
 
 	public:
-		const NotePos Invalid = -1;
-		const NotePos First = 0;
+		static const NotePos Invalid = -1;
+		static const NotePos First = 0;
 
 		/**
 		 * Get the NoteLength at the given note position.

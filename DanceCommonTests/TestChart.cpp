@@ -87,3 +87,19 @@ TEST(Chart, GetNoteRow_IterateOverChart_SkipEmpty)
 
 	EXPECT_EQ(670, count);
 }
+
+TEST(Chart, GetNoteRow_IterateOverChart_Backwards)
+{
+	SinglesChart chart = GetVertexDeltaHard();
+
+	int count = 0;
+
+	for (NotePos position = chart.GetLastPosition(); chart.Contains(position); position--)
+	{
+		auto noteRow = chart.GetNoteRow(position);
+
+		count++;
+	}
+
+	EXPECT_EQ(18745, count);
+}

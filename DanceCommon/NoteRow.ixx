@@ -22,7 +22,12 @@ export namespace DanceCommon
 			}
 		}
 
-		bool IsEmpty()
+		inline NoteType GetNote(size_t i) const
+		{
+			return notes[i];
+		}
+
+		bool IsEmpty() const
 		{
 			for (size_t i = 0; i < rowSize; i++)
 			{

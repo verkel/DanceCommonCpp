@@ -15,15 +15,17 @@ export namespace DanceCommon
 		std::vector<TNoteRow> noteRows;
 
 	public:
+		inline static const TNoteRow EmptyRow{};
+
 		NoteData() :
 			noteRows(0)
 		{
 		}
 
-		TNoteRow GetNoteRow(NotePos notePosition)
+		const TNoteRow& GetNoteRow(NotePos notePosition)
 		{
-			if (!Contains(notePosition)) 
-				return TNoteRow{ };
+			if (!Contains(notePosition))
+				return EmptyRow;
 
 			return noteRows[notePosition];
 		}
@@ -51,6 +53,54 @@ export namespace DanceCommon
 				pos++;
 			}
 			return pos;
+		}
+
+		NotePos PreviousPosition(NotePos position)
+		{
+			return PreviousPosition(position, -1);
+		}
+
+		NotePos PreviousPosition(NotePos position, int skipEmptyPanel)
+		{
+			return PreviousPosition(position, skipEmptyPanel, NotePositions::Invalid);
+		}
+
+		NotePos PreviousPosition(NotePos position, int skipEmptyPanel, NotePos lowerBound)
+		{
+			NotePos pos = position - 1;
+
+			if (skipEmptyPanel == -1)
+			{
+				while (GetNoteRow(pos).IsEmpty() && pos > lowerBound)
+				{
+					pos--;
+				}
+			}
+			else
+			{
+				while (GetNoteRow(pos).GetNote(skipEmptyPanel) == NoteType::Empty && pos > lowerBound)
+				{
+					pos--;
+				}
+			}
+
+			return pos;
+		}
+
+		NotePos GetLastPosition()
+		{
+			if (noteRows.size() == 0)
+				return NotePositions::Invalid;
+
+			NotePos pos = (NotePos)(noteRows.size() - 1);
+			if (GetNoteRow(pos).IsEmpty())
+			{
+				return PreviousPosition(pos);
+			}
+			else
+			{
+				return pos;
+			}
 		}
 
 		void EnsureNoteRowsCapacity(NotePos notePosition)

@@ -234,6 +234,11 @@ export namespace DanceCommon
 			return noteData.NextPosition(pos);
 		}
 
+		inline NotePos GetLastPosition()
+		{
+			return noteData.GetLastPosition();
+		}
+
 	private:
 
 		static void Trim(std::string_view& s)
