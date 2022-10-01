@@ -1,13 +1,14 @@
 export module PlayStyle;
+import <array>;
+import <string>;
+import <stdexcept>;
 
 export namespace DanceCommon
 {
 	export enum class PlayStyle
 	{
-		None = -1,
-		Any = 0,
-		Single = 1,
-		Double = 2,
+		Single = 0,
+		Double = 1,
 	};
 
 	// cannot use scoped enums as template parameters
@@ -19,10 +20,24 @@ export namespace DanceCommon
 
 	export class PlayStyles
 	{
+	private:
+		static constexpr std::array NamesByPlayStyle
+		{
+			"Single",
+			"Double"
+		};
+
 	public:
 		static int CenterPanelCount(PlayStyle style)
 		{
-			return (int)style;
+			switch (style)
+			{
+			case PlayStyle::Single:
+				return 1;
+			case PlayStyle::Double:
+				return 2;
+			}
+			throw std::range_error("style");
 		}
 
 		static int ButtonCount(PlayStyle style) {
@@ -40,8 +55,14 @@ export namespace DanceCommon
 			{
 				case NoteRowSizeSingle: return PlayStyle::Single;
 				case NoteRowSizeDouble: return PlayStyle::Double;
-				default: return PlayStyle::Single;
 			}
+
+			throw std::range_error("size");
+		}
+
+		static const std::string GetName(PlayStyle style)
+		{
+			return NamesByPlayStyle[(int)style];
 		}
 	};
 }

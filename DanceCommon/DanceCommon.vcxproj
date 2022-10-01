@@ -164,6 +164,7 @@
     <ClCompile Include="ChartInfo.ixx" />
     <ClCompile Include="DanceCommon.cpp" />
     <ClCompile Include="Difficulty.ixx" />
+    <ClCompile Include="NoSuchChartException.ixx" />
     <ClCompile Include="NoteData.ixx" />
     <ClCompile Include="NoteLength.ixx" />
     <ClCompile Include="NotePos.ixx" />

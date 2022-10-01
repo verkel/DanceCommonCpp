@@ -14,6 +14,7 @@ import Parser;
 import StringUtils;
 import PlayStyle;
 import ParseException;
+import NoSuchChartException;
 
 export namespace DanceCommon
 {
@@ -90,14 +91,12 @@ export namespace DanceCommon
 
 				if (lineView.starts_with(chartStyleString))
 				{
-					DoLoad(parser, matchInfo, ReadMode::ReadMatchingChart);
+					if (DoLoad(parser, matchInfo, ReadMode::ReadMatchingChart))
+						return;
 				}
 			}
 
-			/*for (std::string line; parser.ReadLine(line);)
-			{
-				std::cout << line << std::endl;
-			}*/
+			throw NoSuchChartException(matchInfo);
 		}
 
 		bool DoLoad(Parser parser, const ChartMatchInfo& matchInfo, ReadMode readMode)
@@ -108,23 +107,16 @@ export namespace DanceCommon
 			{
 				// Read chart metadata
 				std::string descriptionStr, difficultyClassStr, ratingStr;
-				std::string_view descriptionStrView, difficultyClassStrView, ratingStrView;
-				
-				if (!ReadSubDataLine(parser, descriptionStr, descriptionStrView))
-					return false;
-
-				if (!ReadSubDataLine(parser, difficultyClassStr, difficultyClassStrView))
-					return false;
-
-				if (!ReadSubDataLine(parser, ratingStr, ratingStrView))
-					return false;
+				auto descriptionStrView = ReadSubDataLine(parser, descriptionStr);
+				auto difficultyClassStrView = ReadSubDataLine(parser, difficultyClassStr);
+				auto ratingStrView = ReadSubDataLine(parser, ratingStr);
 
 				std::string skippedLine;
 				parser.ReadLine(skippedLine); // Skip groove radar data
 
 				int rating;
 				if (!TryParseInt(ratingStrView, rating))
-					return false;
+					throw ParseException(std::format("Cannot parse rating: {}", ratingStrView));
 
 				Difficulty difficulty = Difficulties::FromFormatString(difficultyClassStrView);
 
@@ -246,19 +238,19 @@ export namespace DanceCommon
 			throw std::invalid_argument("style");
 		}
 
-		static bool ReadSubDataLine(Parser& parser, std::string& line, std::string_view& result)
+		static std::string_view ReadSubDataLine(Parser& parser, std::string& line)
 		{
 			if (parser.ReadLine(line))
 			{
-				result = line;
+				std::string_view result = line;
 				Trim(result);
 				size_t end = result.length() - 1;
 				if (result[end] == ':')
 					SubstrStartEnd(result, 0, end);
-				return true;
+				return result;
 			}
 
-			return false;
+			throw ParseException(std::format("Cannot read sub data line: {}", line));
 		}
 	};
 

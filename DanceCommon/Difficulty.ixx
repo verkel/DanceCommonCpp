@@ -3,6 +3,7 @@ import <array>;
 import <string>;
 import <string_view>;
 import <format>;
+import <optional>;
 import ParseException;
 
 export namespace DanceCommon
@@ -19,7 +20,9 @@ export namespace DanceCommon
 
 	export class Difficulties
 	{
-	public:
+	private:
+		inline static const std::string DifficultyAnyName = "Any";
+
 		static constexpr std::array NamesByDifficulty
 		{
 			"Novice",
@@ -40,6 +43,7 @@ export namespace DanceCommon
 			"Edit"
 		};
 
+	public:
 		static Difficulty FromFormatString(const std::string_view& sv)
 		{
 			if (sv == FormatStringsByDifficulty[(int)Difficulty::Novice])
@@ -56,6 +60,21 @@ export namespace DanceCommon
 				return Difficulty::Edit;
 
 			throw ParseException(std::format("Unknown difficulty: {}", std::string(sv)));
+		}
+
+		static const std::string GetName(Difficulty difficulty)
+		{
+			return NamesByDifficulty[(int)difficulty];
+		}
+
+		static const std::string GetName(std::optional<Difficulty> difficulty)
+		{
+			if (difficulty)
+			{
+				return NamesByDifficulty[(int)difficulty.value()];
+			}
+
+			return DifficultyAnyName;
 		}
 	};
 }

@@ -9,6 +9,7 @@ import Difficulty;
 import NoteLength;
 import NotePos;
 import NoteRow;
+import NoSuchChartException;
 import <fstream>;
 import <optional>;
 import <string>;
@@ -28,4 +29,19 @@ TEST(Chart, Load_ExistingChart)
 	NotePos pos = NoteLength::Measure * 5 + NoteLength::Note_16th * 3;
 	auto noteRow = chart.GetNoteRow(pos);
 	EXPECT_EQ(NoteRow<NoteRowSizeSingle> { "M000" }, noteRow);
+}
+
+TEST(Chart, Load_NonExistentChart)
+{
+	try
+	{
+		std::ifstream stream{ "Vertex_Delta.sm" };
+		SinglesChart chart{ stream, ChartMatchInfo{ PlayStyle::Single, Difficulty::Novice, 42, std::nullopt } };
+	}
+	catch (NoSuchChartException&)
+	{
+		return;
+	}
+
+	FAIL() << "Reading non-existent chart did not throw exception properly";
 }
