@@ -13,13 +13,13 @@ export namespace DanceCommon
 	bool TryParseInt(std::string_view input, int& result)
 	{
 		auto [ptr, ec] = std::from_chars(input.data(), input.data() + input.size(), result, 10);
-		return ec != std::errc();
+		return ec == std::errc();
 	}
 
 	bool TryParseDouble(std::string_view input, double& result)
 	{
 		auto [ptr, ec] = std::from_chars(input.data(), input.data() + input.size(), result, std::chars_format::general);
-		return ec != std::errc();
+		return ec == std::errc();
 	}
 
 	bool Contains(std::string_view input, char c)

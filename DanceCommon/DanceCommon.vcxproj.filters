@@ -59,5 +59,8 @@
     <ClCompile Include="NoteType.ixx">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ParseException.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

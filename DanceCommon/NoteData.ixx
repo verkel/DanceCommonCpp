@@ -44,15 +44,21 @@ export namespace DanceCommon
 
 		void EnsureNoteRowsCapacity(NotePos notePosition)
 		{
-			/*while (noteRows.Count <= notePosition)
+			size_t expectedSize = (size_t)notePosition + 1;
+			if (noteRows.size() < expectedSize)
 			{
-				noteRows.Add(null);
-			}*/
+				noteRows.resize(expectedSize);
+			}
 		}
 
 		void CleanupHolds(NotePos position, TNoteRow oldRow, TNoteRow newRow)
 		{
 
+		}
+
+		NotePos GetLength() const
+		{
+			return (NotePos)noteRows.size();
 		}
 	};
 }

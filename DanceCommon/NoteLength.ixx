@@ -1,6 +1,7 @@
 export module NoteLength;
 import <array>;
-import <stdexcept>;
+import <format>;
+import ParseException;
 
 export namespace DanceCommon
 {
@@ -61,7 +62,6 @@ export namespace DanceCommon
 			NoteLength::Note_192nd
 		};
 
-
 		static int GetResolution(NoteLength length)
 		{
 			switch (length)
@@ -79,7 +79,7 @@ export namespace DanceCommon
 				case NoteLength::Note_192nd: return 192;
 			}
 
-			throw std::invalid_argument("length");
+			throw ParseException(std::format("Unknown length: {}", (int)length));
 		}
 
 		static NoteLength FromResolution(int resolution)
@@ -99,7 +99,7 @@ export namespace DanceCommon
 				case 192: return NoteLength::Note_192nd;
 			}
 
-			throw std::invalid_argument("resolution");
+			throw ParseException(std::format("Unknown resolution: {}", resolution));
 		}
 	};
 }

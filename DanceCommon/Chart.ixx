@@ -13,6 +13,7 @@ import ChartInfo;
 import Parser;
 import StringUtils;
 import PlayStyle;
+import ParseException;
 
 export namespace DanceCommon
 {
@@ -37,21 +38,6 @@ export namespace DanceCommon
 			 * Mode for reading bare noteRows without any header
 			 */
 			ReadNotes
-		};
-
-		class ParseException : public std::exception
-		{
-		private:
-			std::string message;
-
-		public:
-			ParseException(std::string message) : message{message}
-			{ }
-
-			const char* what()
-			{
-				return message.c_str();
-			}
 		};
 
 		static inline const std::string SinglesChartType = "dance-single";
@@ -102,7 +88,7 @@ export namespace DanceCommon
 
 				auto chartStyleString = GetStyleString(matchInfo.style.value());
 
-				if (line.starts_with(chartStyleString))
+				if (lineView.starts_with(chartStyleString))
 				{
 					DoLoad(parser, matchInfo, ReadMode::ReadMatchingChart);
 				}
@@ -136,8 +122,11 @@ export namespace DanceCommon
 				std::string skippedLine;
 				parser.ReadLine(skippedLine); // Skip groove radar data
 
+				int rating;
 				if (!TryParseInt(ratingStrView, rating))
 					return false;
+
+				Difficulty difficulty = Difficulties::FromFormatString(difficultyClassStrView);
 
 				ChartInfo info{ style, difficulty, rating, std::string(descriptionStrView) };
 
@@ -147,7 +136,7 @@ export namespace DanceCommon
 						return false;
 				}
 
-				this->description = description;
+				this->description = std::string(descriptionStrView);
 				this->difficulty = difficulty;
 				this->rating = rating;
 			}
@@ -174,6 +163,7 @@ export namespace DanceCommon
 				if (len != expectedRowLength && !isMeasureTerminator && !isChartTerminator)
 					throw ParseException(std::format("Malformed note row at line {}", parser.LineNumber));
 
+				// If this row is a measure terminator, continue onward to next row
 				if (isMeasureTerminator || isChartTerminator)
 				{
 					size_t rowsCount = measureRows.size();
@@ -190,11 +180,21 @@ export namespace DanceCommon
 							NotePos pos = posOffset + noteLength * i;
 							SetNoteRow(pos, measureRows[i], false);
 						}
+
+						measureRows.clear();
+						measureCount++;
 					}
+
+					if (isChartTerminator) break;
+					else continue;
 				}
+
+				// Now it should be a note row. Add the row into the current measure.
+				measureRows.push_back(TNoteRow{ lineView });
 			}
 
-			return false;
+			// Chart parsed successfully
+			return true;
 		}
 
 		std::string GetDescription() const
@@ -219,7 +219,7 @@ export namespace DanceCommon
 
 		NotePos GetLength() const
 		{
-			return -1;
+			return noteData.GetLength();
 		}
 
 		void SetNoteRow(NotePos pos, TNoteRow newRow, bool cleanupHolds)
