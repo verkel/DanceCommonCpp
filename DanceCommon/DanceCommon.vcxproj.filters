@@ -65,5 +65,11 @@
     <ClCompile Include="NoSuchChartException.ixx">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SongMetadata.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SongMetadataComputations.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
