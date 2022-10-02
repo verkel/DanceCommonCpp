@@ -234,6 +234,11 @@ export namespace DanceCommon
 			return noteData.NextPosition(pos);
 		}
 
+		inline NotePos PreviousPosition(NotePos pos)
+		{
+			return noteData.PreviousPosition(pos);
+		}
+
 		inline NotePos GetLastPosition()
 		{
 			return noteData.GetLastPosition();

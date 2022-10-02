@@ -23,6 +23,13 @@ SinglesChart GetVertexDeltaHard()
 	return SinglesChart{ stream, ChartMatchInfo{ PlayStyle::Single, Difficulty::Hard, std::nullopt, std::nullopt } };
 }
 
+SinglesChart GetBadBoyExpert()
+{
+	std::ifstream stream{ "Bad Boy.sm" };
+	return SinglesChart{ stream, ChartMatchInfo{ PlayStyle::Single, Difficulty::Expert, std::nullopt, std::nullopt } };
+}
+
+
 TEST(Chart, Load_ExistingChart)
 {
 	SinglesChart chart = GetVertexDeltaHard();
@@ -81,7 +88,10 @@ TEST(Chart, GetNoteRow_IterateOverChart_SkipEmpty)
 	for (NotePos position = 0; chart.Contains(position); position = chart.NextPosition(position))
 	{
 		auto noteRow = chart.GetNoteRow(position);
-
+		
+		if (position != 0)
+			EXPECT_FALSE(noteRow.IsEmpty());
+		
 		count++;
 	}
 
@@ -97,7 +107,6 @@ TEST(Chart, GetNoteRow_IterateOverChart_Backwards)
 	for (NotePos position = chart.GetLastPosition(); chart.Contains(position); position--)
 	{
 		auto noteRow = chart.GetNoteRow(position);
-
 		count++;
 	}
 
@@ -106,10 +115,24 @@ TEST(Chart, GetNoteRow_IterateOverChart_Backwards)
 
 TEST(Chart, GetNoteRow_IterateOverChart_BackwardsSkipEmpty)
 {
-	FAIL(); // TODO implement
+	SinglesChart chart = GetVertexDeltaHard();
+
+	int count = 0;
+
+	for (NotePos position = chart.GetLastPosition(); chart.Contains(position); 
+		position = chart.PreviousPosition(position))
+	{
+		auto noteRow = chart.GetNoteRow(position);
+		EXPECT_FALSE(noteRow.IsEmpty());
+		count++;
+	}
+
+	EXPECT_EQ(669, count);
 }
 
 TEST(Chart, PreviousPosition)
 {
-	FAIL(); // TODO implement
+	SinglesChart chart = GetBadBoyExpert();
+	NotePos pos = chart.PreviousPosition(5928);
+	EXPECT_LT(pos, 5928);
 }
