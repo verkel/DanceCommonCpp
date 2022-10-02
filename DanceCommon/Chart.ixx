@@ -5,6 +5,7 @@ import <string>;
 import <memory>;
 import <iostream>;
 import <format>;
+import SongConstants;
 import Difficulty;
 import NoteData;
 import NoteRow;
@@ -40,9 +41,6 @@ export namespace DanceCommon
 			 */
 			ReadNotes
 		};
-
-		static inline const std::string SinglesChartType = "dance-single";
-		static inline const std::string DoublesChartType = "dance-double";
 
 		NoteData<rowSize> noteData;
 		std::string description;
@@ -246,8 +244,8 @@ export namespace DanceCommon
 		}
 
 		static const std::string& GetStyleString(PlayStyle style) {
-			if (style == PlayStyle::Single) return SinglesChartType;
-			else if (style == PlayStyle::Double) return DoublesChartType;
+			if (style == PlayStyle::Single) return SongConstants::SinglesChartType;
+			else if (style == PlayStyle::Double) return SongConstants::DoublesChartType;
 			throw std::invalid_argument("style");
 		}
 

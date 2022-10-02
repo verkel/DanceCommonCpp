@@ -1,11 +1,14 @@
 export module Song;
 import <istream>;
 import <format>;
+import <optional>;
+import SongConstants;
 import SongMetadata;
 import Parser;
 import StringUtils;
 import SongUtils;
 import ParseException;
+import PlayStyle;
 
 export namespace DanceCommon
 {
@@ -60,7 +63,36 @@ export namespace DanceCommon
 
 		void LoadStepchart(Parser& parser)
 		{
-			// TODO implement
+			std::string line;
+			std::string_view lineView;
+
+			parser.ReadLine(line);
+			lineView = line;
+			StringUtils::Trim(lineView);
+
+			auto type = ParseType(lineView);
+			if (type)
+			{
+				// TODO instantiate chart
+			}
+			else
+			{
+				// Ignore unsupported chart types
+				while (parser.ReadLine(line))
+				{
+					if (StringUtils::Contains(line, ';'))
+						break;
+				}
+			}
+		}
+
+		std::optional<PlayStyle> ParseType(const std::string_view& lineView)
+		{
+			if (lineView.starts_with(SongConstants::SinglesChartType))
+				return PlayStyle::Single;
+			if (lineView.starts_with(SongConstants::DoublesChartType))
+				return PlayStyle::Double;
+			return std::nullopt;
 		}
 	};
 }

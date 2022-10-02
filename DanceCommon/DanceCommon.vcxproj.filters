@@ -74,5 +74,8 @@
     <ClCompile Include="SongUtils.ixx">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SongConstants.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
