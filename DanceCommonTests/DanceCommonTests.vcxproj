@@ -35,6 +35,7 @@
   <ItemGroup>
     <ClCompile Include="TestChart.cpp" />
     <ClCompile Include="TestNotePos.cpp" />
+    <ClCompile Include="TestSong.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
