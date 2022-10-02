@@ -8,9 +8,9 @@ export namespace DanceCommon
 	export class StringUtils
 	{
 	public:
-		static void SubstrStartEnd(std::string_view& s, size_t start, size_t end)
+		static std::string_view SubstrStartEnd(const std::string_view& s, size_t start, size_t end)
 		{
-			s = s.substr(start, end - start);
+			return s.substr(start, end - start);
 		}
 
 		static bool TryParseInt(std::string_view input, int& result)
@@ -28,6 +28,12 @@ export namespace DanceCommon
 		static bool Contains(std::string_view input, char c)
 		{
 			return input.find(c) != std::string::npos;
+		}
+
+		static void Trim(std::string_view& s)
+		{
+			s.remove_prefix(std::min(s.find_first_not_of(" \t\r\v\n"), s.size()));
+			s.remove_suffix(std::min(s.size() - s.find_last_not_of(" \t\r\v\n") - 1, s.size()));
 		}
 	};
 }

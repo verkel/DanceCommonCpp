@@ -176,6 +176,7 @@
     <ClCompile Include="Song.ixx" />
     <ClCompile Include="SongMetadata.ixx" />
     <ClCompile Include="SongMetadataComputations.ixx" />
+    <ClCompile Include="SongUtils.ixx" />
     <ClCompile Include="StringUtils.ixx" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

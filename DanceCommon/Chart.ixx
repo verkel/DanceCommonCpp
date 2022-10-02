@@ -85,7 +85,7 @@ export namespace DanceCommon
 			while (parser.ReadLine(line))
 			{
 				lineView = line;
-				Trim(lineView);
+				StringUtils::Trim(lineView);
 
 				auto chartStyleString = GetStyleString(matchInfo.style.value());
 
@@ -97,96 +97,6 @@ export namespace DanceCommon
 			}
 
 			throw NoSuchChartException(matchInfo);
-		}
-
-		bool DoLoad(Parser parser, const ChartMatchInfo& matchInfo, ReadMode readMode)
-		{
-			constexpr auto style = PlayStyles::GetStyle(rowSize);
-
-			if (readMode == ReadMode::ReadFirstChart || readMode == ReadMode::ReadMatchingChart)
-			{
-				// Read chart metadata
-				std::string descriptionStr, difficultyClassStr, ratingStr;
-				auto descriptionStrView = ReadSubDataLine(parser, descriptionStr);
-				auto difficultyClassStrView = ReadSubDataLine(parser, difficultyClassStr);
-				auto ratingStrView = ReadSubDataLine(parser, ratingStr);
-
-				std::string skippedLine;
-				parser.ReadLine(skippedLine); // Skip groove radar data
-
-				int rating;
-				if (!StringUtils::TryParseInt(ratingStrView, rating))
-					throw ParseException(std::format("Cannot parse rating: {}", ratingStrView));
-
-				Difficulty difficulty = Difficulties::FromFormatString(difficultyClassStrView);
-
-				ChartInfo info{ style, difficulty, rating, std::string(descriptionStrView) };
-
-				if (readMode == ReadMode::ReadMatchingChart)
-				{
-					if (!info.Matches(matchInfo))
-						return false;
-				}
-
-				this->description = std::string(descriptionStrView);
-				this->difficulty = difficulty;
-				this->rating = rating;
-			}
-
-			// Now read the actual steps data
-			std::string line;
-			std::string_view lineView;
-			size_t measureCount = 0;
-			std::vector<TNoteRow> measureRows;
-			int expectedRowLength = PlayStyles::ButtonCount(style);
-
-			while (parser.ReadLine(line))
-			{
-				lineView = line;
-				Trim(lineView);
-				
-				if (lineView.empty() || lineView.starts_with("//"))
-					continue;
-
-				size_t len = lineView.size();
-				bool isChartTerminator = StringUtils::Contains(lineView, ';');
-				bool isMeasureTerminator = StringUtils::Contains(lineView, ',');
-
-				if (len != expectedRowLength && !isMeasureTerminator && !isChartTerminator)
-					throw ParseException(std::format("Malformed note row at line {}", parser.LineNumber));
-
-				// If this row is a measure terminator, continue onward to next row
-				if (isMeasureTerminator || isChartTerminator)
-				{
-					size_t rowsCount = measureRows.size();
-
-					if (rowsCount > 0)
-					{
-						NotePos posOffset = NoteLength::Measure * (int)measureCount;
-						NoteLength noteLength = NoteLengths::FromResolution((int)rowsCount);
-						if (noteLength == NoteLength::None)
-							throw ParseException(std::format("Unsupported measure resolution {}", rowsCount));
-
-						for (int i = 0; i < rowsCount; i++)
-						{
-							NotePos pos = posOffset + noteLength * i;
-							SetNoteRow(pos, measureRows[i], false);
-						}
-
-						measureRows.clear();
-						measureCount++;
-					}
-
-					if (isChartTerminator) break;
-					else continue;
-				}
-
-				// Now it should be a note row. Add the row into the current measure.
-				measureRows.push_back(TNoteRow{ lineView });
-			}
-
-			// Chart parsed successfully
-			return true;
 		}
 
 		std::string GetDescription() const
@@ -245,14 +155,97 @@ export namespace DanceCommon
 		}
 
 	private:
-
-		static void Trim(std::string_view& s)
+		bool DoLoad(Parser parser, const ChartMatchInfo& matchInfo, ReadMode readMode)
 		{
-			s.remove_prefix(std::min(s.find_first_not_of(" \t\r\v\n"), s.size()));
-			s.remove_suffix(std::min(s.size() - s.find_last_not_of(" \t\r\v\n") - 1, s.size()));
+			constexpr auto style = PlayStyles::GetStyle(rowSize);
+
+			if (readMode == ReadMode::ReadFirstChart || readMode == ReadMode::ReadMatchingChart)
+			{
+				// Read chart metadata
+				std::string descriptionStr, difficultyClassStr, ratingStr;
+				auto descriptionStrView = ReadSubDataLine(parser, descriptionStr);
+				auto difficultyClassStrView = ReadSubDataLine(parser, difficultyClassStr);
+				auto ratingStrView = ReadSubDataLine(parser, ratingStr);
+
+				std::string skippedLine;
+				parser.ReadLine(skippedLine); // Skip groove radar data
+
+				int rating;
+				if (!StringUtils::TryParseInt(ratingStrView, rating))
+					throw ParseException(std::format("Cannot parse rating: {}", ratingStrView));
+
+				Difficulty difficulty = Difficulties::FromFormatString(difficultyClassStrView);
+
+				ChartInfo info{ style, difficulty, rating, std::string(descriptionStrView) };
+
+				if (readMode == ReadMode::ReadMatchingChart)
+				{
+					if (!info.Matches(matchInfo))
+						return false;
+				}
+
+				this->description = std::string(descriptionStrView);
+				this->difficulty = difficulty;
+				this->rating = rating;
+			}
+
+			// Now read the actual steps data
+			std::string line;
+			std::string_view lineView;
+			size_t measureCount = 0;
+			std::vector<TNoteRow> measureRows;
+			int expectedRowLength = PlayStyles::ButtonCount(style);
+
+			while (parser.ReadLine(line))
+			{
+				lineView = line;
+				StringUtils::Trim(lineView);
+
+				if (lineView.empty() || lineView.starts_with("//"))
+					continue;
+
+				size_t len = lineView.size();
+				bool isChartTerminator = StringUtils::Contains(lineView, ';');
+				bool isMeasureTerminator = StringUtils::Contains(lineView, ',');
+
+				if (len != expectedRowLength && !isMeasureTerminator && !isChartTerminator)
+					throw ParseException(std::format("Malformed note row at line {}", parser.LineNumber));
+
+				// If this row is a measure terminator, continue onward to next row
+				if (isMeasureTerminator || isChartTerminator)
+				{
+					size_t rowsCount = measureRows.size();
+
+					if (rowsCount > 0)
+					{
+						NotePos posOffset = NoteLength::Measure * (int)measureCount;
+						NoteLength noteLength = NoteLengths::FromResolution((int)rowsCount);
+						if (noteLength == NoteLength::None)
+							throw ParseException(std::format("Unsupported measure resolution {}", rowsCount));
+
+						for (int i = 0; i < rowsCount; i++)
+						{
+							NotePos pos = posOffset + noteLength * i;
+							SetNoteRow(pos, measureRows[i], false);
+						}
+
+						measureRows.clear();
+						measureCount++;
+					}
+
+					if (isChartTerminator) break;
+					else continue;
+				}
+
+				// Now it should be a note row. Add the row into the current measure.
+				measureRows.push_back(TNoteRow{ lineView });
+			}
+
+			// Chart parsed successfully
+			return true;
 		}
 
-		std::string GetStyleString(PlayStyle style) {
+		static const std::string& GetStyleString(PlayStyle style) {
 			if (style == PlayStyle::Single) return SinglesChartType;
 			else if (style == PlayStyle::Double) return DoublesChartType;
 			throw std::invalid_argument("style");
@@ -263,10 +256,10 @@ export namespace DanceCommon
 			if (parser.ReadLine(line))
 			{
 				std::string_view result = line;
-				Trim(result);
+				StringUtils::Trim(result);
 				size_t end = result.length() - 1;
 				if (result[end] == ':')
-					StringUtils::SubstrStartEnd(result, 0, end);
+					result = StringUtils::SubstrStartEnd(result, 0, end);
 				return result;
 			}
 

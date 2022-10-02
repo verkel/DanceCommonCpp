@@ -24,7 +24,7 @@ const double TimeEpsilon = 0.001;
 Song GetVertexDelta()
 {
 	std::ifstream stream{ "Vertex_Delta.sm" };
-	return Song{ stream };
+	return Song::Load(stream);
 }
 
 TEST(Song, Load)
