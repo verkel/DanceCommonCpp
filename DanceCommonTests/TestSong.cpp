@@ -11,6 +11,7 @@ import NoteLength;
 import NotePos;
 import NoteRow;
 import NoSuchChartException;
+import ParseException;
 import <fstream>;
 import <optional>;
 import <string>;

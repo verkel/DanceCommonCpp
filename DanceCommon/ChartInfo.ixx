@@ -8,6 +8,8 @@ namespace DanceCommon
 {
 	export struct ChartMatchInfo
 	{
+		static const ChartMatchInfo Any;
+
 		std::optional<PlayStyle> style;
 		std::optional<Difficulty> difficulty;
 		std::optional<int> rating;
@@ -38,4 +40,6 @@ namespace DanceCommon
 			return true;
 		}
 	};
+
+	const ChartMatchInfo ChartMatchInfo::Any{ std::nullopt, std::nullopt, std::nullopt, std::nullopt };
 }

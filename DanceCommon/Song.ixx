@@ -2,6 +2,8 @@ export module Song;
 import <istream>;
 import <format>;
 import <optional>;
+import <set>;
+import <memory>;
 import SongConstants;
 import SongMetadata;
 import Parser;
@@ -9,15 +11,16 @@ import StringUtils;
 import SongUtils;
 import ParseException;
 import PlayStyle;
+import Chart;
+import ChartInfo;
 
 export namespace DanceCommon
 {
 	class Song
 	{
 	private:
-		inline static const std::string Notes = "#NOTES";
-
 		SongMetadata metadata;
+		std::set<std::shared_ptr<SinglesChart>> singlesCharts;
 		double musicLength;
 
 	public:
@@ -54,7 +57,7 @@ export namespace DanceCommon
 					continue;
 
 				auto tokens = SongUtils::ParseDataLine(lineView);
-				if (tokens.first == Notes)
+				if (tokens.first == SongConstants::Notes)
 					LoadStepchart(parser);
 				else
 					throw ParseException(std::format("Syntax error in line {}: {}", parser.LineNumber, lineView));
@@ -73,7 +76,17 @@ export namespace DanceCommon
 			auto type = ParseType(lineView);
 			if (type)
 			{
-				// TODO instantiate chart
+				if (type.value() == PlayStyle::Single)
+				{
+					auto chart = std::make_shared<SinglesChart>();
+					chart->DoLoad(parser, ChartMatchInfo::Any, ChartReadMode::ReadFirstChart);
+					//chart->SetParent(std::shared_ptr<Song>(this)); // TOOD need to split implementation to talk about the same Song
+					singlesCharts.insert(chart);
+				}
+				else if (type.value() == PlayStyle::Double)
+				{
+
+				}
 			}
 			else
 			{

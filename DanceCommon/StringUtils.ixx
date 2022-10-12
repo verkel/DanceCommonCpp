@@ -2,6 +2,7 @@ export module StringUtils;
 import <string_view>;
 import <optional>;
 import <charconv>;
+import <vector>;
 
 export namespace DanceCommon
 {
@@ -30,10 +31,37 @@ export namespace DanceCommon
 			return input.find(c) != std::string::npos;
 		}
 
+		static bool Contains(std::string_view input, const std::string& str)
+		{
+			return input.find(str) != std::string::npos;
+		}
+
 		static void Trim(std::string_view& s)
 		{
 			s.remove_prefix(std::min(s.find_first_not_of(" \t\r\v\n"), s.size()));
 			s.remove_suffix(std::min(s.size() - s.find_last_not_of(" \t\r\v\n") - 1, s.size()));
+		}
+
+		static void Split(std::string_view sv, char delim, std::vector<std::string_view>& tokens)
+		{
+			tokens.clear();
+			size_t start = 0;
+			size_t end = sv.find(delim);
+			while (end != std::string::npos)
+			{
+				tokens.push_back(sv.substr(start, end - start));
+				start = end + 1;
+				end = sv.find(delim, start);
+			}
+
+			tokens.push_back(sv.substr(start));
+		}
+
+		static std::vector<std::string_view> Split(std::string_view sv, char delim)
+		{
+			std::vector<std::string_view> tokens;
+			Split(sv, delim, tokens);
+			return tokens;
 		}
 	};
 }

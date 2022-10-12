@@ -1,6 +1,5 @@
 export module Chart;
 import NotePos;
-import Song;
 import <string>;
 import <memory>;
 import <iostream>;
@@ -17,30 +16,35 @@ import PlayStyle;
 import ParseException;
 import NoSuchChartException;
 
+namespace DanceCommon
+{
+	class Song;
+}
+
 export namespace DanceCommon
 {
+	enum class ChartReadMode
+	{
+		/**
+		 * Mode for reading first chart in the input
+		 */
+		ReadFirstChart,
+		/**
+		 * Mode for reading chart with the matching difficulty (and optionally
+		 * description) in the input
+		 */
+		ReadMatchingChart,
+		/**
+		 * Mode for reading bare noteRows without any header
+		 */
+		ReadNotes
+	};
+
 	template<NoteRowSize rowSize>
 	class Chart
 	{
 	private:
 		typedef NoteRow<rowSize> TNoteRow;
-
-		enum class ReadMode
-		{
-			/**
-			 * Mode for reading first chart in the input
-			 */
-			ReadFirstChart,
-			/**
-			 * Mode for reading chart with the matching difficulty (and optionally
-			 * description) in the input
-			 */
-			ReadMatchingChart,
-			/**
-			 * Mode for reading bare noteRows without any header
-			 */
-			ReadNotes
-		};
 
 		NoteData<rowSize> noteData;
 		std::string description;
@@ -53,9 +57,9 @@ export namespace DanceCommon
 		/**
 		* Public constructor for creating empty stepcharts
 		*/
-		Chart(PlayStyle style, Difficulty difficulty) :
+		Chart() :
 			noteData{ },
-			difficulty{ difficulty },
+			difficulty{ Difficulty::Easy },
 			rating{ 0 },
 			parent{ nullptr }
 		{
@@ -73,28 +77,41 @@ export namespace DanceCommon
 		* @throws NoSuchChartException If no chart with the given difficulty is
 		*            found
 		*/
-		Chart(std::istream& stream, const ChartMatchInfo& matchInfo) :
-			Chart{ matchInfo.style.value(), matchInfo.difficulty.value() }
+		Chart(std::istream& stream, const ChartMatchInfo& matchInfo) : Chart{ }
 		{
-			Parser parser{ stream, 1 };
+			constexpr auto style = PlayStyles::GetStyle(rowSize);
+			auto chartStyleString = GetStyleString(style);
+
 			std::string line;
 			std::string_view lineView;
+
+			Parser parser{ stream, 1 };
 
 			while (parser.ReadLine(line))
 			{
 				lineView = line;
 				StringUtils::Trim(lineView);
 
-				auto chartStyleString = GetStyleString(matchInfo.style.value());
-
 				if (lineView.starts_with(chartStyleString))
 				{
-					if (DoLoad(parser, matchInfo, ReadMode::ReadMatchingChart))
+					if (DoLoad(parser, matchInfo, ChartReadMode::ReadMatchingChart))
 						return;
 				}
 			}
 
 			throw NoSuchChartException(matchInfo);
+		}
+
+		bool operator<(const Chart& rhs) const
+		{
+			if (difficulty != rhs.difficulty)
+				return difficulty < rhs.difficulty;
+
+			if (rating != rhs.rating)
+				return rating < rhs.rating;
+
+			if (description != rhs.description)
+				return description < rhs.description;
 		}
 
 		std::string GetDescription() const
@@ -117,47 +134,51 @@ export namespace DanceCommon
 			return parent;
 		}
 
-		inline NotePos GetLength() const
+		void SetParent(std::shared_ptr<Song> parent)
+		{
+			this->parent = parent;
+		}
+
+		NotePos GetLength() const
 		{
 			return noteData.GetLength();
 		}
 
-		inline void SetNoteRow(NotePos pos, TNoteRow newRow, bool cleanupHolds)
+		void SetNoteRow(NotePos pos, TNoteRow newRow, bool cleanupHolds)
 		{
 			noteData.SetNoteRow(pos, newRow, cleanupHolds);
 		}
 
-		inline TNoteRow GetNoteRow(NotePos pos)
+		TNoteRow GetNoteRow(NotePos pos)
 		{
 			return noteData.GetNoteRow(pos);
 		}
 
-		inline bool Contains(NotePos pos)
+		bool Contains(NotePos pos)
 		{
 			return noteData.Contains(pos);
 		}
 
-		inline NotePos NextPosition(NotePos pos)
+		NotePos NextPosition(NotePos pos)
 		{
 			return noteData.NextPosition(pos);
 		}
 
-		inline NotePos PreviousPosition(NotePos pos)
+		NotePos PreviousPosition(NotePos pos)
 		{
 			return noteData.PreviousPosition(pos);
 		}
 
-		inline NotePos GetLastPosition()
+		NotePos GetLastPosition()
 		{
 			return noteData.GetLastPosition();
 		}
 
-	private:
-		bool DoLoad(Parser parser, const ChartMatchInfo& matchInfo, ReadMode readMode)
+		bool DoLoad(Parser parser, const ChartMatchInfo& matchInfo, ChartReadMode readMode)
 		{
 			constexpr auto style = PlayStyles::GetStyle(rowSize);
 
-			if (readMode == ReadMode::ReadFirstChart || readMode == ReadMode::ReadMatchingChart)
+			if (readMode == ChartReadMode::ReadFirstChart || readMode == ChartReadMode::ReadMatchingChart)
 			{
 				// Read chart metadata
 				std::string descriptionStr, difficultyClassStr, ratingStr;
@@ -176,7 +197,7 @@ export namespace DanceCommon
 
 				ChartInfo info{ style, difficulty, rating, std::string(descriptionStrView) };
 
-				if (readMode == ReadMode::ReadMatchingChart)
+				if (readMode == ChartReadMode::ReadMatchingChart)
 				{
 					if (!info.Matches(matchInfo))
 						return false;
@@ -243,6 +264,7 @@ export namespace DanceCommon
 			return true;
 		}
 
+	private:
 		static const std::string& GetStyleString(PlayStyle style) {
 			if (style == PlayStyle::Single) return SongConstants::SinglesChartType;
 			else if (style == PlayStyle::Double) return SongConstants::DoublesChartType;
