@@ -16,6 +16,7 @@ import <fstream>;
 import <optional>;
 import <string>;
 import <string_view>;
+import <cmath>;
 
 using namespace DanceCommon;
 
@@ -25,6 +26,12 @@ const double TimeEpsilon = 0.001;
 Song GetVertexDelta()
 {
 	std::ifstream stream{ "Vertex_Delta.sm" };
+	return Song::Load(stream);
+}
+
+Song GetSilikon()
+{
+	std::ifstream stream{ "silikon.sm" };
 	return Song::Load(stream);
 }
 
@@ -80,19 +87,35 @@ TEST(Song, Load)
 	}
 }
 
+// Not implemented
+/*
 TEST(Song, ChartInfos)
 {
 	FAIL();
 }
+*/
 
 TEST(Song, GetPosition_VertexDelta)
 {
-	FAIL();
+	Song song = GetVertexDelta();
+	EXPECT_EQ(0, std::lround(song.GetPosition(0.847))); // song begins
+	EXPECT_EQ(4044, std::lround(song.GetPosition(34.543))); // Past about 1/5 of the song
+	EXPECT_EQ(9216, std::lround(song.GetPosition(77.637))); // begin slowdown
+	EXPECT_EQ(9540, std::lround(song.GetPosition(83.036))); // mid-slowdown
+	EXPECT_EQ(10824, std::lround(song.GetPosition(104.433))); // slowdown ends
+	EXPECT_EQ(18204, std::lround(song.GetPosition(165.925))); // almost end of song
+	EXPECT_EQ(18744, std::lround(song.GetPosition(170.424))); // final hold ends
+	EXPECT_EQ(18816, std::lround(song.GetPosition(171.024))); // past song end, next measure
 }
 
 TEST(Song, GetPosition_Silikon)
 {
-	FAIL();
+	Song song = GetSilikon();
+	EXPECT_EQ(0, std::lround(song.GetPosition(0.140))); // song begins
+	EXPECT_EQ(2046, std::lround(song.GetPosition(34.297))); // Past about 1/5 of the song
+	EXPECT_EQ(6192, std::lround(song.GetPosition(85.785))); // 2/3 of the song
+	EXPECT_EQ(10572, std::lround(song.GetPosition(146.816))); // song ends with a mine wall
+	EXPECT_EQ(11024, std::lround(song.GetPosition(149.361))); // random spot past the song end
 }
 
 TEST(Song, GetTime_VertexDelta)
@@ -105,7 +128,10 @@ TEST(Song, GetTime_Silikon)
 	FAIL();
 }
 
+// Not implemented
+/*
 TEST(Song, Save)
 {
 	FAIL();
 }
+*/

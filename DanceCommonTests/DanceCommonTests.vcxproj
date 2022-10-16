@@ -46,7 +46,10 @@
     </CopyFileToFolders>
     <None Include="songs\It%27s In Your Melody Hard 8 Single (Verkel).play" />
     <None Include="songs\It%27s In Your Melody.sm" />
-    <None Include="songs\silikon.sm" />
+    <CopyFileToFolders Include="songs\silikon.sm">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
+      <FileType>Document</FileType>
+    </CopyFileToFolders>
     <CopyFileToFolders Include="songs\Vertex_Delta.sm">
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
       <FileType>Document</FileType>

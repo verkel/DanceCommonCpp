@@ -9,11 +9,14 @@ import SongUtils;
 import SongConstants;
 import StringUtils;
 import ParseException;
+import SongMetadataComputations;
 
 export namespace DanceCommon
 {
 	class SongMetadata
 	{
+		SongMetadataComputations computations;
+
 		std::string title;
 		std::string subtitle;
 		std::string artist;
@@ -119,59 +122,66 @@ export namespace DanceCommon
 			return map;
 		}
 
-		const std::string& GetTitle()
+		const std::string& GetTitle() const
 		{
 			return title;
 		}
 
-		const std::string& GetArtist()
+		const std::string& GetArtist() const
 		{
 			return artist;
 		}
 
-		const std::string& GetCredit()
+		const std::string& GetCredit() const
 		{
 			return credit;
 		}
 
-		const std::string& GetBanner()
+		const std::string& GetBanner() const
 		{
 			return banner;
 		}
 
-		const std::string& GetBackground()
+		const std::string& GetBackground() const
 		{
 			return background;
 		}
 
-		const std::string& GetCdtitle()
+		const std::string& GetCdtitle() const
 		{
 			return cdtitle;
 		}
 
-		const std::string& GetMusic()
+		const std::string& GetMusic() const
 		{
 			return music;
 		}
 
-		const double GetOffset()
+		const double GetOffset() const
 		{
 			return offset;
 		}
 
-		const double GetSamplestart()
+		const double GetSamplestart() const
 		{
 			return samplestart;
 		}
 
-		const double GetSamplelength()
+		const double GetSamplelength() const
 		{
 			return samplelength;
 		}
 
-		const std::string& GetSelectable()
+		const std::string& GetSelectable() const
 		{
 			return selectable;
+		}
+
+		auto& GetComputations()
+		{
+			if (!computations.IsComputed())
+				computations.ComputeEvents(bpms, stops, offset);
+			return computations;
 		}
 	};
 }

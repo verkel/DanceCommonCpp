@@ -6,6 +6,7 @@ import <set>;
 import <memory>;
 import SongConstants;
 import SongMetadata;
+import SongMetadataComputations;
 import Parser;
 import StringUtils;
 import SongUtils;
@@ -46,6 +47,50 @@ export namespace DanceCommon
 		const auto GetSinglesCharts() const
 		{
 			return singlesCharts;
+		}
+
+		double GetPosition(double time)
+		{
+			auto& computations = metadata.GetComputations();
+			auto& bpmsByTime = computations.GetBpmsByTime();
+			auto& stopsByTime = computations.GetStopsByTime();
+
+			auto bpmLowerBound = bpmsByTime.lower_bound(time);
+			double bpmTime = bpmLowerBound != bpmsByTime.end()
+				? bpmLowerBound->first
+				: bpmsByTime.rbegin()->first;
+			auto bpmEvent = bpmsByTime.at(bpmTime);
+
+			double stopElapsedSeconds = 0.0;
+			auto stopLowerBound = stopsByTime.lower_bound(time);
+			bool stopTimeFound = stopLowerBound != stopsByTime.end();
+			double stopTime = stopTimeFound
+				? stopLowerBound->first
+				: 0.0;
+
+			double eventTime;
+			SongMetadataComputations::Event evt;
+			if (!stopTimeFound || bpmTime >= stopTime)
+			{
+				evt = bpmEvent;
+				eventTime = bpmTime;
+			}
+			else
+			{
+				auto stopEvent = stopsByTime.at(stopTime);
+				stopElapsedSeconds = time - stopTime;
+				if (stopElapsedSeconds > stopEvent.value)
+					stopElapsedSeconds = stopEvent.value;
+
+				evt = stopEvent;
+				eventTime = stopTime;
+			}
+
+			double secondsAfterEvent = time - eventTime;
+			double bpm = bpmEvent.value;
+
+			// bpm/60 = beats per second, bps*48 = position increase per second
+			return evt.position + (secondsAfterEvent - stopElapsedSeconds) * bpm / 60.0 * 48.0;
 		}
 
 	private:
