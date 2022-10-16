@@ -43,6 +43,41 @@ TEST(Song, Load)
 	EXPECT_NEAR(53.103, m.GetSamplestart(), Epsilon);
 	EXPECT_NEAR(12.000, m.GetSamplelength(), Epsilon);
 	EXPECT_EQ("YES", m.GetSelectable());
+
+	auto charts = song.GetSinglesCharts();
+	EXPECT_EQ(5, charts.size());
+	
+	size_t i = 0;
+	for (auto chart : charts)
+	{
+		EXPECT_EQ("Verkel", chart->GetDescription());
+
+		switch (i)
+		{
+		case 0:
+			EXPECT_EQ(1, chart->GetRating());
+			EXPECT_EQ(Difficulty::Novice, chart->GetDifficulty());
+			break;
+		case 1:
+			EXPECT_EQ(4, chart->GetRating());
+			EXPECT_EQ(Difficulty::Easy, chart->GetDifficulty());
+			break;
+		case 2:
+			EXPECT_EQ(8, chart->GetRating());
+			EXPECT_EQ(Difficulty::Medium, chart->GetDifficulty());
+			break;
+		case 3:
+			EXPECT_EQ(9, chart->GetRating());
+			EXPECT_EQ(Difficulty::Hard, chart->GetDifficulty());
+			break;
+		case 4:
+			EXPECT_EQ(11, chart->GetRating());
+			EXPECT_EQ(Difficulty::Expert, chart->GetDifficulty());
+			break;
+		}
+
+		i++;
+	}
 }
 
 TEST(Song, ChartInfos)

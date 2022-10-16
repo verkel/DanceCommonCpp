@@ -110,8 +110,7 @@ export namespace DanceCommon
 			if (rating != rhs.rating)
 				return rating < rhs.rating;
 
-			if (description != rhs.description)
-				return description < rhs.description;
+			return description < rhs.description;
 		}
 
 		std::string GetDescription() const

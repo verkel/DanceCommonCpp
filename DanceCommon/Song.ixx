@@ -19,8 +19,16 @@ export namespace DanceCommon
 	class Song
 	{
 	private:
+		struct ChartComparator
+		{
+			bool operator()(std::shared_ptr<SinglesChart> a, std::shared_ptr<SinglesChart> b) const
+			{
+				return *a < *b;
+			}
+		};
+
 		SongMetadata metadata;
-		std::set<std::shared_ptr<SinglesChart>> singlesCharts;
+		std::set<std::shared_ptr<SinglesChart>, ChartComparator> singlesCharts;
 		double musicLength;
 
 	public:
@@ -33,6 +41,11 @@ export namespace DanceCommon
 		const SongMetadata& GetMetadata() const
 		{
 			return metadata;
+		}
+
+		const auto GetSinglesCharts() const
+		{
+			return singlesCharts;
 		}
 
 	private:
