@@ -120,12 +120,30 @@ TEST(Song, GetPosition_Silikon)
 
 TEST(Song, GetTime_VertexDelta)
 {
-	FAIL();
+	Song song = GetVertexDelta();
+	EXPECT_NEAR(0.847, song.GetTime(0), TimeEpsilon); // song begins
+	EXPECT_NEAR(34.543, song.GetTime(4044), TimeEpsilon); // Past about 1/5 of the song
+	EXPECT_NEAR(77.637, song.GetTime(9216), TimeEpsilon); // begin slowdown
+	EXPECT_NEAR(83.036, song.GetTime(9540), TimeEpsilon); // mid-slowdown
+	EXPECT_NEAR(104.433, song.GetTime(10824), TimeEpsilon); // slowdown ends
+	EXPECT_NEAR(165.925, song.GetTime(18204), TimeEpsilon); // almost end of song
+	EXPECT_NEAR(170.424, song.GetTime(18744), TimeEpsilon); // final hold ends
+	EXPECT_NEAR(171.024, song.GetTime(18816), TimeEpsilon); // past song end, next measure
+
+	EXPECT_NEAR(song.GetTime(0), song.GetTime(0, false) - song.GetMetadata().GetOffset(), TimeEpsilon);
+
 }
 
 TEST(Song, GetTime_Silikon)
 {
-	FAIL();
+	Song song = GetSilikon();
+	EXPECT_NEAR(0.140, song.GetTime(0), TimeEpsilon); // song begins
+	EXPECT_NEAR(34.297, song.GetTime(2046), TimeEpsilon); // Past about 1/5 of the song
+	EXPECT_NEAR(85.785, song.GetTime(6192), TimeEpsilon); // 2/3 of the song
+	EXPECT_NEAR(146.816, song.GetTime(10572), TimeEpsilon); // song ends with a mine wall
+	EXPECT_NEAR(149.361, song.GetTime(11024), TimeEpsilon); // random spot past the song end
+
+	EXPECT_NEAR(song.GetTime(0), song.GetTime(0, false) - song.GetMetadata().GetOffset(), TimeEpsilon);
 }
 
 // Not implemented

@@ -91,6 +91,61 @@ export namespace DanceCommon
 			return evt.position + (secondsAfterEvent - stopElapsedSeconds) * bpm / 60.0 * 48.0;
 		}
 
+		double GetTime(NotePos position)
+		{
+			return GetTime(position, true);
+		}
+
+		double GetTime(NotePos position, bool addOffset)
+		{
+			auto& bpms = metadata.GetBpms();
+			auto& stops = metadata.GetStops();
+			double givenBeat = NotePositions::ToBeatsDouble(position);
+			double beat = 0.0;
+
+			if (!bpms.contains(beat))
+				throw std::exception("Chart does not specify initial BPM");
+
+			double bpm = bpms.at(beat);
+			double lastBeat = 0.0;
+			double lastBpm = 0.0;
+			double time = 0.0;
+
+			do
+			{
+				lastBeat = beat;
+				lastBpm = bpm;
+
+				auto beatUpperBound = bpms.upper_bound(beat);
+				bool beatFound = beatUpperBound != bpms.end();
+				
+				if (beatFound)
+				{
+					beat = beatUpperBound->first;
+				}
+
+				if (!beatFound || beat >= givenBeat)
+				{
+					beat = givenBeat;
+				}
+				
+				auto bpmItr = bpms.find(beat);
+				if (bpmItr != bpms.end())
+					bpm = bpmItr->second;
+
+				double beatPeriod = beat - lastBeat;
+				double secondsPerBeat = 60.0 / lastBpm;
+				time += beatPeriod * secondsPerBeat;
+			} while (beat != givenBeat);
+
+			time += GetStopAddition(givenBeat, stops);
+
+			if (addOffset)
+				return time - metadata.GetOffset();
+			else
+				return time;
+		}
+
 	private:
 		Song(Parser& parser) :
 			metadata{parser},
@@ -136,14 +191,12 @@ export namespace DanceCommon
 				{
 					auto chart = std::make_shared<SinglesChart>();
 					chart->DoLoad(parser, ChartMatchInfo::Any, ChartReadMode::ReadFirstChart);
-					//chart->SetParent(std::shared_ptr<Song>(this)); // TOOD need to split implementation to talk about the same Song
 					singlesCharts.insert(chart);
 				}
 				else if (type.value() == PlayStyle::Double)
 				{
 					auto chart = std::make_shared<DoublesChart>();
 					chart->DoLoad(parser, ChartMatchInfo::Any, ChartReadMode::ReadFirstChart);
-					//chart->SetParent(std::shared_ptr<Song>(this)); // TOOD need to split implementation to talk about the same Song
 					doublesCharts.insert(chart);
 				}
 			}
@@ -165,6 +218,23 @@ export namespace DanceCommon
 			if (lineView.starts_with(SongConstants::DoublesChartType))
 				return PlayStyle::Double;
 			return std::nullopt;
+		}
+
+		double GetStopAddition(double givenBeat, const std::map<double, double>& stops) {
+			double addition = 0.0;
+			double beat = -1.0;
+			std::map<double, double>::const_iterator stop;
+			while ((stop = stops.upper_bound(beat)) != stops.end())
+			{
+				beat = stop->first;
+
+				if (beat >= givenBeat)
+					break;
+
+				double stop = stops.at(beat);
+				addition += stop;
+			}
+			return addition;
 		}
 	};
 }

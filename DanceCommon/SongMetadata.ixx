@@ -177,6 +177,16 @@ export namespace DanceCommon
 			return selectable;
 		}
 
+		auto& GetBpms() const
+		{
+			return bpms;
+		}
+
+		auto& GetStops() const
+		{
+			return stops;
+		}
+
 		auto& GetComputations()
 		{
 			if (!computations.IsComputed())

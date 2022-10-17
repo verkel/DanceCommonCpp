@@ -94,5 +94,41 @@ export namespace DanceCommon
 			else 
 				return Floor(notePos, noteLength) + noteLength;
 		}
+
+		/**
+		 * Convert the given note position to beats. One measure is 4 beats.
+		 *
+		 * @return the beat as double
+		 */
+		static float ToBeats(NotePos notePos) {
+			return notePos / 48.0f;
+		}
+
+		/**
+		 * Convert the given note position to measures.
+		 *
+		 * @return the beat as double
+		 */
+		static float ToMeasures(NotePos notePos) {
+			return notePos / 192.0f;
+		}
+
+		/**
+		 * Convert the given note position to beats. One measure is 4 beats.
+		 *
+		 * @return the beat as double
+		 */
+		static double ToBeatsDouble(NotePos notePos) {
+			return notePos / 48.0;
+		}
+
+		/**
+		 * Convert the given note position to measures.
+		 *
+		 * @return the beat as double
+		 */
+		static double ToMeasuresDouble(NotePos notePos) {
+			return notePos / 192.0;
+		}
 	};
 }
