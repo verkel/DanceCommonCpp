@@ -20,16 +20,9 @@ export namespace DanceCommon
 	class Song
 	{
 	private:
-		struct ChartComparator
-		{
-			bool operator()(std::shared_ptr<SinglesChart> a, std::shared_ptr<SinglesChart> b) const
-			{
-				return *a < *b;
-			}
-		};
-
 		SongMetadata metadata;
-		std::set<std::shared_ptr<SinglesChart>, ChartComparator> singlesCharts;
+		std::set<std::shared_ptr<SinglesChart>, SinglesChart::Comparator> singlesCharts;
+		std::set<std::shared_ptr<DoublesChart>, DoublesChart::Comparator> doublesCharts;
 		double musicLength;
 
 	public:
@@ -47,6 +40,11 @@ export namespace DanceCommon
 		const auto GetSinglesCharts() const
 		{
 			return singlesCharts;
+		}
+
+		const auto GetDoublesCharts() const
+		{
+			return doublesCharts;
 		}
 
 		double GetPosition(double time)
@@ -143,7 +141,10 @@ export namespace DanceCommon
 				}
 				else if (type.value() == PlayStyle::Double)
 				{
-
+					auto chart = std::make_shared<DoublesChart>();
+					chart->DoLoad(parser, ChartMatchInfo::Any, ChartReadMode::ReadFirstChart);
+					//chart->SetParent(std::shared_ptr<Song>(this)); // TOOD need to split implementation to talk about the same Song
+					doublesCharts.insert(chart);
 				}
 			}
 			else

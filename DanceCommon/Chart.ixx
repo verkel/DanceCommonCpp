@@ -54,6 +54,15 @@ export namespace DanceCommon
 		std::shared_ptr<Song> parent;
 
 	public:
+		struct Comparator
+		{
+			bool operator()(std::shared_ptr<Chart> a, std::shared_ptr<Chart> b) const
+			{
+				return *a < *b;
+			}
+		};
+
+
 		/**
 		* Public constructor for creating empty stepcharts
 		*/
@@ -173,7 +182,7 @@ export namespace DanceCommon
 			return noteData.GetLastPosition();
 		}
 
-		bool DoLoad(Parser parser, const ChartMatchInfo& matchInfo, ChartReadMode readMode)
+		bool DoLoad(Parser& parser, const ChartMatchInfo& matchInfo, ChartReadMode readMode)
 		{
 			constexpr auto style = PlayStyles::GetStyle(rowSize);
 
