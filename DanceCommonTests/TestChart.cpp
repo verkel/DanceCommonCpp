@@ -17,18 +17,17 @@ import <string_view>;
 
 using namespace DanceCommon;
 
-SinglesChart GetVertexDeltaHard()
+static SinglesChart GetVertexDeltaHard()
 {
 	std::ifstream stream{ "Vertex_Delta.sm" };
 	return SinglesChart{ stream, ChartMatchInfo{ PlayStyle::Single, Difficulty::Hard, std::nullopt, std::nullopt } };
 }
 
-SinglesChart GetBadBoyExpert()
+static SinglesChart GetBadBoyExpert()
 {
 	std::ifstream stream{ "Bad Boy.sm" };
 	return SinglesChart{ stream, ChartMatchInfo{ PlayStyle::Single, Difficulty::Expert, std::nullopt, std::nullopt } };
 }
-
 
 TEST(Chart, Load_ExistingChart)
 {

@@ -20,16 +20,16 @@ import <cmath>;
 
 using namespace DanceCommon;
 
-const double Epsilon = 0.00001;
-const double TimeEpsilon = 0.001;
+static const double Epsilon = 0.00001;
+static const double TimeEpsilon = 0.001;
 
-Song GetVertexDelta()
+static Song GetVertexDelta()
 {
 	std::ifstream stream{ "Vertex_Delta.sm" };
 	return Song::Load(stream);
 }
 
-Song GetSilikon()
+static Song GetSilikon()
 {
 	std::ifstream stream{ "silikon.sm" };
 	return Song::Load(stream);

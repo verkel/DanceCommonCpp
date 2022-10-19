@@ -15,6 +15,12 @@ export namespace DanceCommon
 		{
 			int position;
 			double value;
+
+			bool operator==(const Event& rhs) const
+			{
+				return (position == rhs.position)
+					&& (value == rhs.value);
+			}
 		};
 
 	private:
