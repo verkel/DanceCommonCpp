@@ -44,7 +44,7 @@ export namespace DanceCommon
 	class Chart
 	{
 	private:
-		typedef NoteRow<rowSize> TNoteRow;
+		using TNoteRow = NoteRow<rowSize>;
 
 		NoteData<rowSize> noteData;
 		std::string description;
@@ -295,6 +295,6 @@ export namespace DanceCommon
 		}
 	};
 
-	export typedef Chart<NoteRowSizeSingle> SinglesChart;
-	export typedef Chart<NoteRowSizeDouble> DoublesChart;
+	export using SinglesChart = Chart<NoteRowSizeSingle>;
+	export using DoublesChart = Chart<NoteRowSizeDouble>;
 }

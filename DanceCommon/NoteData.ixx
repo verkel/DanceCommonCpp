@@ -10,7 +10,7 @@ export namespace DanceCommon
 	class NoteData
 	{
 	private:
-		typedef NoteRow<rowSize> TNoteRow;
+		using TNoteRow = NoteRow<rowSize>;
 
 		std::vector<TNoteRow> noteRows;
 

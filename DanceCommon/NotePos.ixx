@@ -4,7 +4,7 @@ import <array>;
 
 export namespace DanceCommon
 {
-	export typedef int NotePos;
+	export using NotePos = int;
 
 	NotePos operator * (NoteLength length, int n)
 	{
