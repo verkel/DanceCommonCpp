@@ -1,19 +1,36 @@
-export module NoteRow;
+﻿export module PadPanels;
 import <string_view>;
 import NoteType;
 import PlayStyle;
 
 export namespace DanceCommon
 {
-	export template<size_t rowSize>
-	struct NoteRow
+	export template<typename TValue, size_t rowSize>
+	struct PadPanels
 	{
-		NoteType notes[rowSize];
+		TValue values[rowSize];
 
-		NoteRow() :
-			notes {}
+		PadPanels() :
+			values {}
 		{ }
 
+		bool IsEmpty() const
+		{
+			for (size_t i = 0; i < rowSize; i++)
+			{
+				if (values[i] != NoteType::Empty)
+					return false;
+			}
+
+			return true;
+		}
+
+		TValue operator[](size_t i)
+		{
+		   return values[i];
+		}
+
+		/*
 		NoteRow(const std::string_view& lineView)
 		{
 			for (size_t i = 0; i < rowSize; i++)
@@ -53,5 +70,6 @@ export namespace DanceCommon
 		{
 			return !operator==(rhs);
 		}
+		*/
 	};
 }

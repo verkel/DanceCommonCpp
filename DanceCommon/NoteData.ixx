@@ -6,7 +6,7 @@ import <vector>;
 
 export namespace DanceCommon
 {
-	export template<NoteRowSize rowSize>
+	export template<size_t rowSize>
 	class NoteData
 	{
 	private:

@@ -164,12 +164,17 @@
     <ClCompile Include="ChartInfo.ixx" />
     <ClCompile Include="DanceCommon.cpp" />
     <ClCompile Include="Difficulty.ixx" />
+    <ClCompile Include="LimbsOnPad.ixx" />
+    <ClCompile Include="MathUtils.ixx" />
     <ClCompile Include="NoSuchChartException.ixx" />
     <ClCompile Include="NoteData.ixx" />
     <ClCompile Include="NoteLength.ixx" />
     <ClCompile Include="NotePos.ixx" />
     <ClCompile Include="NoteRow.ixx" />
+    <ClCompile Include="NoteRowPossibleStates.ixx" />
     <ClCompile Include="NoteType.ixx" />
+    <ClCompile Include="PadPanels.ixx" />
+    <ClCompile Include="Panel.ixx" />
     <ClCompile Include="ParseException.ixx" />
     <ClCompile Include="Parser.ixx" />
     <ClCompile Include="PlayStyle.ixx" />
@@ -178,6 +183,8 @@
     <ClCompile Include="SongMetadata.ixx" />
     <ClCompile Include="SongMetadataComputations.ixx" />
     <ClCompile Include="SongUtils.ixx" />
+    <ClCompile Include="State.ixx" />
+    <ClCompile Include="StateLinks.ixx" />
     <ClCompile Include="StringUtils.ixx" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

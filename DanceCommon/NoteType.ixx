@@ -5,7 +5,7 @@ import ParseException;
 
 export namespace DanceCommon
 {
-	export enum class NoteType
+	export enum class NoteType : unsigned char
 	{
 		Empty,
 		Tap,

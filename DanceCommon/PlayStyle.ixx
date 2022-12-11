@@ -5,17 +5,24 @@ import <stdexcept>;
 
 export namespace DanceCommon
 {
-	export enum class PlayStyle
+	enum class PlayStyle
 	{
 		Single = 0,
 		Double = 1,
 	};
 
 	// cannot use scoped enums as template parameters
-	export enum NoteRowSize : size_t
+	/*export enum class NoteRowSize : size_t
 	{
-		NoteRowSizeSingle = 4,
-		NoteRowSizeDouble = 8
+		Single = 4,
+		Double = 8
+	};*/
+
+	export class NoteRowSize
+	{
+	public:
+		static constexpr size_t Single = 4;
+		static constexpr size_t Double = 8;
 	};
 
 	export class PlayStyles
@@ -49,12 +56,12 @@ export namespace DanceCommon
 			return CenterPanelCount(style) + ButtonCount(style);
 		}
 
-		static constexpr PlayStyle GetStyle(NoteRowSize size)
+		static constexpr PlayStyle GetStyle(size_t size)
 		{
 			switch (size)
 			{
-				case NoteRowSizeSingle: return PlayStyle::Single;
-				case NoteRowSizeDouble: return PlayStyle::Double;
+				case NoteRowSize::Single: return PlayStyle::Single;
+				case NoteRowSize::Double: return PlayStyle::Double;
 			}
 
 			throw std::range_error("size");

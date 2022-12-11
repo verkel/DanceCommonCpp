@@ -40,7 +40,7 @@ export namespace DanceCommon
 		ReadNotes
 	};
 
-	template<NoteRowSize rowSize>
+	template<size_t rowSize>
 	class Chart
 	{
 	private:
@@ -295,6 +295,6 @@ export namespace DanceCommon
 		}
 	};
 
-	export using SinglesChart = Chart<NoteRowSizeSingle>;
-	export using DoublesChart = Chart<NoteRowSizeDouble>;
+	export using SinglesChart = Chart<NoteRowSize::Single>;
+	export using DoublesChart = Chart<NoteRowSize::Double>;
 }

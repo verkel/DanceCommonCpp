@@ -39,7 +39,7 @@ TEST(Chart, Load_ExistingChart)
 
 	NotePos pos = NoteLength::Measure * 5 + NoteLength::Note_16th * 3;
 	auto noteRow = chart.GetNoteRow(pos);
-	EXPECT_EQ(NoteRow<NoteRowSizeSingle> { "M000" }, noteRow);
+	EXPECT_EQ(NoteRow<NoteRowSize::Single> { "M000" }, noteRow);
 }
 
 TEST(Chart, Load_NonExistentChart)

@@ -35,6 +35,7 @@
   <ItemGroup>
     <ClCompile Include="TestChart.cpp" />
     <ClCompile Include="TestNotePos.cpp" />
+    <ClCompile Include="TestNoteRowPossibleStates.cpp" />
     <ClCompile Include="TestSong.cpp" />
     <ClCompile Include="TestSongMetadataComputations.cpp" />
   </ItemGroup>
