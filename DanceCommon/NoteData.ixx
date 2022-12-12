@@ -22,7 +22,7 @@ export namespace DanceCommon
 		{
 		}
 
-		const TNoteRow& GetNoteRow(NotePos notePosition)
+		const TNoteRow& GetNoteRow(NotePos notePosition) const
 		{
 			if (!Contains(notePosition))
 				return EmptyRow;
@@ -39,12 +39,12 @@ export namespace DanceCommon
 			if (cleanupHolds) CleanupHolds(notePosition, oldRow, newRow);
 		}
 
-		inline bool Contains(NotePos position)
+		bool Contains(NotePos position) const
 		{
 			return position >= 0 && position < noteRows.size();
 		}
 
-		inline NotePos NextPosition(NotePos position)
+		NotePos NextPosition(NotePos position) const
 		{
 			int pos = position + 1;
 			NotePos upperBound = (NotePos)noteRows.size();
@@ -55,17 +55,17 @@ export namespace DanceCommon
 			return pos;
 		}
 
-		NotePos PreviousPosition(NotePos position)
+		NotePos PreviousPosition(NotePos position) const
 		{
 			return PreviousPosition(position, -1);
 		}
 
-		NotePos PreviousPosition(NotePos position, int skipEmptyPanel)
+		NotePos PreviousPosition(NotePos position, int skipEmptyPanel) const
 		{
 			return PreviousPosition(position, skipEmptyPanel, NotePositions::Invalid);
 		}
 
-		NotePos PreviousPosition(NotePos position, int skipEmptyPanel, NotePos lowerBound)
+		NotePos PreviousPosition(NotePos position, int skipEmptyPanel, NotePos lowerBound) const
 		{
 			NotePos pos = position - 1;
 
@@ -87,7 +87,7 @@ export namespace DanceCommon
 			return pos;
 		}
 
-		NotePos GetLastPosition()
+		NotePos GetLastPosition() const
 		{
 			if (noteRows.size() == 0)
 				return NotePositions::Invalid;

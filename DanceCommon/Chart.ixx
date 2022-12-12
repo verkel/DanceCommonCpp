@@ -157,27 +157,27 @@ export namespace DanceCommon
 			noteData.SetNoteRow(pos, newRow, cleanupHolds);
 		}
 
-		TNoteRow GetNoteRow(NotePos pos)
+		TNoteRow GetNoteRow(NotePos pos) const
 		{
 			return noteData.GetNoteRow(pos);
 		}
 
-		bool Contains(NotePos pos)
+		bool Contains(NotePos pos) const
 		{
 			return noteData.Contains(pos);
 		}
 
-		NotePos NextPosition(NotePos pos)
+		NotePos NextPosition(NotePos pos) const
 		{
 			return noteData.NextPosition(pos);
 		}
 
-		NotePos PreviousPosition(NotePos pos)
+		NotePos PreviousPosition(NotePos pos) const
 		{
 			return noteData.PreviousPosition(pos);
 		}
 
-		NotePos GetLastPosition()
+		NotePos GetLastPosition() const
 		{
 			return noteData.GetLastPosition();
 		}

@@ -7,6 +7,7 @@ import <ostream>;
 import <sstream>;
 import State;
 import Chart;
+import NoteRowPossibleStates;
 using namespace DanceCommon;
 
 static const std::string Expected1 =
@@ -23,8 +24,10 @@ static std::vector<State> GetStatesForRow(std::string_view noteStr)
 	SinglesChart chart{};
 	NoteRow<NoteRowSize::Single> row{noteStr};
 	chart.SetNoteRow(0, row, true);
-	std::vector results{ State{} };
-	return results;
+	auto parent = std::make_shared<std::map<NotePos, NoteRowPossibleStates<NoteRowSize::Single>>>();
+	NoteRowPossibleStates<NoteRowSize::Single> states{0, -1, parent, chart, true};
+	states.InsertPossibleStates();
+	return std::vector(states.GetStates());
 }
 
 static std::string ToString(const std::vector<State>& states)
