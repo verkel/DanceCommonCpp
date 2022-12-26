@@ -54,4 +54,11 @@ export namespace DanceCommon
 			return !operator==(rhs);
 		}
 	};
+
+	export template<size_t rowSize>
+	class NoteRows
+	{
+		static inline const NoteRow<rowSize> Empty = {};
+	};
+
 }

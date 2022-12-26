@@ -1,5 +1,6 @@
 ﻿export module PadPanels;
 import <string_view>;
+import <initializer_list>;
 import NoteType;
 import PlayStyle;
 
@@ -13,6 +14,17 @@ export namespace DanceCommon
 		PadPanels() :
 			values {}
 		{ }
+
+		PadPanels(std::initializer_list<TValue> list) :
+			values {}
+		{
+			size_t i = 0;
+			for (auto value : list)
+			{
+				values[i] = value;
+				i++;
+			}
+		}
 
 		bool IsEmpty() const
 		{

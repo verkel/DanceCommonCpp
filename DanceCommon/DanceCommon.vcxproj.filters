@@ -98,5 +98,8 @@
     <ClCompile Include="MathUtils.ixx">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Limb.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

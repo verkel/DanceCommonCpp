@@ -14,9 +14,12 @@ namespace DanceCommon
 	export template<size_t rowSize>
 	class NoteRowPossibleStates
 	{
+		using TState = State<rowSize>;
+		using TStateLinks = StateLinks<rowSize>;
+
 	private:
-		std::vector<State> states;
-		std::unordered_map<State, StateLinks> statesToLinks;
+		std::vector<TState> states;
+		std::unordered_map<TState, TStateLinks> statesToLinks;
 		std::shared_ptr<std::map<NotePos, NoteRowPossibleStates>> parent;
 
 		NotePos previousPosition;
@@ -30,10 +33,17 @@ namespace DanceCommon
 
 		void InsertPossibleStates()
 		{
-			// TODO implement
+			if (previousPosition == -1)
+			{
+				//InsertPossibleStatesFor();
+			}
 		}
 
-		const std::vector<State>& GetStates() const
+		void InsertPossibleStatesFor(const TState& previousState, const TStateLinks& previousStateLinks)
+		{
+		}
+
+		const std::vector<TState>& GetStates() const
 		{
 			return states;
 		}

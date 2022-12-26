@@ -4,9 +4,10 @@ import State;
 
 export namespace DanceCommon
 {
-	export class StateLinks
+	export template<size_t rowSize>
+	class StateLinks
 	{
-		std::set<State> linksTo;
-		std::set<State> linksFrom;
+		std::set<State<rowSize>> linksTo;
+		std::set<State<rowSize>> linksFrom;
 	};
 }
