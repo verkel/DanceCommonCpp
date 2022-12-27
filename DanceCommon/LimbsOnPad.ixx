@@ -63,4 +63,11 @@ export namespace DanceCommon
 			return Panel::None;
 		}
 	};
+
+	export template<size_t rowSize>
+	class LimbsOnPads
+	{
+	public:
+		static inline const LimbsOnPad<rowSize> Empty{};
+	};
 }

@@ -80,6 +80,27 @@ namespace DanceCommon
 			return newState;
 		}
 
+		State Tap(const TNoteRow& noteRow, const TLimbsOnPad& limbsUsed) const
+		{
+			auto newState = *this;
+
+			auto noteRowTappables = noteRow.GetTappables();
+			auto noteRowHoldables = noteRow.GetHoldables();
+
+			//UpdateLastLeg(state, limbsUsed, noteRowTappables);
+			//CheckDoublesteps(state, limbsUsed, noteRowTappables);
+
+			//state.leftLegFreed = false;
+			//state.rightLegFreed = false;
+
+			//UpdateOccupiedPanels(state, limbsUsed);
+			//ReserveLimbs(state, limbsUsed, noteRowHoldables);
+			//ComputeMovedLegs(state);
+			//ComputeAngleDeltaAndSpin(state);
+
+			return newState;
+		}
+
 	private:
 		static void ReleaseHoldEnds(State& state, const TNoteRow& noteRow)
 		{

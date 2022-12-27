@@ -18,6 +18,8 @@ namespace DanceCommon
 		using TState = State<rowSize>;
 		using TStates = States<rowSize>;
 		using TStateLinks = StateLinks<rowSize>;
+		using TLimbsOnPad = LimbsOnPad<rowSize>;
+		using TLimbsOnPads = LimbsOnPads<rowSize>;
 		using TOptionalStateLinks = std::optional<std::reference_wrapper<TStateLinks>>;
 
 	private:
@@ -56,28 +58,40 @@ namespace DanceCommon
 			auto [tappables, tappablesCount] = noteRow.GetTappablesWithCount();
 
 			// TODO
-			/*if (tappablesCount == 0)
+			if (tappablesCount == 0)
 			{
-				tapAndInsertState(previousState, previousState.before(noteRow), previousStateLinks,
-					new LimbsOnPad(playStyle));
+				TapAndInsertState(previousState, previousState.Before(noteRow), previousStateLinks, TLimbsOnPads::Empty);
 			}
-			else */if (tappablesCount == 1)
+			else if (tappablesCount == 1)
 			{
-				insertSingleTapStates(previousState, previousStateLinks);
+				InsertSingleTapStates(previousState, previousStateLinks);
 			}
 			else if (tappablesCount > 1)
 			{
-				insertMultipleTapsStates(previousState, previousStateLinks);
+				InsertMultipleTapsStates(previousState, previousStateLinks);
 			}
 		}
 
-		void insertSingleTapStates(const TState& previousState, TOptionalStateLinks previousStateLinks)
+		void InsertSingleTapStates(const TState& previousState, TOptionalStateLinks previousStateLinks)
 		{
-			State beforeTapState = previousState.Before(noteRow);
+			TState beforeTapState = previousState.Before(noteRow);
 		}
 
-		void insertMultipleTapsStates(const TState& previousState, TOptionalStateLinks previousStateLinks)
+		void InsertMultipleTapsStates(const TState& previousState, TOptionalStateLinks previousStateLinks)
 		{
+		}
+
+		void TapAndInsertState(const TState& previousState, const TState& beforeTapState, TOptionalStateLinks previousStateLinks,
+			Panel panel, Limb limb)
+		{
+			TLimbsOnPad limbsUsed;
+			limbsUsed[panel] = limb;
+			TapAndInsertState(previousState, beforeTapState, previousStateLinks, limbsUsed);
+		}
+
+		void TapAndInsertState(const TState& previousState, const TState& beforeTapState, TOptionalStateLinks previousStateLinks, const TLimbsOnPad& limbsUsed)
+		{
+			TState state = beforeTapState.Tap(noteRow, limbsUsed);
 		}
 
 		const std::vector<TState>& GetStates() const

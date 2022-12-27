@@ -42,43 +42,22 @@ export namespace DanceCommon
 
 		Panel GetTappables() const
 		{
-			Panel result = Panel::None;
-			for (int i = 0; i < rowSize; i++)
-			{
-				if (NoteTypes::IsTappable(notes[i]))
-				{
-					result = result | Panels::ForIndex(i);
-				}
-			}
-			return result;
+			return GetPanelsWith(NoteTypes::Tappable);
 		}
 
 		std::tuple<Panel, int> GetTappablesWithCount() const
 		{
-			Panel result = Panel::None;
-			int count = 0;
-			for (int i = 0; i < rowSize; i++)
-			{
-				if (NoteTypes::IsTappable(notes[i]))
-				{
-					result = result | Panels::ForIndex(i);
-					count++;
-				}
-			}
-			return std::tuple{result, count};
+			return GetPanelsWithCount(NoteTypes::Tappable);
+		}
+
+		Panel GetHoldables() const
+		{
+			return GetPanelsWith(NoteTypes::Holdable);
 		}
 
 		Panel GetHoldEnds() const
 		{
-			Panel result = Panel::None;
-			for (int i = 0; i < rowSize; i++)
-			{
-				if (notes[i] == NoteType::HoldEnd)
-				{
-					result = result | Panels::ForIndex(i);
-				}
-			}
-			return result;
+			return GetPanelsWith(NoteType::HoldEnd);
 		}
 
 		template<typename TFunc>
@@ -92,20 +71,6 @@ export namespace DanceCommon
 		{
 			ForEachPanelWith(NoteType::Mine, f);
 		}
-
-		/*
-		auto GetHoldEndsRange() const
-		{
-			return notes
-				| std::views::filter([](const auto& nt) { return nt == NoteType::HoldEnd; });
-		}
-
-		auto GetMinesRange() const
-		{
-			return notes
-				| std::views::filter([](const auto& nt) { return nt == NoteType::Mine; });
-		}
-		*/
 
 		bool operator==(const NoteRow& rhs) const
 		{
@@ -134,6 +99,34 @@ export namespace DanceCommon
 					f(static_cast<Panel>(i));
 				}
 			}
+		}
+
+		Panel GetPanelsWith(NoteType typeMask) const
+		{
+			Panel result = Panel::None;
+			for (int i = 0; i < rowSize; i++)
+			{
+				if (NoteTypes::Is(notes[i], typeMask))
+				{
+					result = result | Panels::ForIndex(i);
+				}
+			}
+			return result;
+		}
+
+		std::tuple<Panel, int> GetPanelsWithCount(NoteType typeMask) const
+		{
+			Panel result = Panel::None;
+			int count = 0;
+			for (int i = 0; i < rowSize; i++)
+			{
+				if (NoteTypes::Is(notes[i], typeMask))
+				{
+					result = result | Panels::ForIndex(i);
+					count++;
+				}
+			}
+			return std::tuple{result, count};
 		}
 	};
 
