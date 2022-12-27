@@ -27,6 +27,7 @@ namespace DanceCommon
 		bool doublestep;
 		bool airDoublestep;
 		bool spin;
+
 	public:
 		//friend std::ostream& operator<<(std::ostream& os, const State<rowSize>& state);
 
@@ -84,24 +85,184 @@ namespace DanceCommon
 		{
 			auto newState = *this;
 
-			auto noteRowTappables = noteRow.GetTappables();
-			auto noteRowHoldables = noteRow.GetHoldables();
+			auto [tappables, tappablesCount] = noteRow.GetTappablesWithCount();
+			auto firstTappable = noteRow.GetFirstTappable();
+			//auto holdables = noteRow.GetHoldables();
 
-			//UpdateLastLeg(state, limbsUsed, noteRowTappables);
-			//CheckDoublesteps(state, limbsUsed, noteRowTappables);
+			UpdateLastLeg(newState, limbsUsed, tappablesCount, firstTappable);
+			CheckDoublesteps(newState, limbsUsed, noteRow, tappablesCount, firstTappable);
 
-			//state.leftLegFreed = false;
-			//state.rightLegFreed = false;
+			newState.leftLegFreed = false;
+			newState.rightLegFreed = false;
 
-			//UpdateOccupiedPanels(state, limbsUsed);
-			//ReserveLimbs(state, limbsUsed, noteRowHoldables);
-			//ComputeMovedLegs(state);
-			//ComputeAngleDeltaAndSpin(state);
+			UpdateOccupiedPanels(newState, limbsUsed);
+			ReserveLimbs(newState, limbsUsed, noteRow);
+			ComputeMovedLegs(newState);
+			ComputeAngleDeltaAndSpin(newState);
 
 			return newState;
 		}
-
+		
 	private:
+		static void UpdateLastLeg(State& state, const TLimbsOnPad& limbsUsed, int tappablesCount, Panel firstTappable)
+		{
+			if (tappablesCount > 0) state.lastLeg = Limb::None;
+
+			if (tappablesCount == 1 && state.GetNumberOfFreeLegs() > 0)
+			{
+				Limb limbAtTappable = limbsUsed[firstTappable];
+				if (Limbs::IsLeg(limbAtTappable))
+				{
+					state.lastLeg = limbAtTappable;
+				}
+			}
+		}
+
+		void CheckDoublesteps(State& state, const TLimbsOnPad& limbsUsed, const TNoteRow& noteRow, int tappablesCount, Panel firstTappable) const
+		{
+			state.doublestep = false;
+			state.airDoublestep = false;
+
+			if (state.GetNumberOfFreeLegs() == 2)
+			{
+				// Check if it's a normal doublestep
+				if (tappablesCount == 1)
+				{
+					if (this->lastLeg == state.lastLeg && IsDoublestepEnabled(state.lastLeg, state))
+					{
+						if (this->GetOccupyingPanel(this->lastLeg) != firstTappable)
+						{
+							state.doublestep = true;
+						}
+					}
+				}
+
+				// Check if it's an "air doublestep"
+				else if (tappablesCount > 1)
+				{
+					noteRow.ForEachTappable([&](Panel panel)
+					{
+						const Limb occupyingLimb = this->occupiedPanels[panel];
+						if (Limbs::IsLeg(occupyingLimb))
+						{
+							const Limb limbToUse = limbsUsed[panel];
+							if (occupyingLimb != limbToUse)
+							{
+								state.airDoublestep = true;
+							}
+						}
+					});
+				}
+			}
+		}
+
+		static void UpdateOccupiedPanels(State& state, const TLimbsOnPad& limbsUsed)
+		{
+			// Remove all limbs from their old positions
+			for (int i = TLimbsOnPad::First(); i < TLimbsOnPad::End(); i++)
+			{
+				Limb usedLimb = limbsUsed[i];
+				if (usedLimb == Limb::None) continue;
+
+				state.occupiedPanels.RemoveLimb(usedLimb);
+			}
+
+			// Put the limbs back into their new positions
+			for (int i = TLimbsOnPad::First(); i < TLimbsOnPad::End(); i++)
+			{
+				Limb usedLimb = limbsUsed[i];
+				if (usedLimb == Limb::None) continue;
+
+				state.occupiedPanels.PlaceLimb(Panels::ForIndex(i), usedLimb);
+			}
+		}
+
+		static void ReserveLimbs(State& state, const TLimbsOnPad& limbsUsed, const TNoteRow& noteRow)
+		{
+			noteRow.ForEachHoldable([&](Panel panel)
+			{
+				Limb limbAtHoldable = limbsUsed[panel];
+				if (limbAtHoldable != Limb::None)
+				{
+					state.ReserveLimb(limbAtHoldable);
+				}
+			});
+		}
+
+		void ComputeMovedLegs(State& state) const
+		{
+			state.movedLegsAmount = 0;
+			for (int i = state.occupiedPanels.First(); i < state.occupiedPanels.End(); i++)
+			{
+				Limb limb = state.occupiedPanels[i];
+				if (!Limbs::IsLeg(limb)) continue;
+				if (limb != this->occupiedPanels[i]) state.movedLegsAmount++;
+			}
+		}
+
+		void ComputeAngleDeltaAndSpin(State& state) const
+		{
+			int previousAngle = this->GetAngle();
+			int angle = state.GetAngle();
+
+			int angleDelta = angle - previousAngle;
+			int properAngleDelta = angleDelta + ((angleDelta > 180) ? -360 : (angleDelta < -180) ? 360 : 0);
+
+			state.angleDelta = properAngleDelta;
+
+			// Determine if a spin
+			// Cases around 180 need to be handled specifically
+			if (angle == 180) state.spin = false; // Not a spin (at least yet)
+			else if (previousAngle == 180) // Is a spin if we don't back out
+			{
+				int previousAngleDelta = this->GetAngleDelta();
+				if (previousAngleDelta > 0 && properAngleDelta > 0) state.spin = true;
+				else if (previousAngleDelta < 0 && properAngleDelta < 0) state.spin = true;
+				else state.spin = false;
+			}
+			// It's a spin if the angleDelta needed fixing
+			else state.spin = (angleDelta != properAngleDelta);
+		}
+
+		int GetNumberOfFreeLegs() const
+		{
+			int amount = 0;
+			if (Limbs::Contains(freeLimbs, Limb::LeftLeg)) amount++;
+			if (Limbs::Contains(freeLimbs, Limb::RightLeg)) amount++;
+			return amount;
+		}
+
+		Panel GetOccupyingPanel(Limb limb) const
+		{
+			return occupiedPanels.GetOccupyingPanel(limb);
+		}
+
+		int GetAngle() const
+		{
+			Panel leftLegPanel = GetOccupyingPanel(Limb::LeftLeg);
+			Panel rightLegPanel = GetOccupyingPanel(Limb::RightLeg);
+
+			//FeetPlacement2 placement = FeetPlacement2.get(leftLegPanel, rightLegPanel);
+			//return placement.getAngle();
+
+			throw std::exception("not implemented"); // TODO implement
+		}
+
+		int GetAngleDelta() const
+		{
+			return angleDelta;
+		}
+
+		static bool IsDoublestepEnabled(Limb doublestepLeg, State state)
+		{
+			switch (doublestepLeg)
+			{
+				case Limb::LeftLeg: return !state.rightLegFreed;
+				case Limb::RightLeg: return !state.leftLegFreed;
+				default: throw std::invalid_argument("doublestepLeg");
+			}
+		}
+
 		static void ReleaseHoldEnds(State& state, const TNoteRow& noteRow)
 		{
 			state.leftLegFreed = false;

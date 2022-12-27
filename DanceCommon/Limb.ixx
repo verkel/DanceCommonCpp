@@ -43,8 +43,8 @@ namespace DanceCommon
 			return limb == Limb::LeftHand || limb == Limb::RightHand;
 		}
 
-		static bool Contains(Limb limbAsMask, Limb limbToTest) {
-			return (limbAsMask & limbToTest) == limbToTest;
+		static bool Contains(Limb limbAsMask, Limb limb) {
+			return (limbAsMask & limb) == limb;
 		}
 
 		static Limb WithAdded(Limb limbAsMask, Limb limb)

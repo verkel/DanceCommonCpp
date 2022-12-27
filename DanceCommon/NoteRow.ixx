@@ -50,6 +50,11 @@ export namespace DanceCommon
 			return GetPanelsWithCount(NoteTypes::Tappable);
 		}
 
+		Panel GetFirstTappable() const
+		{
+			return GetFirstPanelWith(NoteTypes::Tappable);
+		}
+
 		Panel GetHoldables() const
 		{
 			return GetPanelsWith(NoteTypes::Holdable);
@@ -58,6 +63,18 @@ export namespace DanceCommon
 		Panel GetHoldEnds() const
 		{
 			return GetPanelsWith(NoteType::HoldEnd);
+		}
+
+		template<typename TFunc>
+		void ForEachTappable(TFunc f) const
+		{
+			ForEachPanelWith(NoteTypes::Tappable, f);
+		}
+
+		template<typename TFunc>
+		void ForEachHoldable(TFunc f) const
+		{
+			ForEachPanelWith(NoteTypes::Holdable, f);
 		}
 
 		template<typename TFunc>
@@ -127,6 +144,18 @@ export namespace DanceCommon
 				}
 			}
 			return std::tuple{result, count};
+		}
+
+		Panel GetFirstPanelWith(NoteType typeMask) const
+		{
+			for (int i = 0; i < rowSize; i++)
+			{
+				if (NoteTypes::Is(notes[i], typeMask))
+				{
+					return Panels::ForIndex(i);
+				}
+			}
+			return Panel::None;
 		}
 	};
 

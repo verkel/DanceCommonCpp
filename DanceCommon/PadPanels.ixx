@@ -65,6 +65,16 @@ export namespace DanceCommon
 			return values[index + GetIndexOffset()];
 		}
 
+		const TValue& operator[](Panel panel) const
+		{
+			return (*this)[Panels::Index(panel)];
+		}
+
+		const TValue& operator[](int index) const
+		{
+			return values[index + GetIndexOffset()];
+		}
+
 		friend bool operator==(const PadPanels& lhs, const PadPanels& rhs)
 		{
 			for (size_t i = 0; i < rowSize; i++)

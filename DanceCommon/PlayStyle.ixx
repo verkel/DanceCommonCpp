@@ -47,11 +47,11 @@ export namespace DanceCommon
 			throw std::range_error("style");
 		}
 
-		static int ButtonCount(PlayStyle style) {
+		static constexpr int ButtonCount(PlayStyle style) {
 			return CenterPanelCount(style) * 4;
 		}
 
-		static int PanelCount(PlayStyle style)
+		static constexpr int PanelCount(PlayStyle style)
 		{
 			return CenterPanelCount(style) + ButtonCount(style);
 		}

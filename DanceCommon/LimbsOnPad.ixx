@@ -52,7 +52,7 @@ export namespace DanceCommon
 			}
 		}
 
-		Panel GetOccupyingPanel(Limb limb)
+		Panel GetOccupyingPanel(Limb limb) const
 		{
 			for (int i = TPadPanels::First(); i < TPadPanels::End(); i++)
 			{
