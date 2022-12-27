@@ -24,6 +24,11 @@ export namespace DanceCommon
 		Right2 = 1 << 10
 	};
 
+	inline Panel operator|(Panel a, Panel b)
+	{
+	    return static_cast<Panel>(static_cast<int>(a) | static_cast<int>(b));
+	}
+
 	export class Panels
 	{
 	public:
@@ -151,7 +156,7 @@ export namespace DanceCommon
 		 */
 		static int CountElements(Panel panel)
 		{
-			return MathUtils::BitCount((int)panel);
+			return MathUtils::BitCount(static_cast<int>(panel));
 		}
 
 		/**

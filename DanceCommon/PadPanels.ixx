@@ -3,14 +3,22 @@ import <string_view>;
 import <initializer_list>;
 import NoteType;
 import PlayStyle;
+import Panel;
 
 export namespace DanceCommon
 {
 	export template<typename TValue, size_t rowSize>
-	struct PadPanels
+	class PadPanels
 	{
-		TValue values[rowSize];
+	private:
+		static constexpr int GetIndexOffset()
+		{
+			return PlayStyles::CenterPanelCount(PlayStyles::GetStyle(rowSize));
+		}
 
+		TValue values[rowSize + GetIndexOffset()];
+
+	public:
 		PadPanels() :
 			values {}
 		{ }
@@ -37,51 +45,40 @@ export namespace DanceCommon
 			return true;
 		}
 
-		TValue operator[](size_t i)
+		static constexpr int First()
 		{
-		   return values[i];
+			return 0 - GetIndexOffset();
 		}
 
-		/*
-		NoteRow(const std::string_view& lineView)
+		static constexpr int End()
+		{
+			return PlayStyles::ButtonCount(PlayStyles::GetStyle(rowSize));
+		}
+
+		TValue& operator[](Panel panel)
+		{
+			return (*this)[Panels::Index(panel)];
+		}
+
+		TValue& operator[](int index)
+		{
+			return values[index + GetIndexOffset()];
+		}
+
+		friend bool operator==(const PadPanels& lhs, const PadPanels& rhs)
 		{
 			for (size_t i = 0; i < rowSize; i++)
 			{
-				notes[i] = NoteTypes::Get(lineView[i]);
-			}
-		}
-
-		inline NoteType GetNote(size_t i) const
-		{
-			return notes[i];
-		}
-
-		bool IsEmpty() const
-		{
-			for (size_t i = 0; i < rowSize; i++)
-			{
-				if (notes[i] != NoteType::Empty)
+				if (lhs.values[i] != rhs.values[i])
 					return false;
 			}
 
 			return true;
 		}
 
-		bool operator==(const NoteRow& rhs) const
+		friend bool operator!=(const PadPanels& lhs, const PadPanels& rhs)
 		{
-			for (size_t i = 0; i < rowSize; i++)
-			{
-				if (notes[i] != rhs.notes[i])
-					return false;
-			}
-
-			return true;
+			return !(lhs == rhs);
 		}
-
-		bool operator!=(const NoteRow& rhs) const
-		{
-			return !operator==(rhs);
-		}
-		*/
 	};
 }

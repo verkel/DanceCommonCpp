@@ -3,6 +3,7 @@ import <vector>;
 import <map>;
 import <unordered_map>;
 import <memory>;
+import <optional>;
 import State;
 import StateLinks;
 import NotePos;
@@ -15,7 +16,9 @@ namespace DanceCommon
 	class NoteRowPossibleStates
 	{
 		using TState = State<rowSize>;
+		using TStates = States<rowSize>;
 		using TStateLinks = StateLinks<rowSize>;
+		using TOptionalStateLinks = std::optional<std::reference_wrapper<TStateLinks>>;
 
 	private:
 		std::vector<TState> states;
@@ -35,17 +38,56 @@ namespace DanceCommon
 		{
 			if (previousPosition == -1)
 			{
-				//InsertPossibleStatesFor();
+				InsertPossibleStatesFor(States<rowSize>::GetEmpty(), std::nullopt);
+			}
+			else
+			{
+				NoteRowPossibleStates& previousStates = parent->at(previousPosition);
+				for (auto& previousState : previousStates.GetStates())
+				{
+					auto previousStateLinks = previousStates.GetStateLinks(previousState);
+					InsertPossibleStatesFor(previousState, previousStateLinks);
+				}
 			}
 		}
 
-		void InsertPossibleStatesFor(const TState& previousState, const TStateLinks& previousStateLinks)
+		void InsertPossibleStatesFor(const TState& previousState, TOptionalStateLinks previousStateLinks)
+		{
+			auto [tappables, tappablesCount] = noteRow.GetTappablesWithCount();
+
+			// TODO
+			/*if (tappablesCount == 0)
+			{
+				tapAndInsertState(previousState, previousState.before(noteRow), previousStateLinks,
+					new LimbsOnPad(playStyle));
+			}
+			else */if (tappablesCount == 1)
+			{
+				insertSingleTapStates(previousState, previousStateLinks);
+			}
+			else if (tappablesCount > 1)
+			{
+				insertMultipleTapsStates(previousState, previousStateLinks);
+			}
+		}
+
+		void insertSingleTapStates(const TState& previousState, TOptionalStateLinks previousStateLinks)
+		{
+			State beforeTapState = previousState.Before(noteRow);
+		}
+
+		void insertMultipleTapsStates(const TState& previousState, TOptionalStateLinks previousStateLinks)
 		{
 		}
 
 		const std::vector<TState>& GetStates() const
 		{
 			return states;
+		}
+
+		const TStateLinks& GetStateLinks(const TState& state)
+		{
+			return statesToLinks.at(state);
 		}
 	};
 

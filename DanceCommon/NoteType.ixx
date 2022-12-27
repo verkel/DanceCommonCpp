@@ -7,18 +7,37 @@ export namespace DanceCommon
 {
 	export enum class NoteType : unsigned char
 	{
-		Empty,
-		Tap,
-		HoldStart,
-		HoldEnd,
-		RollStart,
-		Mine,
-		VirtualTap
+		Empty = 0,
+		Tap = 1 << 0,
+		HoldStart = 2 << 0,
+		HoldEnd = 3 << 0,
+		RollStart = 4 << 0,
+		Mine = 5 << 0,
+		VirtualTap = 6 << 0
 	};
+
+	inline NoteType operator|(NoteType a, NoteType b)
+	{
+	    return static_cast<NoteType>(static_cast<int>(a) | static_cast<int>(b));
+	}
+
+	inline NoteType operator&(NoteType a, NoteType b)
+	{
+	    return static_cast<NoteType>(static_cast<int>(a) & static_cast<int>(b));
+	}
+
+	inline NoteType operator~(NoteType a)
+	{
+	    return static_cast<NoteType>(~static_cast<int>(a));
+	}
 
 	export class NoteTypes
 	{
 	public:
+		static inline const NoteType Holdable = NoteType::HoldStart | NoteType::RollStart;
+		static inline const NoteType Tap = NoteType::Tap | NoteType::VirtualTap;
+		static inline const NoteType Tappable = Tap | Holdable;
+
 		static NoteType Get(char c)
 		{
 			switch (c)
@@ -40,6 +59,23 @@ export namespace DanceCommon
 			}
 
 			throw ParseException(std::format("Unknown note type: {}", c));
+		}
+
+		static bool IsTappable(NoteType nt) {
+			return IsTap(nt) || IsHoldable(nt);
+		}
+
+		static bool IsHoldable(NoteType nt) {
+			return nt == NoteType::HoldStart || nt == NoteType::RollStart;
+		}
+
+		static bool IsTap(NoteType nt)
+		{
+			return nt == NoteType::Tap || nt == NoteType::VirtualTap;
+		}
+
+		static bool Is(NoteType type, NoteType typeMask) {
+			return (typeMask & type) == type;
 		}
 	};
 }
