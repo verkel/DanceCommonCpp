@@ -102,7 +102,48 @@ namespace DanceCommon
 
 			return newState;
 		}
+
+		const TLimbsOnPad& GetOccupiedPanels() const
+		{
+			return occupiedPanels;
+		}
+
+		bool IsFree(Limb limb) const
+		{
+			return Limbs::Contains(freeLimbs, limb);
+		}
 		
+		Limb GetNextFreeLeg() const
+		{
+			Limb leg = Limbs::GetPair(lastLeg);
+			if (leg == Limb::None) return Limb::None;
+
+			if (IsFree(leg)) return leg;
+
+			Limb pair = Limbs::GetPair(leg);
+			if (IsFree(pair)) return pair;
+
+			return Limb::None;
+		}
+		
+		Panel GetOccupyingPanel(Limb limb) const
+		{
+			return occupiedPanels.GetOccupyingPanel(limb);
+		}
+
+		Limb GetFreeLimbs() const
+		{
+			return freeLimbs;
+		}
+		
+		int GetNumberOfFreeLegs() const
+		{
+			int amount = 0;
+			if (Limbs::Contains(freeLimbs, Limb::LeftLeg)) amount++;
+			if (Limbs::Contains(freeLimbs, Limb::RightLeg)) amount++;
+			return amount;
+		}
+
 	private:
 		static void UpdateLastLeg(State& state, const TLimbsOnPad& limbsUsed, int tappablesCount, Panel firstTappable)
 		{
@@ -224,19 +265,6 @@ namespace DanceCommon
 			else state.spin = (angleDelta != properAngleDelta);
 		}
 
-		int GetNumberOfFreeLegs() const
-		{
-			int amount = 0;
-			if (Limbs::Contains(freeLimbs, Limb::LeftLeg)) amount++;
-			if (Limbs::Contains(freeLimbs, Limb::RightLeg)) amount++;
-			return amount;
-		}
-
-		Panel GetOccupyingPanel(Limb limb) const
-		{
-			return occupiedPanels.GetOccupyingPanel(limb);
-		}
-
 		int GetAngle() const
 		{
 			Panel leftLegPanel = GetOccupyingPanel(Limb::LeftLeg);
@@ -308,11 +336,6 @@ namespace DanceCommon
 					if (state.lastLeg == limbAtMine) state.lastLeg = Limb::None;
 				}
 			});
-		}
-
-		bool IsFree(Limb limb) const
-		{
-			return Limbs::Contains(freeLimbs, limb);
 		}
 
 		void ReserveLimb(Limb limb)

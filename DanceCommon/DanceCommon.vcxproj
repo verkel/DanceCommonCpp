@@ -162,8 +162,11 @@
   <ItemGroup>
     <ClCompile Include="Chart.ixx" />
     <ClCompile Include="ChartInfo.ixx" />
+    <ClCompile Include="Computations.ixx" />
     <ClCompile Include="DanceCommon.cpp" />
     <ClCompile Include="Difficulty.ixx" />
+    <ClCompile Include="FacingType.ixx" />
+    <ClCompile Include="FeetPlacement.ixx" />
     <ClCompile Include="Limb.ixx" />
     <ClCompile Include="LimbsOnPad.ixx" />
     <ClCompile Include="MathUtils.ixx" />

@@ -9,6 +9,8 @@ import StateLinks;
 import NotePos;
 import NoteRow;
 import Chart;
+import Computations;
+import FeetPlacement;
 
 namespace DanceCommon
 {
@@ -75,10 +77,125 @@ namespace DanceCommon
 		void InsertSingleTapStates(const std::shared_ptr<TState> previousState, TOptionalStateLinks previousStateLinks)
 		{
 			TState beforeTapState = previousState->Before(noteRow);
+
+			auto panel = noteRow.GetFirstTappable();
+
+			// If there already is a limb on that panel, use it.
+			auto occupyingLimb = beforeTapState.GetOccupiedPanels()[panel];
+			if (occupyingLimb != Limb::None)
+			{
+				TapAndInsertState(previousState, beforeTapState, previousStateLinks, panel, occupyingLimb);
+				return;
+			}
+
+			// Disallow doublesteps -- force alternate stepping
+			if (!allowDoublesteps)
+			{
+				Limb nextLeg = beforeTapState.GetNextFreeLeg();
+
+				// If there's no next free leg, try proposing both legs if they're free
+				if (nextLeg == Limb::None)
+				{
+					bool done = false;
+					if (beforeTapState.IsFree(Limb::LeftLeg))
+					{
+						TapAndInsertState(previousState, beforeTapState, previousStateLinks, panel, Limb::LeftLeg);
+						done = true;
+					}
+
+					if (beforeTapState.IsFree(Limb::RightLeg))
+					{
+						TapAndInsertState(previousState, beforeTapState, previousStateLinks, panel, Limb::RightLeg);
+						done = true;
+					}
+
+					if (done) return;
+					// continue if neither legs were free
+				}
+
+				// If there is a next free leg, use only that
+				else
+				{
+					TapAndInsertState(previousState, beforeTapState, previousStateLinks, panel, nextLeg);
+					return;
+				}
+			}
+			// Allow doublesteps
+			else
+			{
+				if (beforeTapState.IsFree(Limb::LeftLeg))
+					TapAndInsertState(previousState, beforeTapState, previousStateLinks, panel, Limb::LeftLeg);
+				if (beforeTapState.IsFree(Limb::RightLeg))
+					TapAndInsertState(previousState, beforeTapState, previousStateLinks, panel, Limb::RightLeg);
+				if (beforeTapState.IsFree(Limb::LeftLeg) || beforeTapState.IsFree(Limb::RightLeg))
+					return;
+			}
+
+			// Pick a hand depending on foot placement
+			// If the preferred hand is reserved, use the another one
+			Panel leftLegPanel = beforeTapState.GetOccupyingPanel(Limb::LeftLeg);
+			Panel rightLegPanel = beforeTapState.GetOccupyingPanel(Limb::RightLeg);
+			FeetPlacement placement = Computations::GetInstance().feetPlacements.Get(leftLegPanel, rightLegPanel);
+			Limb hand;
+			if (placement.GetLeftHandPanel() == panel) hand = Limb::LeftHand;
+			else hand = Limb::RightHand;
+			if (!beforeTapState.IsFree(hand)) hand = Limbs::GetPair(hand);
+			TapAndInsertState(previousState, beforeTapState, previousStateLinks, panel, hand);
 		}
 
 		void InsertMultipleTapsStates(const std::shared_ptr<TState> previousState, TOptionalStateLinks previousStateLinks)
 		{
+			TState beforeTapState = previousState->Before(noteRow);
+			auto freeLimbs = beforeTapState.GetFreeLimbs();
+			int freeLegsAmount = beforeTapState.GetNumberOfFreeLegs();
+
+			/*
+			 * Create different placements for legs we have and then augment the
+			 * placements with hands according to the FeetPlacement class.
+			 */
+
+			// There's at least one free leg...
+			if (freeLegsAmount >= 1)
+			{
+				// ... so put it everywhere it can go
+				noteRow.ForEachTappable([&](Panel tapPanel1)
+				{
+					// There's another free leg
+					if (freeLegsAmount == 2)
+					{
+						// ... so put it in the remaining places
+						noteRow.ForEachTappable([&](Panel tapPanel2)
+						{
+							if (tapPanel1 != tapPanel2)
+							{
+								// Do this for every formed limbsUsed (2 legged)
+								FillHandsAndInsert(tapPanel1, tapPanel2, freeLimbs, 2, previousState, beforeTapState,
+									previousStateLinks);
+							}
+						});
+					}
+					// There was only one free leg
+					else
+					{
+						// Do this for every formed limbsUsed (1 legged)
+						FillHandsAndInsert(tapPanel1, Panel::None, freeLimbs, 1, previousState, beforeTapState,
+							previousStateLinks);
+					}
+				});
+			}
+			// Seems that all legs are reserved
+			else
+			{
+				// Do this for empty limbsUsed
+				FillHandsAndInsert(Panel::None, Panel::None, freeLimbs, 0, previousState, beforeTapState,
+					previousStateLinks);
+			}
+		}
+
+		void FillHandsAndInsert(Panel tapPanel1, Panel tapPanel2, Limb/*bitmask*/ freeLimbs,
+			int handsOffset, const std::shared_ptr<TState> previousState, const TState& beforeTapState, TOptionalStateLinks previousStateLinks)
+		{
+			// TODO implement
 		}
 
 		void TapAndInsertState(const std::shared_ptr<TState> previousState, const TState& beforeTapState, TOptionalStateLinks previousStateLinks,

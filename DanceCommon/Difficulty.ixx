@@ -21,9 +21,9 @@ export namespace DanceCommon
 	export class Difficulties
 	{
 	private:
-		inline static const std::string DifficultyAnyName = "Any";
+		inline static constexpr std::string_view DifficultyAnyName = "Any";
 
-		static constexpr std::array NamesByDifficulty
+		static constexpr std::array<std::string_view, 6> NamesByDifficulty
 		{
 			"Novice",
 			"Easy",
@@ -33,7 +33,7 @@ export namespace DanceCommon
 			"Edit"
 		};
 
-		static constexpr std::array FormatStringsByDifficulty
+		static constexpr std::array<std::string_view, 6> FormatStringsByDifficulty
 		{
 			"Beginner",
 			"Easy",
@@ -44,34 +44,34 @@ export namespace DanceCommon
 		};
 
 	public:
-		static Difficulty FromFormatString(const std::string_view& sv)
+		static constexpr Difficulty FromFormatString(std::string_view sv)
 		{
-			if (sv == FormatStringsByDifficulty[(int)Difficulty::Novice])
+			if (sv == FormatStringsByDifficulty[static_cast<int>(Difficulty::Novice)])
 				return Difficulty::Novice;
-			if (sv == FormatStringsByDifficulty[(int)Difficulty::Easy])
+			if (sv == FormatStringsByDifficulty[static_cast<int>(Difficulty::Easy)])
 				return Difficulty::Easy;
-			if (sv == FormatStringsByDifficulty[(int)Difficulty::Medium])
+			if (sv == FormatStringsByDifficulty[static_cast<int>(Difficulty::Medium)])
 				return Difficulty::Medium;
-			if (sv == FormatStringsByDifficulty[(int)Difficulty::Hard])
+			if (sv == FormatStringsByDifficulty[static_cast<int>(Difficulty::Hard)])
 				return Difficulty::Hard;
-			if (sv == FormatStringsByDifficulty[(int)Difficulty::Expert])
+			if (sv == FormatStringsByDifficulty[static_cast<int>(Difficulty::Expert)])
 				return Difficulty::Expert;
-			if (sv == FormatStringsByDifficulty[(int)Difficulty::Edit])
+			if (sv == FormatStringsByDifficulty[static_cast<int>(Difficulty::Edit)])
 				return Difficulty::Edit;
 
 			throw ParseException(std::format("Unknown difficulty: {}", std::string(sv)));
 		}
 
-		static const std::string GetName(Difficulty difficulty)
+		static constexpr std::string_view GetName(Difficulty difficulty)
 		{
-			return NamesByDifficulty[(int)difficulty];
+			return NamesByDifficulty[static_cast<int>(difficulty)];
 		}
 
-		static const std::string GetName(std::optional<Difficulty> difficulty)
+		static constexpr std::string_view GetName(std::optional<Difficulty> difficulty)
 		{
 			if (difficulty)
 			{
-				return NamesByDifficulty[(int)difficulty.value()];
+				return NamesByDifficulty[static_cast<int>(difficulty.value())];
 			}
 
 			return DifficultyAnyName;

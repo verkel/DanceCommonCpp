@@ -8,12 +8,12 @@ export namespace DanceCommon
 	export enum class NoteType : unsigned char
 	{
 		Empty = 0,
-		Tap = 1 << 0,
-		HoldStart = 2 << 0,
-		HoldEnd = 3 << 0,
-		RollStart = 4 << 0,
-		Mine = 5 << 0,
-		VirtualTap = 6 << 0
+		Tap = 1 << 1,
+		HoldStart = 1 << 2,
+		HoldEnd = 1 << 3,
+		RollStart = 1 << 4,
+		Mine = 1 << 5,
+		VirtualTap = 1 << 6
 	};
 
 	inline NoteType operator|(NoteType a, NoteType b)
@@ -74,8 +74,9 @@ export namespace DanceCommon
 			return nt == NoteType::Tap || nt == NoteType::VirtualTap;
 		}
 
-		static bool Is(NoteType type, NoteType typeMask) {
-			return (typeMask & type) == type;
+		static bool Is(NoteType type, NoteType typeMask)
+		{
+			return (typeMask & type) != NoteType::Empty;
 		}
 	};
 }

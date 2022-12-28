@@ -101,5 +101,14 @@
     <ClCompile Include="Limb.ixx">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="FeetPlacement.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FacingType.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Computations.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
