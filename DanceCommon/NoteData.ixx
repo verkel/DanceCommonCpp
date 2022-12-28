@@ -78,7 +78,7 @@ export namespace DanceCommon
 			}
 			else
 			{
-				while (GetNoteRow(pos).GetNote(skipEmptyPanel) == NoteType::Empty && pos > lowerBound)
+				while (GetNoteRow(pos)[skipEmptyPanel] == NoteType::Empty && pos > lowerBound)
 				{
 					pos--;
 				}

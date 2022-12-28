@@ -1,6 +1,7 @@
 ﻿export module Computations;
 
 import FeetPlacement;
+import Panel;
 
 namespace DanceCommon
 {
@@ -17,6 +18,11 @@ namespace DanceCommon
 
 		Computations(Computations const&) = delete;
 		void operator=(Computations const&) = delete;
+
+		static const FeetPlacement& GetFeetPlacement(Panel leftLegPanel, Panel rightLegPanel)
+		{
+			return GetInstance().feetPlacements.Get(leftLegPanel, rightLegPanel);
+		}
 
 	private:
 		Computations() :

@@ -79,7 +79,7 @@ namespace DanceCommon
 					leftHandPanel = panel;
 					break;
 				case Limb::RightHand:
-					rightLegPanel = panel;
+					rightHandPanel = panel;
 					break;
 				default:;
 			}
@@ -302,6 +302,8 @@ namespace DanceCommon
 				}
 			}
 
+			//return byLeftLegAndRightLeg[leftLegPanel][rightLegPanel];
+
 			return Get(Panel::Left, Panel::Right);
 		}
 
@@ -309,12 +311,8 @@ namespace DanceCommon
 		{
 			for (auto placement : Values)
 			{
-				if (!byLeftLegAndRightLeg.contains(placement.GetLeftLegPanel()))
-				{
-					byLeftLegAndRightLeg[placement.GetLeftLegPanel()] = std::unordered_map<Panel, FeetPlacement>{};
-				}
-				auto& byRightLeg = byLeftLegAndRightLeg.at(placement.GetLeftLegPanel());
-				byRightLeg[placement.GetRightLegPanel()] = placement;
+				// [] will insert the default value if it doesn't exist
+				byLeftLegAndRightLeg[placement.GetLeftLegPanel()][placement.GetRightLegPanel()] = placement;
 			}
 		}
 

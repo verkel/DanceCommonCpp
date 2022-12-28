@@ -59,7 +59,7 @@ namespace DanceCommon
 
 		static Limb FilterLegs(Limb limbAsMask)
 		{
-			return limbAsMask & (Limb::LeftLeg | Limb::RightLeg);
+			return limbAsMask & BothLegs;
 		}
 
 		static Limb GetPair(Limb limb)

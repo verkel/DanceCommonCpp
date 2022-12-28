@@ -24,9 +24,19 @@ export namespace DanceCommon
 			}
 		}
 
-		NoteType GetNote(size_t i) const
+		NoteType operator[](Panel panel) const
 		{
-			return notes[i];
+			return (*this)[Panels::Index(panel)];
+		}
+
+		NoteType operator[](int index) const
+		{
+			return notes[index];
+		}
+		
+		NoteType operator[](size_t index) const
+		{
+			return notes[index];
 		}
 
 		bool IsEmpty() const
@@ -113,7 +123,7 @@ export namespace DanceCommon
 			{
 				if (NoteTypes::Is(notes[i], typeMask))
 				{
-					f(static_cast<Panel>(i));
+					f(Panels::ForIndex(i));
 				}
 			}
 		}

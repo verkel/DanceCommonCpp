@@ -5,6 +5,8 @@ import Limb;
 import PlayStyle;
 import NoteRow;
 import Panel;
+import FeetPlacement;
+import Computations;
 import <ostream>;
 import <stdexcept>;
 
@@ -270,10 +272,8 @@ namespace DanceCommon
 			Panel leftLegPanel = GetOccupyingPanel(Limb::LeftLeg);
 			Panel rightLegPanel = GetOccupyingPanel(Limb::RightLeg);
 
-			//FeetPlacement2 placement = FeetPlacement2.get(leftLegPanel, rightLegPanel);
-			//return placement.getAngle();
-
-			throw std::exception("not implemented"); // TODO implement
+			FeetPlacement placement = Computations::GetFeetPlacement(leftLegPanel, rightLegPanel);
+			return placement.GetAngle();
 		}
 
 		int GetAngleDelta() const

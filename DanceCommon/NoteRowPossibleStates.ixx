@@ -8,6 +8,7 @@ import State;
 import StateLinks;
 import NotePos;
 import NoteRow;
+import NoteType;
 import Chart;
 import Computations;
 import FeetPlacement;
@@ -135,7 +136,7 @@ namespace DanceCommon
 			// If the preferred hand is reserved, use the another one
 			Panel leftLegPanel = beforeTapState.GetOccupyingPanel(Limb::LeftLeg);
 			Panel rightLegPanel = beforeTapState.GetOccupyingPanel(Limb::RightLeg);
-			FeetPlacement placement = Computations::GetInstance().feetPlacements.Get(leftLegPanel, rightLegPanel);
+			FeetPlacement placement = Computations::GetFeetPlacement(leftLegPanel, rightLegPanel);
 			Limb hand;
 			if (placement.GetLeftHandPanel() == panel) hand = Limb::LeftHand;
 			else hand = Limb::RightHand;
@@ -195,7 +196,79 @@ namespace DanceCommon
 		void FillHandsAndInsert(Panel tapPanel1, Panel tapPanel2, Limb/*bitmask*/ freeLimbs,
 			int handsOffset, const std::shared_ptr<TState> previousState, const TState& beforeTapState, TOptionalStateLinks previousStateLinks)
 		{
-			// TODO implement
+			TLimbsOnPad limbsUsed;
+
+			auto leftLegPanel = Panel::None, rightLegPanel = Panel::None;
+
+			// Find out where the legs are
+			if (handsOffset == 2)
+			{
+				// Two legs were placed
+				limbsUsed[tapPanel1] = Limb::LeftLeg;
+				limbsUsed[tapPanel2] = Limb::RightLeg;
+				leftLegPanel = tapPanel1;
+				rightLegPanel = tapPanel2;
+			}
+			else if (handsOffset == 1)
+			{
+				// One leg was placed
+				auto leg = Limbs::FilterLegs(freeLimbs);
+				limbsUsed[tapPanel1] = leg;
+
+				if (leg == Limb::LeftLeg)
+				{
+					leftLegPanel = tapPanel1;
+					rightLegPanel = beforeTapState.GetOccupyingPanel(Limb::RightLeg);
+				}
+				else
+				{
+					leftLegPanel = beforeTapState.GetOccupyingPanel(Limb::LeftLeg);
+					rightLegPanel = tapPanel1;
+				}
+			}
+			else
+			{
+				// No legs were placed
+				leftLegPanel = beforeTapState.GetOccupyingPanel(Limb::LeftLeg);
+				rightLegPanel = beforeTapState.GetOccupyingPanel(Limb::RightLeg);
+			}
+
+			// At this point, both legs are placed or reserved. Now let's place hands.
+			// This FeetPlacement will tell how the hands should be placed...
+			FeetPlacement placement = Computations::GetFeetPlacement(leftLegPanel, rightLegPanel);
+			Panel leftHandPanel = placement.GetLeftHandPanel();
+			Panel rightHandPanel = placement.GetRightHandPanel();
+
+			if (Limbs::Contains(freeLimbs, Limb::LeftHand))
+			{
+				if (NoteTypes::IsTappable(noteRow[leftHandPanel]) && beforeTapState.IsFree(Limb::LeftHand))
+				{
+					if (limbsUsed[leftHandPanel] == Limb::None) limbsUsed[leftHandPanel] = Limb::LeftHand;
+				}
+			}
+			if (Limbs::Contains(freeLimbs, Limb::RightHand))
+			{
+				if (NoteTypes::IsTappable(noteRow[rightHandPanel]) && beforeTapState.IsFree(Limb::RightHand))
+				{
+					if (limbsUsed[rightHandPanel] == Limb::None) limbsUsed[rightHandPanel] = Limb::RightHand;
+				}
+			}
+
+			// We might have panels that couldn't be pressed with FeetPlacement hand orientation
+			// So we unfortunately have to ensure that we did fill all tappable panels
+			// And fill them in the opposite way if they're unfilled
+			if (NoteTypes::IsTappable(noteRow[leftHandPanel]) && limbsUsed[leftHandPanel] == Limb::None)
+			{
+				limbsUsed[leftHandPanel] = Limb::RightHand;
+			}
+
+			if (NoteTypes::IsTappable(noteRow[rightHandPanel]) && limbsUsed[rightHandPanel] == Limb::None)
+			{
+				limbsUsed[rightHandPanel] = Limb::LeftHand;
+			}
+
+			// Now limbsUsed is filled with hands too, let's insert the state
+			TapAndInsertState(previousState, beforeTapState, previousStateLinks, limbsUsed);
 		}
 
 		void TapAndInsertState(const std::shared_ptr<TState> previousState, const TState& beforeTapState, TOptionalStateLinks previousStateLinks,
