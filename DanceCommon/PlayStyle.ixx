@@ -28,7 +28,7 @@ export namespace DanceCommon
 	export class PlayStyles
 	{
 	private:
-		static constexpr std::array<std::string, 2> NamesByPlayStyle
+		static constexpr std::array<std::string_view, 2> NamesByPlayStyle
 		{
 			"Single",
 			"Double"
@@ -67,7 +67,7 @@ export namespace DanceCommon
 			throw std::range_error("size");
 		}
 
-		static const std::string& GetName(PlayStyle style)
+		static std::string_view GetName(PlayStyle style)
 		{
 			return NamesByPlayStyle[static_cast<int>(style)];
 		}

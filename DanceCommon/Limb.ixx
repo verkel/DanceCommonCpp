@@ -1,4 +1,5 @@
 ﻿export module Limb;
+import <string_view>;
 
 namespace DanceCommon
 {
@@ -71,6 +72,18 @@ namespace DanceCommon
 				case Limb::LeftHand: return Limb::RightHand;
 				case Limb::RightHand: return Limb::LeftHand;
 				default: return Limb::None;
+			}
+		}
+
+		static std::string_view GetCompactName(Limb limb)
+		{
+			switch (limb)
+			{
+				case Limb::LeftLeg: return "L";
+				case Limb::RightLeg: return "R";
+				case Limb::LeftHand: return "LH";
+				case Limb::RightHand: return "RH";
+				default: return "-";
 			}
 		}
 	};

@@ -7,8 +7,11 @@ import NoteRow;
 import Panel;
 import FeetPlacement;
 import Computations;
+import StringUtils;
+import FacingType;
 import <ostream>;
 import <stdexcept>;
+import <cstdlib>;
 
 namespace DanceCommon
 {
@@ -105,6 +108,66 @@ namespace DanceCommon
 			return newState;
 		}
 
+		int ComputeCost() const
+		{
+			int cost = 0;
+
+			Panel leftLegPanel = GetOccupyingPanel(Limb::LeftLeg);
+			Panel rightLegPanel = GetOccupyingPanel(Limb::RightLeg);
+			Panel leftHandPanel = GetOccupyingPanel(Limb::LeftHand);
+			Panel rightHandPanel = GetOccupyingPanel(Limb::RightHand);
+
+			FeetPlacement placement = Computations::GetFeetPlacement(leftLegPanel, rightLegPanel);
+			FacingType facingType = placement.GetFacingType();
+
+			int angle = abs(GetAngle());
+			int angleDelta = abs(GetAngleDelta());
+
+			if (angle >= 135) cost += 1;
+
+			if (angleDelta == 135) cost += 5;
+			else if (angleDelta == 180) cost += 15;
+
+			if (doublestep) cost += 12;
+			else if (airDoublestep) cost += 10; // Prefer ADs slightly to dsteps
+			else if (spin) cost += 3; // If we can spin cleanly, that's most preferred
+
+			// Tax hand use based on FacingType
+			if (Panels::IsButton(leftHandPanel)) {
+				cost += GetFacingCost(facingType);
+			}
+			if (Panels::IsButton(rightHandPanel)) {
+				cost += GetFacingCost(facingType);
+			}
+
+			// If hands are in wrong orientation, tax this state
+			bool lhWronglyPlaced = (Panels::IsButton(leftHandPanel) && leftHandPanel != placement.GetLeftHandPanel());
+			bool rhWronglyPlaced = (Panels::IsButton(rightHandPanel) && rightHandPanel != placement.GetRightHandPanel());
+			if (lhWronglyPlaced || rhWronglyPlaced) {
+				cost += 5;
+			}
+
+			// If hands are used for holdables, tax this state
+			// Note, this accumulates in every tap during hand holds
+			// Might be better to tax just beginning a hand hold, but
+			// starting holds is not currently tracked by the state.
+			if (!IsFree(Limb::LeftHand)) cost += 1;
+			if (!IsFree(Limb::RightHand)) cost += 1;
+
+			return cost;
+		}
+
+		static int GetFacingCost(FacingType facingType)
+		{
+			switch (facingType)
+			{
+				case FacingType::FaceIn: return 0;
+				case FacingType::FaceOut: return 2;
+				case FacingType::FaceToSide: return 1;
+				default: return 0;
+			}
+		}
+
 		const TLimbsOnPad& GetOccupiedPanels() const
 		{
 			return occupiedPanels;
@@ -137,7 +200,74 @@ namespace DanceCommon
 		{
 			return freeLimbs;
 		}
+
+		Limb GetLastLeg() const
+		{
+			return lastLeg;
+		}
 		
+		int GetAngleDelta() const
+		{
+			return angleDelta;
+		}
+
+		int GetAngle() const
+		{
+			Panel leftLegPanel = GetOccupyingPanel(Limb::LeftLeg);
+			Panel rightLegPanel = GetOccupyingPanel(Limb::RightLeg);
+
+			FeetPlacement placement = Computations::GetFeetPlacement(leftLegPanel, rightLegPanel);
+			return placement.GetAngle();
+		}
+
+		int GetMovedLegsAmount() const
+		{
+			return movedLegsAmount;
+		}
+
+		int GetCost()
+		{
+			if (cost == -1)
+				cost = ComputeCost();
+
+			return cost;
+		}
+
+		bool IsDoublestep() const
+		{
+			return doublestep;
+		}
+
+		bool IsAirDoublestep() const
+		{
+			return airDoublestep;
+		}
+
+		bool IsSpin() const
+		{
+			return spin;
+		}
+
+		bool IsLeftLegFreed() const
+		{
+			return leftLegFreed;
+		}
+
+		bool IsRightLegFreed() const
+		{
+			return rightLegFreed;
+		}
+
+		static bool IsDoublestepEnabled(Limb doublestepLeg, State state)
+		{
+			switch (doublestepLeg)
+			{
+				case Limb::LeftLeg: return !state.rightLegFreed;
+				case Limb::RightLeg: return !state.leftLegFreed;
+				default: throw std::invalid_argument("doublestepLeg");
+			}
+		}
+
 		int GetNumberOfFreeLegs() const
 		{
 			int amount = 0;
@@ -267,30 +397,6 @@ namespace DanceCommon
 			else state.spin = (angleDelta != properAngleDelta);
 		}
 
-		int GetAngle() const
-		{
-			Panel leftLegPanel = GetOccupyingPanel(Limb::LeftLeg);
-			Panel rightLegPanel = GetOccupyingPanel(Limb::RightLeg);
-
-			FeetPlacement placement = Computations::GetFeetPlacement(leftLegPanel, rightLegPanel);
-			return placement.GetAngle();
-		}
-
-		int GetAngleDelta() const
-		{
-			return angleDelta;
-		}
-
-		static bool IsDoublestepEnabled(Limb doublestepLeg, State state)
-		{
-			switch (doublestepLeg)
-			{
-				case Limb::LeftLeg: return !state.rightLegFreed;
-				case Limb::RightLeg: return !state.leftLegFreed;
-				default: throw std::invalid_argument("doublestepLeg");
-			}
-		}
-
 		static void ReleaseHoldEnds(State& state, const TNoteRow& noteRow)
 		{
 			state.leftLegFreed = false;
@@ -355,7 +461,81 @@ namespace DanceCommon
 	export template<size_t rowSize>
 	std::ostream& operator<<(std::ostream& os, const State<rowSize>& state)
 	{
-		os << "State " << "foo" << "bar";
+		Append(os, state, true);
+        return os;
+	}
+
+	export template<size_t rowSize>
+	std::ostream& Append(std::ostream& os, const State<rowSize>& state, bool displayClassName)
+	{
+		if (displayClassName)
+			os << "State { ";
+
+		AppendBody(os, state);
+
+		os << ", cost=" << state.ComputeCost()
+			<< ", angle=" << state.GetAngle()
+			<< ", dAngle=" << state.GetAngleDelta()
+			<< ", dstep=" << StringUtils::ToString(state.IsDoublestep())
+			<< ", airDstep=" << StringUtils::ToString(state.IsAirDoublestep())
+			<< ", spin=" << StringUtils::ToString(state.IsSpin())
+			<< ", movedLegs=" << state.GetMovedLegsAmount()
+			<< ", llFreed=" << StringUtils::ToString(state.IsLeftLegFreed())
+			<< ", rlFreed=" << StringUtils::ToString(state.IsRightLegFreed());
+
+		if (displayClassName)
+			os << " }";
+
+		return os;
+	}
+
+	export template<size_t rowSize>
+	std::ostream& AppendBody(std::ostream& os, const State<rowSize>& state)
+	{
+		auto occupiedPanels = state.GetOccupiedPanels();
+		auto lastLeg = state.GetLastLeg();
+
+		// Append single center panel if something is on it
+		Limb limbOnCenter = occupiedPanels[Panel::Center];
+		if (limbOnCenter != Limb::None) os << "(" << Limbs::GetCompactName(limbOnCenter) << ") ";
+
+		// Append rest of the panels
+		for (int i = 0; i < occupiedPanels.End(); i++)
+		{
+			Limb limb = occupiedPanels[i];
+			if (limb != Limb::None)
+			{
+				os << (state.IsFree(limb)
+					? "["
+					: "{");
+				
+				os << Limbs::GetCompactName(limb);
+
+				os << (lastLeg == limb
+					? "*"
+					: Limbs::IsLeg(limb)
+						? " "
+						: "");
+
+				os << (state.IsFree(limb)
+					? "]"
+					: "}");
+			}
+			else
+			{
+				os << "[  ]";
+			}
+
+			if (i != occupiedPanels.End() - 1) os << " ";
+			if (i == 3 && PlayStyles::GetStyle(rowSize) == PlayStyle::Double)
+			{
+				os << "- ";
+				Limb limbOnCenter2 = occupiedPanels[Panel::Center2];
+				if (limbOnCenter2 != Limb::None) os << "(" << Limbs::GetCompactName(limbOnCenter2) << ") ";
+			}
+		}
+
+
         return os;
 	}
 

@@ -63,5 +63,12 @@ export namespace DanceCommon
 			Split(sv, delim, tokens);
 			return tokens;
 		}
+
+		static std::string_view ToString(bool value)
+		{
+			return value
+				? "True"
+				: "False";
+		}
 	};
 }
