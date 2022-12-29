@@ -11,6 +11,7 @@ import StringUtils;
 import FacingType;
 import <ostream>;
 import <stdexcept>;
+import <sstream>;
 import <cstdlib>;
 
 namespace DanceCommon
@@ -275,6 +276,13 @@ namespace DanceCommon
 			if (Limbs::Contains(freeLimbs, Limb::RightLeg)) amount++;
 			return amount;
 		}
+		
+		std::string ToString() const
+		{
+			std::stringstream ss;
+			ss << *this;
+			return ss.str();
+		}
 
 	private:
 		static void UpdateLastLeg(State& state, const TLimbsOnPad& limbsUsed, int tappablesCount, Panel firstTappable)
@@ -534,7 +542,6 @@ namespace DanceCommon
 				if (limbOnCenter2 != Limb::None) os << "(" << Limbs::GetCompactName(limbOnCenter2) << ") ";
 			}
 		}
-
 
         return os;
 	}

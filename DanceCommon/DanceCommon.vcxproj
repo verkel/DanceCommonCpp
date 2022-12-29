@@ -181,7 +181,10 @@
     <ClCompile Include="Panel.ixx" />
     <ClCompile Include="ParseException.ixx" />
     <ClCompile Include="Parser.ixx" />
+    <ClCompile Include="PlanningBot.ixx" />
+    <ClCompile Include="Play.ixx" />
     <ClCompile Include="PlayStyle.ixx" />
+    <ClCompile Include="RobotPlay.ixx" />
     <ClCompile Include="Song.ixx" />
     <ClCompile Include="SongConstants.ixx" />
     <ClCompile Include="SongMetadata.ixx" />

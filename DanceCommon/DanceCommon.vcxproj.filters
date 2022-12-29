@@ -110,5 +110,14 @@
     <ClCompile Include="Computations.ixx">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="PlanningBot.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Play.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RobotPlay.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
