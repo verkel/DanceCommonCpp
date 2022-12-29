@@ -2,18 +2,20 @@ export module NoSuchChartException;
 
 import StdCore;
 import ChartInfo;
+import PlayStyle;
+import Difficulty;
 
 export namespace DanceCommon
 {
-	export class NoSuchChartException : public std::exception
+	export class NoSuchChartException : public exception
 	{
 	private:
-		std::string message;
+		string message;
 
 	public:
 		NoSuchChartException(const ChartMatchInfo& info)
 		{
-			std::stringstream ss;
+			stringstream ss;
 			ss << "No such chart:";
 			if (info.style)
 				ss << " Style=" << PlayStyles::GetName(info.style.value());

@@ -26,37 +26,37 @@ export namespace DanceCommon
 		};
 
 		bool isComputed = false;
-		std::map<double, Event, std::greater<double>> bpmsByTime;
-		std::map<double, Event, std::greater<double>> stopsByTime;
+		map<double, Event, std::greater<double>> bpmsByTime;
+		map<double, Event, std::greater<double>> stopsByTime;
 
 	public:
-		void ComputeEvents(const std::map<double, double>& bpms, const std::map<double, double>& stops, double offset)
+		void ComputeEvents(const map<double, double>& bpms, const map<double, double>& stops, double offset)
 		{
 			bpmsByTime.clear();
 			stopsByTime.clear();
 			
 			auto x = bpms.begin();
 
-			std::deque<std::pair<double, double>> bpmsLeft;
-			std::deque<std::pair<double, double>> stopsLeft;
+			deque<pair<double, double>> bpmsLeft;
+			deque<pair<double, double>> stopsLeft;
 			bpmsLeft.insert(bpmsLeft.end(), bpms.begin(), bpms.end());
 			stopsLeft.insert(stopsLeft.end(), stops.begin(), stops.end());
 			
 			double time = -offset;
 			double lastBeat = -1.0;
-			std::optional<EventType> lastEventType;
-			std::optional<double> lastBpm;
+			optional<EventType> lastEventType;
+			optional<double> lastBpm;
 			double lastStop = -1.0;
 
 			while (!bpmsLeft.empty() || !stopsLeft.empty())
 			{
 				auto bpmEntry = !bpmsLeft.empty() 
-					? std::optional(bpmsLeft.front()) 
-					: std::nullopt;
+					? optional(bpmsLeft.front()) 
+					: nullopt;
 
 				auto stopEntry = !stopsLeft.empty()
-					? std::optional(stopsLeft.front())
-					: std::nullopt;
+					? optional(stopsLeft.front())
+					: nullopt;
 
 				// Decide whether a bpm or stop is next
 				EventType eventType;
@@ -105,7 +105,7 @@ export namespace DanceCommon
 				{
 					double bpmBeat = bpmEntry->first;
 					double bpm = bpmEntry->second;
-					int bpmPos = std::lround(bpmBeat * 48.0);
+					int bpmPos = lround(bpmBeat * 48.0);
 					bpmsByTime[time] = Event{ bpmPos, bpm };
 					lastBpm = bpm;
 				}
@@ -113,7 +113,7 @@ export namespace DanceCommon
 				{
 					double stopBeat = stopEntry->first;
 					double stop = stopEntry->second;
-					int stopPos = std::lround(stopBeat * 48.0);
+					int stopPos = lround(stopBeat * 48.0);
 					stopsByTime[time] = Event{ stopPos, stop };
 					lastStop = stop;
 				}

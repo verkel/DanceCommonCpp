@@ -16,7 +16,7 @@ export namespace DanceCommon
 			notes {}
 		{ }
 
-		NoteRow(const std::string_view& lineView)
+		NoteRow(const string_view& lineView)
 		{
 			for (size_t i = 0; i < rowSize; i++)
 			{
@@ -55,7 +55,7 @@ export namespace DanceCommon
 			return GetPanelsWith(NoteTypes::Tappable);
 		}
 
-		std::tuple<Panel, int> GetTappablesWithCount() const
+		tuple<Panel, int> GetTappablesWithCount() const
 		{
 			return GetPanelsWithCount(NoteTypes::Tappable);
 		}
@@ -141,7 +141,7 @@ export namespace DanceCommon
 			return result;
 		}
 
-		std::tuple<Panel, int> GetPanelsWithCount(NoteType typeMask) const
+		tuple<Panel, int> GetPanelsWithCount(NoteType typeMask) const
 		{
 			Panel result = Panel::None;
 			int count = 0;
@@ -153,7 +153,7 @@ export namespace DanceCommon
 					count++;
 				}
 			}
-			return std::tuple{result, count};
+			return tuple{result, count};
 		}
 
 		Panel GetFirstPanelWith(NoteType typeMask) const

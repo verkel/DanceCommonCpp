@@ -272,7 +272,7 @@ namespace DanceCommon
 		// Public API
 		// --------------------------------------------------------------------------
 
-		static constexpr std::array<FeetPlacement, 21> Values
+		static constexpr array<FeetPlacement, 21> Values
 		{
 			// Positions where player faces away from the center
 			L_R_, __LR, _R_L, RL__,
@@ -316,6 +316,6 @@ namespace DanceCommon
 		}
 
 	private:
-		std::unordered_map<Panel, std::unordered_map<Panel, FeetPlacement>> byLeftLegAndRightLeg;
+		unordered_map<Panel, unordered_map<Panel, FeetPlacement>> byLeftLegAndRightLeg;
 	};
 }

@@ -24,7 +24,7 @@ export namespace DanceCommon
 
 	struct MeasureNoteLengths
 	{
-		std::array<NoteLength, (int)NoteLength::Measure> data;
+		array<NoteLength, (int)NoteLength::Measure> data;
 
 		constexpr MeasureNoteLengths() : data{}
 		{

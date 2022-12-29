@@ -5,19 +5,22 @@
 
 import StdCore;
 import Song;
+import ChartInfo;
 import Chart;
+import PlayStyle;
+import Difficulty;
 import PlanningBot;
 using namespace DanceCommon;
 
 static SinglesChart GetSilikonExpert()
 {
-	std::ifstream stream{ "silikon.sm" };
-	return SinglesChart{ stream, ChartMatchInfo{ PlayStyle::Single, Difficulty::Expert, std::nullopt, std::nullopt } };
+	ifstream stream{ "silikon.sm" };
+	return SinglesChart{ stream, ChartMatchInfo{ PlayStyle::Single, Difficulty::Expert, nullopt, nullopt } };
 }
 
 TEST(PlanningBot, PlaySilikon)
 {
-	std::array<std::string, 10> Expected =
+	array<string, 10> Expected =
 	{
 		// 0..4
 		"State { [  ] [  ] [  ] [  ], cost=0, angle=0, dAngle=0, dstep=False, airDstep=False, spin=False, movedLegs=0, llFreed=False, rlFreed=False }",

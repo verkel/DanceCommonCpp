@@ -4,13 +4,13 @@ import StdCore;
 
 export namespace DanceCommon
 {
-	export class ParseException : public std::exception
+	export class ParseException : public exception
 	{
 	private:
-		std::string message;
+		string message;
 
 	public:
-		ParseException(std::string message) : message{ message }
+		ParseException(string message) : message{ message }
 		{ }
 
 		const char* what()

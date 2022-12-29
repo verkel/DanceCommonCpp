@@ -1,5 +1,6 @@
 ﻿export module State;
 
+import StdCore;
 import LimbsOnPad;
 import Limb;
 import PlayStyle;
@@ -9,9 +10,6 @@ import FeetPlacement;
 import Computations;
 import StringUtils;
 import FacingType;
-import <ostream>;
-import <stdexcept>;
-import <sstream>;
 import <cstdlib>;
 
 namespace DanceCommon
@@ -35,7 +33,7 @@ namespace DanceCommon
 		bool spin;
 
 	public:
-		//friend std::ostream& operator<<(std::ostream& os, const State<rowSize>& state);
+		//friend ostream& operator<<(ostream& os, const State<rowSize>& state);
 
 		State(const LimbsOnPad<rowSize>& occupiedPanels, Limb lastLeg, Limb freeLimbs) :
 			State(occupiedPanels, lastLeg, freeLimbs, false, false, 0, 0, false, false, false)
@@ -265,7 +263,7 @@ namespace DanceCommon
 			{
 				case Limb::LeftLeg: return !state.rightLegFreed;
 				case Limb::RightLeg: return !state.leftLegFreed;
-				default: throw std::invalid_argument("doublestepLeg");
+				default: throw invalid_argument("doublestepLeg");
 			}
 		}
 
@@ -277,9 +275,9 @@ namespace DanceCommon
 			return amount;
 		}
 		
-		std::string ToString() const
+		string ToString() const
 		{
-			std::stringstream ss;
+			stringstream ss;
 			ss << *this;
 			return ss.str();
 		}
@@ -413,7 +411,7 @@ namespace DanceCommon
 			noteRow.ForEachHoldEnd([&](Panel holdEndPanel)
 			{
 				Limb holdingLimb = state.occupiedPanels[holdEndPanel];
-				if (holdingLimb == Limb::None) throw std::logic_error("State did not have a limb on a hold");
+				if (holdingLimb == Limb::None) throw logic_error("State did not have a limb on a hold");
 
 				// Hands don't occupy panels after holds, so remove it
 				if (Limbs::IsHand(holdingLimb)) state.occupiedPanels[holdEndPanel] = Limb::None;
@@ -467,14 +465,14 @@ namespace DanceCommon
 	export using DoublesState = State<NoteRowSize::Double>;
 
 	export template<size_t rowSize>
-	std::ostream& operator<<(std::ostream& os, const State<rowSize>& state)
+	ostream& operator<<(ostream& os, const State<rowSize>& state)
 	{
 		Append(os, state, true);
         return os;
 	}
 
 	export template<size_t rowSize>
-	std::ostream& Append(std::ostream& os, const State<rowSize>& state, bool displayClassName)
+	ostream& Append(ostream& os, const State<rowSize>& state, bool displayClassName)
 	{
 		if (displayClassName)
 			os << "State { ";
@@ -498,7 +496,7 @@ namespace DanceCommon
 	}
 
 	export template<size_t rowSize>
-	std::ostream& AppendBody(std::ostream& os, const State<rowSize>& state)
+	ostream& AppendBody(ostream& os, const State<rowSize>& state)
 	{
 		auto occupiedPanels = state.GetOccupiedPanels();
 		auto lastLeg = state.GetLastLeg();
@@ -587,14 +585,14 @@ namespace std
 	export template <size_t rowSize>
 	struct hash<DanceCommon::State<rowSize>>
 	{
-		std::size_t operator()(const DanceCommon::State<rowSize>& k) const
+		size_t operator()(const DanceCommon::State<rowSize>& k) const
 		{
 			// TODO implement
 			return 0;
 
-			/*using std::size_t;
-				using std::hash;
-				using std::string;
+			/*using size_t;
+				using hash;
+				using string;
 
 				// Compute individual hash values for first,
 				// second and third and combine them using XOR

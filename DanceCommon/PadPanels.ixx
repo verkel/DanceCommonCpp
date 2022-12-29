@@ -23,7 +23,7 @@ export namespace DanceCommon
 			values {}
 		{ }
 
-		PadPanels(std::initializer_list<TValue> list) :
+		PadPanels(initializer_list<TValue> list) :
 			values {}
 		{
 			size_t i = 0;

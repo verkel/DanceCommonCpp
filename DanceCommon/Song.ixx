@@ -18,12 +18,12 @@ export namespace DanceCommon
 	{
 	private:
 		SongMetadata metadata;
-		std::set<std::shared_ptr<SinglesChart>, SinglesChart::Comparator> singlesCharts;
-		std::set<std::shared_ptr<DoublesChart>, DoublesChart::Comparator> doublesCharts;
+		set<shared_ptr<SinglesChart>, SinglesChart::Comparator> singlesCharts;
+		set<shared_ptr<DoublesChart>, DoublesChart::Comparator> doublesCharts;
 		double musicLength;
 
 	public:
-		static Song Load(std::istream& stream)
+		static Song Load(istream& stream)
 		{
 			Parser parser{ stream, 1 };
 			return Song(parser);
@@ -101,7 +101,7 @@ export namespace DanceCommon
 			double beat = 0.0;
 
 			if (!bpms.contains(beat))
-				throw std::exception("Chart does not specify initial BPM");
+				throw exception("Chart does not specify initial BPM");
 
 			double bpm = bpms.at(beat);
 			double lastBeat = 0.0;
@@ -153,8 +153,8 @@ export namespace DanceCommon
 
 		void DoLoad(Parser& parser)
 		{
-			std::string line;
-			std::string_view lineView;
+			string line;
+			string_view lineView;
 
 			while (parser.ReadLine(line))
 			{
@@ -168,14 +168,14 @@ export namespace DanceCommon
 				if (tokens.first == SongConstants::Notes)
 					LoadStepchart(parser);
 				else
-					throw ParseException(std::format("Syntax error in line {}: {}", parser.LineNumber, lineView));
+					throw ParseException(format("Syntax error in line {}: {}", parser.LineNumber, lineView));
 			}
 		}
 
 		void LoadStepchart(Parser& parser)
 		{
-			std::string line;
-			std::string_view lineView;
+			string line;
+			string_view lineView;
 
 			parser.ReadLine(line);
 			lineView = line;
@@ -186,13 +186,13 @@ export namespace DanceCommon
 			{
 				if (type.value() == PlayStyle::Single)
 				{
-					auto chart = std::make_shared<SinglesChart>();
+					auto chart = make_shared<SinglesChart>();
 					chart->DoLoad(parser, ChartMatchInfo::Any, ChartReadMode::ReadFirstChart);
 					singlesCharts.insert(chart);
 				}
 				else if (type.value() == PlayStyle::Double)
 				{
-					auto chart = std::make_shared<DoublesChart>();
+					auto chart = make_shared<DoublesChart>();
 					chart->DoLoad(parser, ChartMatchInfo::Any, ChartReadMode::ReadFirstChart);
 					doublesCharts.insert(chart);
 				}
@@ -208,19 +208,19 @@ export namespace DanceCommon
 			}
 		}
 
-		std::optional<PlayStyle> ParseType(const std::string_view& lineView)
+		optional<PlayStyle> ParseType(const string_view& lineView)
 		{
 			if (lineView.starts_with(SongConstants::SinglesChartType))
 				return PlayStyle::Single;
 			if (lineView.starts_with(SongConstants::DoublesChartType))
 				return PlayStyle::Double;
-			return std::nullopt;
+			return nullopt;
 		}
 
-		double GetStopAddition(double givenBeat, const std::map<double, double>& stops) {
+		double GetStopAddition(double givenBeat, const map<double, double>& stops) {
 			double addition = 0.0;
 			double beat = -1.0;
-			std::map<double, double>::const_iterator stop;
+			map<double, double>::const_iterator stop;
 			while ((stop = stops.upper_bound(beat)) != stops.end())
 			{
 				beat = stop->first;

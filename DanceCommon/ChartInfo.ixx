@@ -9,10 +9,10 @@ namespace DanceCommon
 	{
 		static const ChartMatchInfo Any;
 
-		std::optional<PlayStyle> style;
-		std::optional<Difficulty> difficulty;
-		std::optional<int> rating;
-		std::optional<std::string> description;
+		optional<PlayStyle> style;
+		optional<Difficulty> difficulty;
+		optional<int> rating;
+		optional<string> description;
 	};
 
 	export struct ChartInfo
@@ -20,7 +20,7 @@ namespace DanceCommon
 		PlayStyle style;
 		Difficulty difficulty;
 		int rating;
-		std::string description;
+		string description;
 
 		bool Matches(const ChartMatchInfo& matchInfo)
 		{
@@ -40,5 +40,5 @@ namespace DanceCommon
 		}
 	};
 
-	const ChartMatchInfo ChartMatchInfo::Any{ std::nullopt, std::nullopt, std::nullopt, std::nullopt };
+	const ChartMatchInfo ChartMatchInfo::Any{ nullopt, nullopt, nullopt, nullopt };
 }

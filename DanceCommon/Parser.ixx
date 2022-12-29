@@ -5,19 +5,19 @@ import StdCore;
 export class Parser
 {
 private:
-	std::istream& stream;
-	std::queue<std::string> peeks;
+	istream& stream;
+	queue<string> peeks;
 
 public:
 	int LineNumber;
 
-	Parser(std::istream& stream, int lineNumber) :
+	Parser(istream& stream, int lineNumber) :
 		stream{stream},
 		LineNumber{lineNumber}
 	{
 	}
 
-	bool ReadLine(std::string& result)
+	bool ReadLine(string& result)
 	{
 		if (!peeks.empty()) 
 		{
@@ -27,7 +27,7 @@ public:
 			return true;
 		}
 
-		if (std::getline(stream, result))
+		if (getline(stream, result))
 		{
 			LineNumber++;
 			return true;
@@ -36,10 +36,10 @@ public:
 		return false;
 	}
 
-	bool PeekLine(std::string& result)
+	bool PeekLine(string& result)
 	{
-		std::string line;
-		if (std::getline(stream, line))
+		string line;
+		if (getline(stream, line))
 		{
 			peeks.push(line);
 			result = line;
@@ -48,7 +48,7 @@ public:
 		return false;
 	}
 
-	bool ReadOrPeekLine(bool peek, std::string& result)
+	bool ReadOrPeekLine(bool peek, string& result)
 	{
 		if (peek)
 			return PeekLine(result);

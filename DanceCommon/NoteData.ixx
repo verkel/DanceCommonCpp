@@ -4,6 +4,7 @@ import StdCore;
 import PlayStyle;
 import NotePos;
 import NoteRow;
+import NoteType;
 
 export namespace DanceCommon
 {
@@ -13,7 +14,7 @@ export namespace DanceCommon
 	private:
 		using TNoteRow = NoteRow<rowSize>;
 
-		std::vector<TNoteRow> noteRows;
+		vector<TNoteRow> noteRows;
 
 	public:
 		inline static const TNoteRow EmptyRow{};

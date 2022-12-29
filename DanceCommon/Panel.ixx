@@ -53,7 +53,7 @@ export namespace DanceCommon
 				case Panel::Right2: return 7;
 			}
 
-			throw std::range_error("panel");
+			throw range_error("panel");
 		}
 
 		/**
@@ -80,7 +80,7 @@ export namespace DanceCommon
 				case 7: return Panel::Right2;
 			}
 
-			throw std::range_error("index");
+			throw range_error("index");
 		}
 
 		/**
@@ -105,7 +105,7 @@ export namespace DanceCommon
 				case Panel::Right2: return PlayStyle::Double;
 			}
 
-			throw std::range_error("panel");
+			throw range_error("panel");
 		}
 
 		/**
@@ -146,7 +146,7 @@ export namespace DanceCommon
 				case Panel::Right2: return 90;
 			}
 
-			throw std::range_error("panel");
+			throw range_error("panel");
 		}
 
 		// For bitmasks

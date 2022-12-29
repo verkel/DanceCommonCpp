@@ -14,34 +14,34 @@ export namespace DanceCommon
 	{
 		SongMetadataComputations computations;
 
-		std::string title;
-		std::string subtitle;
-		std::string artist;
-		std::string titletranslit;
-		std::string subtitletranslit;
-		std::string artisttranslit;
-		std::string genre;
-		std::string credit;
-		std::string banner;
-		std::string background;
-		std::string lyricspath;
-		std::string cdtitle;
-		std::string music;
+		string title;
+		string subtitle;
+		string artist;
+		string titletranslit;
+		string subtitletranslit;
+		string artisttranslit;
+		string genre;
+		string credit;
+		string banner;
+		string background;
+		string lyricspath;
+		string cdtitle;
+		string music;
 		double offset = 0.0;
 		double samplestart = 0.0;
 		double samplelength = 0.0;
-		std::string selectable;
-		std::map<double, double> bpms;
-		std::map<double, double> stops;
-		std::string bgchanges;
-		std::string keysounds;
-		std::string displaybpm;
+		string selectable;
+		map<double, double> bpms;
+		map<double, double> stops;
+		string bgchanges;
+		string keysounds;
+		string displaybpm;
 
 	public:
 		SongMetadata(Parser& parser)
 		{
-			std::optional<std::pair<std::string_view, std::string_view>> dataLine;
-			std::string linesBuffer;
+			optional<pair<string_view, string_view>> dataLine;
+			string linesBuffer;
 			while (dataLine = SongUtils::ReadDataLine(parser, linesBuffer, true))
 			{
 				auto& l = dataLine->first;
@@ -69,17 +69,17 @@ export namespace DanceCommon
 				else if (l == SongConstants::Offset)
 				{
 					if (!StringUtils::TryParseDouble(c, offset))
-						throw ParseException(std::format("Cannot parse offset: {}", c));
+						throw ParseException(format("Cannot parse offset: {}", c));
 				}
 				else if (l == SongConstants::Samplestart)
 				{
 					if (!StringUtils::TryParseDouble(c, samplestart))
-						throw ParseException(std::format("Cannot parse samplestart: {}", c));
+						throw ParseException(format("Cannot parse samplestart: {}", c));
 				}
 				else if (l == SongConstants::Samplelength)
 				{
 					if (!StringUtils::TryParseDouble(c, samplelength))
-						throw ParseException(std::format("Cannot parse samplelength: {}", c));
+						throw ParseException(format("Cannot parse samplelength: {}", c));
 				}
 				else if (l == SongConstants::Selectable) selectable = c;
 				else if (l == SongConstants::Bpms) bpms = ParseMapFromString(c);
@@ -91,27 +91,27 @@ export namespace DanceCommon
 			}
 		}
 
-		std::map<double, double> ParseMapFromString(std::string_view sv)
+		map<double, double> ParseMapFromString(string_view sv)
 		{
-			std::map<double, double> map;
+			map<double, double> map;
 			
 			if (sv == "")
 				return map;
 
-			std::vector<std::string_view> tokens = StringUtils::Split(sv, ',');
-			std::vector<std::string_view> subtokens;
+			vector<string_view> tokens = StringUtils::Split(sv, ',');
+			vector<string_view> subtokens;
 
 			for (auto& token : tokens)
 			{
 				StringUtils::Split(token, '=', subtokens);
 				if (subtokens.size() != 2)
-					throw ParseException(std::format("Malformed subtokens: {}", token));
+					throw ParseException(format("Malformed subtokens: {}", token));
 
 				double key, value;
 				if (!StringUtils::TryParseDouble(subtokens[0], key))
-					throw ParseException(std::format("Cannot parse key: {}", token));
+					throw ParseException(format("Cannot parse key: {}", token));
 				if (!StringUtils::TryParseDouble(subtokens[1], value))
-					throw ParseException(std::format("Cannot parse value: {}", token));
+					throw ParseException(format("Cannot parse value: {}", token));
 
 				map[key] = value;
 			}
@@ -119,37 +119,37 @@ export namespace DanceCommon
 			return map;
 		}
 
-		const std::string& GetTitle() const
+		const string& GetTitle() const
 		{
 			return title;
 		}
 
-		const std::string& GetArtist() const
+		const string& GetArtist() const
 		{
 			return artist;
 		}
 
-		const std::string& GetCredit() const
+		const string& GetCredit() const
 		{
 			return credit;
 		}
 
-		const std::string& GetBanner() const
+		const string& GetBanner() const
 		{
 			return banner;
 		}
 
-		const std::string& GetBackground() const
+		const string& GetBackground() const
 		{
 			return background;
 		}
 
-		const std::string& GetCdtitle() const
+		const string& GetCdtitle() const
 		{
 			return cdtitle;
 		}
 
-		const std::string& GetMusic() const
+		const string& GetMusic() const
 		{
 			return music;
 		}
@@ -169,7 +169,7 @@ export namespace DanceCommon
 			return samplelength;
 		}
 
-		const std::string& GetSelectable() const
+		const string& GetSelectable() const
 		{
 			return selectable;
 		}

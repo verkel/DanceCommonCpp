@@ -75,7 +75,7 @@ namespace DanceCommon
 			}
 		}
 
-		static std::string_view GetCompactName(Limb limb)
+		static string_view GetCompactName(Limb limb)
 		{
 			switch (limb)
 			{

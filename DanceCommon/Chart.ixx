@@ -44,16 +44,16 @@ export namespace DanceCommon
 		using TNoteRow = NoteRow<rowSize>;
 
 		NoteData<rowSize> noteData;
-		std::string description;
+		string description;
 		Difficulty difficulty;
 		int rating;
 
-		std::shared_ptr<Song> parent;
+		shared_ptr<Song> parent;
 
 	public:
 		struct Comparator
 		{
-			bool operator()(std::shared_ptr<Chart> a, std::shared_ptr<Chart> b) const
+			bool operator()(shared_ptr<Chart> a, shared_ptr<Chart> b) const
 			{
 				return *a < *b;
 			}
@@ -83,13 +83,13 @@ export namespace DanceCommon
 		* @throws NoSuchChartException If no chart with the given difficulty is
 		*            found
 		*/
-		Chart(std::istream& stream, const ChartMatchInfo& matchInfo) : Chart{ }
+		Chart(istream& stream, const ChartMatchInfo& matchInfo) : Chart{ }
 		{
 			constexpr auto style = PlayStyles::GetStyle(rowSize);
 			auto chartStyleString = GetStyleString(style);
 
-			std::string line;
-			std::string_view lineView;
+			string line;
+			string_view lineView;
 
 			Parser parser{ stream, 1 };
 
@@ -119,7 +119,7 @@ export namespace DanceCommon
 			return description < rhs.description;
 		}
 
-		std::string GetDescription() const
+		string GetDescription() const
 		{
 			return description;
 		}
@@ -134,12 +134,12 @@ export namespace DanceCommon
 			return rating;
 		}
 
-		std::shared_ptr<Song> GetParent() const
+		shared_ptr<Song> GetParent() const
 		{
 			return parent;
 		}
 
-		void SetParent(std::shared_ptr<Song> parent)
+		void SetParent(shared_ptr<Song> parent)
 		{
 			this->parent = parent;
 		}
@@ -186,21 +186,21 @@ export namespace DanceCommon
 			if (readMode == ChartReadMode::ReadFirstChart || readMode == ChartReadMode::ReadMatchingChart)
 			{
 				// Read chart metadata
-				std::string descriptionStr, difficultyClassStr, ratingStr;
+				string descriptionStr, difficultyClassStr, ratingStr;
 				auto descriptionStrView = ReadSubDataLine(parser, descriptionStr);
 				auto difficultyClassStrView = ReadSubDataLine(parser, difficultyClassStr);
 				auto ratingStrView = ReadSubDataLine(parser, ratingStr);
 
-				std::string skippedLine;
+				string skippedLine;
 				parser.ReadLine(skippedLine); // Skip groove radar data
 
 				int rating;
 				if (!StringUtils::TryParseInt(ratingStrView, rating))
-					throw ParseException(std::format("Cannot parse rating: {}", ratingStrView));
+					throw ParseException(format("Cannot parse rating: {}", ratingStrView));
 
 				Difficulty difficulty = Difficulties::FromFormatString(difficultyClassStrView);
 
-				ChartInfo info{ style, difficulty, rating, std::string(descriptionStrView) };
+				ChartInfo info{ style, difficulty, rating, string(descriptionStrView) };
 
 				if (readMode == ChartReadMode::ReadMatchingChart)
 				{
@@ -208,16 +208,16 @@ export namespace DanceCommon
 						return false;
 				}
 
-				this->description = std::string(descriptionStrView);
+				this->description = string(descriptionStrView);
 				this->difficulty = difficulty;
 				this->rating = rating;
 			}
 
 			// Now read the actual steps data
-			std::string line;
-			std::string_view lineView;
+			string line;
+			string_view lineView;
 			size_t measureCount = 0;
-			std::vector<TNoteRow> measureRows;
+			vector<TNoteRow> measureRows;
 			int expectedRowLength = PlayStyles::ButtonCount(style);
 
 			while (parser.ReadLine(line))
@@ -233,7 +233,7 @@ export namespace DanceCommon
 				bool isMeasureTerminator = StringUtils::Contains(lineView, ',');
 
 				if (len != expectedRowLength && !isMeasureTerminator && !isChartTerminator)
-					throw ParseException(std::format("Malformed note row at line {}", parser.LineNumber));
+					throw ParseException(format("Malformed note row at line {}", parser.LineNumber));
 
 				// If this row is a measure terminator, continue onward to next row
 				if (isMeasureTerminator || isChartTerminator)
@@ -245,7 +245,7 @@ export namespace DanceCommon
 						NotePos posOffset = NoteLength::Measure * (int)measureCount;
 						NoteLength noteLength = NoteLengths::FromResolution((int)rowsCount);
 						if (noteLength == NoteLength::None)
-							throw ParseException(std::format("Unsupported measure resolution {}", rowsCount));
+							throw ParseException(format("Unsupported measure resolution {}", rowsCount));
 
 						for (int i = 0; i < rowsCount; i++)
 						{
@@ -270,17 +270,17 @@ export namespace DanceCommon
 		}
 
 	private:
-		static const std::string& GetStyleString(PlayStyle style) {
+		static const string& GetStyleString(PlayStyle style) {
 			if (style == PlayStyle::Single) return SongConstants::SinglesChartType;
 			else if (style == PlayStyle::Double) return SongConstants::DoublesChartType;
-			throw std::invalid_argument("style");
+			throw invalid_argument("style");
 		}
 
-		static std::string_view ReadSubDataLine(Parser& parser, std::string& line)
+		static string_view ReadSubDataLine(Parser& parser, string& line)
 		{
 			if (parser.ReadLine(line))
 			{
-				std::string_view result = line;
+				string_view result = line;
 				StringUtils::Trim(result);
 				size_t end = result.length() - 1;
 				if (result[end] == ':')
@@ -288,7 +288,7 @@ export namespace DanceCommon
 				return result;
 			}
 
-			throw ParseException(std::format("Cannot read sub data line: {}", line));
+			throw ParseException(format("Cannot read sub data line: {}", line));
 		}
 	};
 

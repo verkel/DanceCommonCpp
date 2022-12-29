@@ -17,14 +17,14 @@ using namespace DanceCommon;
 
 static SinglesChart GetVertexDeltaHard()
 {
-	std::ifstream stream{ "Vertex_Delta.sm" };
-	return SinglesChart{ stream, ChartMatchInfo{ PlayStyle::Single, Difficulty::Hard, std::nullopt, std::nullopt } };
+	ifstream stream{ "Vertex_Delta.sm" };
+	return SinglesChart{ stream, ChartMatchInfo{ PlayStyle::Single, Difficulty::Hard, nullopt, nullopt } };
 }
 
 static SinglesChart GetBadBoyExpert()
 {
-	std::ifstream stream{ "Bad Boy.sm" };
-	return SinglesChart{ stream, ChartMatchInfo{ PlayStyle::Single, Difficulty::Expert, std::nullopt, std::nullopt } };
+	ifstream stream{ "Bad Boy.sm" };
+	return SinglesChart{ stream, ChartMatchInfo{ PlayStyle::Single, Difficulty::Expert, nullopt, nullopt } };
 }
 
 TEST(Chart, Load_ExistingChart)
@@ -44,8 +44,8 @@ TEST(Chart, Load_NonExistentChart)
 {
 	try
 	{
-		std::ifstream stream{ "Vertex_Delta.sm" };
-		SinglesChart chart{ stream, ChartMatchInfo{ PlayStyle::Single, Difficulty::Novice, 42, std::nullopt } };
+		ifstream stream{ "Vertex_Delta.sm" };
+		SinglesChart chart{ stream, ChartMatchInfo{ PlayStyle::Single, Difficulty::Novice, 42, nullopt } };
 	}
 	catch (NoSuchChartException&)
 	{

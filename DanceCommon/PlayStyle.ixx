@@ -27,7 +27,7 @@ export namespace DanceCommon
 	export class PlayStyles
 	{
 	private:
-		static constexpr std::array<std::string_view, 2> NamesByPlayStyle
+		static constexpr array<string_view, 2> NamesByPlayStyle
 		{
 			"Single",
 			"Double"
@@ -43,7 +43,7 @@ export namespace DanceCommon
 			case PlayStyle::Double:
 				return 2;
 			}
-			throw std::range_error("style");
+			throw range_error("style");
 		}
 
 		static constexpr int ButtonCount(PlayStyle style) {
@@ -63,10 +63,10 @@ export namespace DanceCommon
 				case NoteRowSize::Double: return PlayStyle::Double;
 			}
 
-			throw std::range_error("size");
+			throw range_error("size");
 		}
 
-		static std::string_view GetName(PlayStyle style)
+		static string_view GetName(PlayStyle style)
 		{
 			return NamesByPlayStyle[static_cast<int>(style)];
 		}

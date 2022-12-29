@@ -58,7 +58,7 @@ export namespace DanceCommon
 				return NoteType::VirtualTap;
 			}
 
-			throw ParseException(std::format("Unknown note type: {}", c));
+			throw ParseException(format("Unknown note type: {}", c));
 		}
 
 		static bool IsTappable(NoteType nt) {

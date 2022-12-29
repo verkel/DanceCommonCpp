@@ -11,10 +11,10 @@ export namespace DanceCommon
 	class SongUtils
 	{
 	public:
-		static std::optional<std::pair<std::string_view, std::string_view>> ReadDataLine(Parser& parser, std::string& linesBuffer, bool peek)
+		static optional<pair<string_view, string_view>> ReadDataLine(Parser& parser, string& linesBuffer, bool peek)
 		{
-			std::string line;
-			std::string_view lineView;
+			string line;
+			string_view lineView;
 			bool eof = true;
 			linesBuffer.clear();
 			while (parser.ReadOrPeekLine(peek, line))
@@ -24,9 +24,9 @@ export namespace DanceCommon
 				StringUtils::Trim(lineView);
 				
 				if (lineView == "")
-					return std::nullopt;
+					return nullopt;
 				if (StringUtils::Contains(lineView, SongConstants::Notes))
-					return std::make_pair(SongConstants::Notes, "");
+					return make_pair(SongConstants::Notes, "");
 				if (lineView.starts_with("//"))
 					continue;
 
@@ -37,24 +37,24 @@ export namespace DanceCommon
 			}
 
 			if (eof)
-				return std::nullopt;
+				return nullopt;
 			else
 				return ParseDataLine(linesBuffer);
 		}
 
-		static std::pair<std::string_view, std::string_view> ParseDataLine(const std::string_view& lineView)
+		static pair<string_view, string_view> ParseDataLine(const string_view& lineView)
 		{
 			size_t dividerPos = lineView.find(':');
-			if (dividerPos == std::string::npos)
-				throw ParseException(std::format("Syntax error in line: {}", lineView));
+			if (dividerPos == string::npos)
+				throw ParseException(format("Syntax error in line: {}", lineView));
 
-			std::string_view label = StringUtils::SubstrStartEnd(lineView, 0, dividerPos);
-			std::string_view data = StringUtils::SubstrStartEnd(lineView, dividerPos + 1, lineView.size());
+			string_view label = StringUtils::SubstrStartEnd(lineView, 0, dividerPos);
+			string_view data = StringUtils::SubstrStartEnd(lineView, dividerPos + 1, lineView.size());
 			
 			if (data.ends_with(';'))
 				data = data.substr(0, data.size() - 1);
 
-			return std::make_pair(label, data);
+			return make_pair(label, data);
 		}
 	};
 }

@@ -17,9 +17,9 @@ export namespace DanceCommon
 	export class Difficulties
 	{
 	private:
-		inline static constexpr std::string_view DifficultyAnyName = "Any";
+		inline static constexpr string_view DifficultyAnyName = "Any";
 
-		static constexpr std::array<std::string_view, 6> NamesByDifficulty
+		static constexpr array<string_view, 6> NamesByDifficulty
 		{
 			"Novice",
 			"Easy",
@@ -29,7 +29,7 @@ export namespace DanceCommon
 			"Edit"
 		};
 
-		static constexpr std::array<std::string_view, 6> FormatStringsByDifficulty
+		static constexpr array<string_view, 6> FormatStringsByDifficulty
 		{
 			"Beginner",
 			"Easy",
@@ -40,7 +40,7 @@ export namespace DanceCommon
 		};
 
 	public:
-		static constexpr Difficulty FromFormatString(std::string_view sv)
+		static constexpr Difficulty FromFormatString(string_view sv)
 		{
 			if (sv == FormatStringsByDifficulty[static_cast<int>(Difficulty::Novice)])
 				return Difficulty::Novice;
@@ -55,15 +55,15 @@ export namespace DanceCommon
 			if (sv == FormatStringsByDifficulty[static_cast<int>(Difficulty::Edit)])
 				return Difficulty::Edit;
 
-			throw ParseException(std::format("Unknown difficulty: {}", std::string(sv)));
+			throw ParseException(format("Unknown difficulty: {}", string(sv)));
 		}
 
-		static constexpr std::string_view GetName(Difficulty difficulty)
+		static constexpr string_view GetName(Difficulty difficulty)
 		{
 			return NamesByDifficulty[static_cast<int>(difficulty)];
 		}
 
-		static constexpr std::string_view GetName(std::optional<Difficulty> difficulty)
+		static constexpr string_view GetName(optional<Difficulty> difficulty)
 		{
 			if (difficulty)
 			{

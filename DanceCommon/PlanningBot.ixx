@@ -12,7 +12,7 @@ namespace DanceCommon
 		using TChart = Chart<rowSize>;
 		using TRobotPlay = RobotPlay<rowSize>;
 
-		bool allowDoublesteps;
+		bool allowDoublesteps = false;
 
 	public:
 		TRobotPlay Play(const TChart& chart)

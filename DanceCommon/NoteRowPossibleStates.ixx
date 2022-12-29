@@ -20,12 +20,12 @@ namespace DanceCommon
 		using TStateLinks = StateLinks<rowSize>;
 		using TLimbsOnPad = LimbsOnPad<rowSize>;
 		using TLimbsOnPads = LimbsOnPads<rowSize>;
-		using TOptionalStateLinks = std::optional<std::reference_wrapper<TStateLinks>>;
+		using TOptionalStateLinks = optional<reference_wrapper<TStateLinks>>;
 
 	private:
-		std::vector<std::shared_ptr<TState>> states;
-		std::unordered_map<TState, TStateLinks> statesToLinks;
-		std::shared_ptr<std::map<NotePos, NoteRowPossibleStates>> parent;
+		vector<shared_ptr<TState>> states;
+		unordered_map<TState, TStateLinks> statesToLinks;
+		shared_ptr<map<NotePos, NoteRowPossibleStates>> parent;
 
 		NotePos previousPosition;
 		NotePos position;
@@ -33,15 +33,15 @@ namespace DanceCommon
 		bool allowDoublesteps;
 
 	public:
-		NoteRowPossibleStates(NotePos position, NotePos previousPosition, std::shared_ptr<std::map<NotePos, NoteRowPossibleStates>> parent,
+		NoteRowPossibleStates(NotePos position, NotePos previousPosition, shared_ptr<map<NotePos, NoteRowPossibleStates>> parent,
 			const Chart<rowSize>& chart, bool allowDoublesteps);
 
 		void InsertPossibleStates()
 		{
 			if (previousPosition == -1)
 			{
-				auto emptyState = std::make_shared<TState>(States<rowSize>::GetEmpty());
-				InsertPossibleStatesFor(emptyState, std::nullopt);
+				auto emptyState = make_shared<TState>(States<rowSize>::GetEmpty());
+				InsertPossibleStatesFor(emptyState, nullopt);
 			}
 			else
 			{
@@ -54,7 +54,7 @@ namespace DanceCommon
 			}
 		}
 
-		void InsertPossibleStatesFor(const std::shared_ptr<TState>& previousState, TOptionalStateLinks previousStateLinks)
+		void InsertPossibleStatesFor(const shared_ptr<TState>& previousState, TOptionalStateLinks previousStateLinks)
 		{
 			auto [tappables, tappablesCount] = noteRow.GetTappablesWithCount();
 
@@ -72,7 +72,7 @@ namespace DanceCommon
 			}
 		}
 
-		void InsertSingleTapStates(const std::shared_ptr<TState> previousState, TOptionalStateLinks previousStateLinks)
+		void InsertSingleTapStates(const shared_ptr<TState> previousState, TOptionalStateLinks previousStateLinks)
 		{
 			TState beforeTapState = previousState->Before(noteRow);
 
@@ -141,7 +141,7 @@ namespace DanceCommon
 			TapAndInsertState(previousState, beforeTapState, previousStateLinks, panel, hand);
 		}
 
-		void InsertMultipleTapsStates(const std::shared_ptr<TState> previousState, TOptionalStateLinks previousStateLinks)
+		void InsertMultipleTapsStates(const shared_ptr<TState> previousState, TOptionalStateLinks previousStateLinks)
 		{
 			TState beforeTapState = previousState->Before(noteRow);
 			auto freeLimbs = beforeTapState.GetFreeLimbs();
@@ -191,7 +191,7 @@ namespace DanceCommon
 		}
 
 		void FillHandsAndInsert(Panel tapPanel1, Panel tapPanel2, Limb/*bitmask*/ freeLimbs,
-			int handsOffset, const std::shared_ptr<TState> previousState, const TState& beforeTapState, TOptionalStateLinks previousStateLinks)
+			int handsOffset, const shared_ptr<TState> previousState, const TState& beforeTapState, TOptionalStateLinks previousStateLinks)
 		{
 			TLimbsOnPad limbsUsed;
 
@@ -268,7 +268,7 @@ namespace DanceCommon
 			TapAndInsertState(previousState, beforeTapState, previousStateLinks, limbsUsed);
 		}
 
-		void TapAndInsertState(const std::shared_ptr<TState> previousState, const TState& beforeTapState, TOptionalStateLinks previousStateLinks,
+		void TapAndInsertState(const shared_ptr<TState> previousState, const TState& beforeTapState, TOptionalStateLinks previousStateLinks,
 			Panel panel, Limb limb)
 		{
 			TLimbsOnPad limbsUsed;
@@ -276,7 +276,7 @@ namespace DanceCommon
 			TapAndInsertState(previousState, beforeTapState, previousStateLinks, limbsUsed);
 		}
 
-		void TapAndInsertState(const std::shared_ptr<TState> previousState, const TState& beforeTapState, TOptionalStateLinks previousStateLinks, const TLimbsOnPad& limbsUsed)
+		void TapAndInsertState(const shared_ptr<TState> previousState, const TState& beforeTapState, TOptionalStateLinks previousStateLinks, const TLimbsOnPad& limbsUsed)
 		{
 			TState state = beforeTapState.Tap(noteRow, limbsUsed);
 
@@ -284,7 +284,7 @@ namespace DanceCommon
 			if (stateLinksItr == statesToLinks.end())
 			{
 				statesToLinks[state] = TStateLinks{};
-				auto statePtr = std::make_shared<TState>(state);
+				auto statePtr = make_shared<TState>(state);
 				states.push_back(statePtr);
 
 				if (previousStateLinks)
@@ -297,13 +297,13 @@ namespace DanceCommon
 				if (previousStateLinks)
 				{
 					// Note: this state is now not in any NoteRowPossibleStates::states, not sure if we should be using pointers to states really
-					auto statePtr = std::make_shared<TState>(state); 
+					auto statePtr = make_shared<TState>(state); 
 					LinkStates(previousState, previousStateLinks.value(), statePtr, stateLinksItr->second);
 				}
 			}
 		}
 
-		static void LinkStates(const std::shared_ptr<TState> parent, TStateLinks& parentLinks, const std::shared_ptr<TState> child, TStateLinks& childLinks)
+		static void LinkStates(const shared_ptr<TState> parent, TStateLinks& parentLinks, const shared_ptr<TState> child, TStateLinks& childLinks)
 		{
 			parentLinks.linksFrom.insert(child);
 			childLinks.linksTo.insert(parent);
@@ -321,7 +321,7 @@ namespace DanceCommon
 	};
 
 	template<size_t rowSize>
-	NoteRowPossibleStates<rowSize>::NoteRowPossibleStates(NotePos position, NotePos previousPosition, std::shared_ptr<std::map<NotePos, NoteRowPossibleStates>> parent,
+	NoteRowPossibleStates<rowSize>::NoteRowPossibleStates(NotePos position, NotePos previousPosition, shared_ptr<map<NotePos, NoteRowPossibleStates>> parent,
 			const Chart<rowSize>& chart, bool allowDoublesteps) :
 		states{},
 		statesToLinks{},

@@ -47,7 +47,7 @@ export namespace DanceCommon
 			}
 			else
 			{
-				throw std::logic_error("Cannot move limb into panel: the panel is already occupied with another limb");
+				throw logic_error("Cannot move limb into panel: the panel is already occupied with another limb");
 			}
 		}
 

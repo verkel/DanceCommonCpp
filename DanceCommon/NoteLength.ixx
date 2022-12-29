@@ -29,7 +29,7 @@ export namespace DanceCommon
 		 * exists because that resolution is used when a measure contains both 12th
 		 * and 32nd notes and None.
 		 **/
-		static constexpr std::array UsableValues
+		static constexpr array UsableValues
 		{
 			NoteLength::Note_4th,
 			NoteLength::Note_8th,
@@ -46,7 +46,7 @@ export namespace DanceCommon
 		/**
 		 * All the NoteLengths, except None
 		 */
-		static constexpr std::array Values
+		static constexpr array Values
 		{
 			NoteLength::Measure,
 			NoteLength::Note_4th,
@@ -78,7 +78,7 @@ export namespace DanceCommon
 				case NoteLength::Note_192nd: return 192;
 			}
 
-			throw ParseException(std::format("Unknown length: {}", (int)length));
+			throw ParseException(format("Unknown length: {}", (int)length));
 		}
 
 		static NoteLength FromResolution(int resolution)
@@ -98,7 +98,7 @@ export namespace DanceCommon
 				case 192: return NoteLength::Note_192nd;
 			}
 
-			throw ParseException(std::format("Unknown resolution: {}", resolution));
+			throw ParseException(format("Unknown resolution: {}", resolution));
 		}
 	};
 }
