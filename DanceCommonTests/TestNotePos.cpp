@@ -2,6 +2,8 @@
 #pragma warning(disable: 5050 4005)
 
 #include "gtest/gtest.h"
+
+import StdCore;
 import NotePos;
 import NoteLength;
 

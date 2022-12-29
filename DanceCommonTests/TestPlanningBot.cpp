@@ -2,12 +2,8 @@
 #pragma warning(disable: 5050 4005)
 
 #include "gtest/gtest.h"
-import <vector>;
-import <ostream>;
-import <sstream>;
-import <array>;
-import <string>;
-import <string_view>;
+
+import StdCore;
 import Song;
 import Chart;
 import PlanningBot;

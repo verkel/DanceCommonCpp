@@ -1,7 +1,6 @@
 export module Parser;
-import <fstream>;
-import <queue>;
-import <string>;
+
+import StdCore;
 
 export class Parser
 {

@@ -1,6 +1,5 @@
 export module ChartInfo;
-import <string>;
-import <optional>;
+import StdCore;
 import PlayStyle;
 import Difficulty;
 

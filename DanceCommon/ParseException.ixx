@@ -1,5 +1,6 @@
 export module ParseException;
-import <string>;
+
+import StdCore;
 
 export namespace DanceCommon
 {

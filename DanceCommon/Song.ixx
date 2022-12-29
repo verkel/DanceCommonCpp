@@ -1,9 +1,6 @@
 export module Song;
-import <istream>;
-import <format>;
-import <optional>;
-import <set>;
-import <memory>;
+
+import StdCore;
 import SongConstants;
 import SongMetadata;
 import SongMetadataComputations;

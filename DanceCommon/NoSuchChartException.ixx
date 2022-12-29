@@ -1,6 +1,6 @@
 export module NoSuchChartException;
-import <string>;
-import <sstream>;
+
+import StdCore;
 import ChartInfo;
 
 export namespace DanceCommon

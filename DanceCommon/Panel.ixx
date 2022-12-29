@@ -1,6 +1,6 @@
 ﻿export module Panel;
 
-import <stdexcept>;
+import StdCore;
 import PlayStyle;
 import MathUtils;
 

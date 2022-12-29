@@ -1,6 +1,5 @@
 export module NoteLength;
-import <array>;
-import <format>;
+import StdCore;
 import ParseException;
 
 export namespace DanceCommon

@@ -1,6 +1,6 @@
 export module NoteRow;
-import <string_view>;
-import <ranges>;
+
+import StdCore;
 import NoteType;
 import PlayStyle;
 import Panel;

@@ -2,6 +2,8 @@
 #pragma warning(disable: 5050 4005)
 
 #include "gtest/gtest.h"
+
+import StdCore;
 import Chart;
 import ChartInfo;
 import PlayStyle;
@@ -10,10 +12,6 @@ import NoteLength;
 import NotePos;
 import NoteRow;
 import NoSuchChartException;
-import <fstream>;
-import <optional>;
-import <string>;
-import <string_view>;
 
 using namespace DanceCommon;
 

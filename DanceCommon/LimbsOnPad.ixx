@@ -1,10 +1,9 @@
 ﻿export module LimbsOnPad;
 
+import StdCore;
 import PadPanels;
 import Panel;
 import Limb;
-import <initializer_list>;
-import <stdexcept>;
 
 export namespace DanceCommon
 {

@@ -1,8 +1,6 @@
 export module SongUtils;
-import <string_view>;
-import <utility>;
-import <format>;
-import <optional>;
+
+import StdCore;
 import Parser;
 import ParseException;
 import StringUtils;

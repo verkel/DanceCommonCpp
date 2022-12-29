@@ -1,6 +1,6 @@
 ﻿export module PadPanels;
-import <string_view>;
-import <initializer_list>;
+
+import StdCore;
 import NoteType;
 import PlayStyle;
 import Panel;

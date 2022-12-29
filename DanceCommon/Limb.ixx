@@ -1,5 +1,5 @@
 ﻿export module Limb;
-import <string_view>;
+import StdCore;
 
 namespace DanceCommon
 {

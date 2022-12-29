@@ -1,0 +1,26 @@
+﻿export module StdCore;
+
+export import <array>;
+export import <charconv>;
+export import <cmath>;
+export import <deque>;
+export import <format>;
+export import <fstream>;
+export import <functional>;
+export import <initializer_list>;
+export import <iostream>;
+export import <istream>;
+export import <map>;
+export import <memory>;
+export import <optional>;
+export import <queue>;
+export import <ranges>;
+export import <set>;
+export import <ostream>;
+export import <sstream>;
+export import <stdexcept>;
+export import <string_view>;
+export import <string>;
+export import <unordered_map>;
+export import <utility>;
+export import <vector>;

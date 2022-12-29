@@ -1,8 +1,6 @@
 export module StringUtils;
-import <string_view>;
-import <optional>;
-import <charconv>;
-import <vector>;
+
+import StdCore;
 
 export namespace DanceCommon
 {

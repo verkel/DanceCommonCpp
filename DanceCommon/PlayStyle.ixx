@@ -1,7 +1,6 @@
 export module PlayStyle;
-import <array>;
-import <string>;
-import <stdexcept>;
+
+import StdCore;
 
 export namespace DanceCommon
 {

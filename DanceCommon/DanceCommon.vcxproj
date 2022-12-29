@@ -163,7 +163,6 @@
     <ClCompile Include="Chart.ixx" />
     <ClCompile Include="ChartInfo.ixx" />
     <ClCompile Include="Computations.ixx" />
-    <ClCompile Include="DanceCommon.cpp" />
     <ClCompile Include="Difficulty.ixx" />
     <ClCompile Include="FacingType.ixx" />
     <ClCompile Include="FeetPlacement.ixx" />
@@ -192,6 +191,7 @@
     <ClCompile Include="SongUtils.ixx" />
     <ClCompile Include="State.ixx" />
     <ClCompile Include="StateLinks.ixx" />
+    <ClCompile Include="StdCore.ixx" />
     <ClCompile Include="StringUtils.ixx" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

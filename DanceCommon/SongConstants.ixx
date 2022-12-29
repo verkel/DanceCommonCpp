@@ -1,5 +1,6 @@
 export module SongConstants;
-import <string>;
+
+import StdCore;
 
 export namespace DanceCommon
 {

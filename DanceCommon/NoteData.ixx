@@ -1,8 +1,9 @@
 export module NoteData;
+
+import StdCore;
 import PlayStyle;
 import NotePos;
 import NoteRow;
-import <vector>;
 
 export namespace DanceCommon
 {

@@ -1,10 +1,6 @@
 export module SongMetadataComputations;
-import <map>;
-import <deque>;
-import <optional>;
-import <utility>;
-import <cmath>;
-import <functional>;
+
+import StdCore;
 
 export namespace DanceCommon
 {

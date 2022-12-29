@@ -2,6 +2,8 @@
 #pragma warning(disable: 5050 4005)
 
 #include "gtest/gtest.h"
+
+import StdCore;
 import Song;
 import SongMetadata;
 import SongMetadataComputations;
@@ -14,13 +16,6 @@ import NotePos;
 import NoteRow;
 import NoSuchChartException;
 import ParseException;
-import <fstream>;
-import <optional>;
-import <string>;
-import <string_view>;
-import <cmath>;
-import <vector>;
-import <utility>;
 
 using namespace DanceCommon;
 using Event = SongMetadataComputations::Event;

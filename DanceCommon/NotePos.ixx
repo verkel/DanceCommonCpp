@@ -1,6 +1,7 @@
 export module NotePos;
+
+import StdCore;
 import NoteLength;
-import <array>;
 
 export namespace DanceCommon
 {

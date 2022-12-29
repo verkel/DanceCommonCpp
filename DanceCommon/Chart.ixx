@@ -1,9 +1,6 @@
 export module Chart;
+import StdCore;
 import NotePos;
-import <string>;
-import <memory>;
-import <iostream>;
-import <format>;
 import SongConstants;
 import Difficulty;
 import NoteData;

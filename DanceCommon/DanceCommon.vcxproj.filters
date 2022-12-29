@@ -20,9 +20,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="DanceCommon.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="NotePos.ixx">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -117,6 +114,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="RobotPlay.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="StdCore.ixx">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

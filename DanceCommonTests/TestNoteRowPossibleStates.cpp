@@ -2,9 +2,8 @@
 #pragma warning(disable: 5050 4005)
 
 #include "gtest/gtest.h"
-import <vector>;
-import <ostream>;
-import <sstream>;
+
+import StdCore;
 import State;
 import Chart;
 import NoteRowPossibleStates;

@@ -1,7 +1,6 @@
 ﻿export module FeetPlacement;
 
-import <unordered_map>;
-import <array>;
+import StdCore;
 import LimbsOnPad;
 import PlayStyle;
 import FacingType;

@@ -1,9 +1,6 @@
 export module SongMetadata;
-import <string>;
-import <stdexcept>;
-import <map>;
-import <optional>;
-import <format>;
+
+import StdCore;
 import Parser;
 import SongUtils;
 import SongConstants;

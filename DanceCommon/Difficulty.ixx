@@ -1,9 +1,5 @@
 export module Difficulty;
-import <array>;
-import <string>;
-import <string_view>;
-import <format>;
-import <optional>;
+import StdCore;
 import ParseException;
 
 export namespace DanceCommon

@@ -2,6 +2,8 @@
 #pragma warning(disable: 5050 4005)
 
 #include "gtest/gtest.h"
+
+import StdCore;
 import Song;
 import Chart;
 import ChartInfo;
@@ -12,11 +14,6 @@ import NotePos;
 import NoteRow;
 import NoSuchChartException;
 import ParseException;
-import <fstream>;
-import <optional>;
-import <string>;
-import <string_view>;
-import <cmath>;
 
 using namespace DanceCommon;
 

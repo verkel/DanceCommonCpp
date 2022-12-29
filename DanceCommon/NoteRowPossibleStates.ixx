@@ -1,9 +1,6 @@
 ﻿export module NoteRowPossibleStates;
-import <vector>;
-import <map>;
-import <unordered_map>;
-import <memory>;
-import <optional>;
+
+import StdCore;
 import State;
 import StateLinks;
 import NotePos;

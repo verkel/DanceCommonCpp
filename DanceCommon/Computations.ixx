@@ -1,5 +1,5 @@
 ﻿export module Computations;
-
+import StdCore;
 import FeetPlacement;
 import Panel;
 

@@ -1,6 +1,6 @@
 export module NoteType;
-import <array>;
-import <format>;
+
+import StdCore;
 import ParseException;
 
 export namespace DanceCommon
