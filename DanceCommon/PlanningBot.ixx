@@ -70,13 +70,13 @@ namespace DanceCommon
 			for (auto it = rowPossibleStates.rbegin(); it != rowPossibleStates.rend(); it++)
 			{
 				shared_ptr<TNoteRowPossibleStates> states = it->second;
-				for (auto state : states->GetStates())
+				for (auto& state : states->GetStates())
 				{
-					auto stateLinks = states->GetStateLinks(*state);
+					auto stateLinks = states->GetStateLinks(state);
 					int lowestCost = previousStates != nullptr
 						? TStateLinksUtils::GetCheapestChildCost(stateLinks, *previousStates)
 						: 0;
-					stateLinks.costToGoal = state->GetCost() + lowestCost;
+					stateLinks.costToGoal = state./*GetCost()*/ComputeCost() + lowestCost;
 				}
 
 				previousStates = states;

@@ -20,7 +20,7 @@ static const string Expected2 =
 static const string Expected3 =
 	"[State { [L ] [R ] [LH] [RH], cost=0, angle=45, dAngle=45, dstep=False, airDstep=False, spin=False, movedLegs=2, llFreed=False, rlFreed=False }, State { [L ] [LH] [R ] [RH], cost=4, angle=-45, dAngle=-45, dstep=False, airDstep=False, spin=False, movedLegs=2, llFreed=False, rlFreed=False }, State { [L ] [RH] [LH] [R ], cost=2, angle=0, dAngle=0, dstep=False, airDstep=False, spin=False, movedLegs=2, llFreed=False, rlFreed=False }, State { [R ] [L ] [RH] [LH], cost=10, angle=-135, dAngle=-135, dstep=False, airDstep=False, spin=False, movedLegs=2, llFreed=False, rlFreed=False }, State { [LH] [L ] [R ] [RH], cost=2, angle=-90, dAngle=-90, dstep=False, airDstep=False, spin=False, movedLegs=2, llFreed=False, rlFreed=False }, State { [LH] [L ] [RH] [R ], cost=0, angle=-45, dAngle=-45, dstep=False, airDstep=False, spin=False, movedLegs=2, llFreed=False, rlFreed=False }, State { [R ] [RH] [L ] [LH], cost=6, angle=135, dAngle=135, dstep=False, airDstep=False, spin=False, movedLegs=2, llFreed=False, rlFreed=False }, State { [LH] [R ] [L ] [RH], cost=2, angle=90, dAngle=90, dstep=False, airDstep=False, spin=False, movedLegs=2, llFreed=False, rlFreed=False }, State { [LH] [RH] [L ] [R ], cost=4, angle=45, dAngle=45, dstep=False, airDstep=False, spin=False, movedLegs=2, llFreed=False, rlFreed=False }, State { [R ] [LH] [RH] [L ], cost=18, angle=180, dAngle=180, dstep=False, airDstep=False, spin=False, movedLegs=2, llFreed=False, rlFreed=False }, State { [RH] [R ] [LH] [L ], cost=10, angle=135, dAngle=135, dstep=False, airDstep=False, spin=False, movedLegs=2, llFreed=False, rlFreed=False }, State { [RH] [LH] [R ] [L ], cost=6, angle=-135, dAngle=-135, dstep=False, airDstep=False, spin=False, movedLegs=2, llFreed=False, rlFreed=False }]";
 
-static vector<shared_ptr<SinglesState>> GetStatesForRow(string_view noteStr)
+static vector<SinglesState> GetStatesForRow(string_view noteStr)
 {
 	SinglesChart chart{};
 	NoteRow<NoteRowSize::Single> row{noteStr};
@@ -31,7 +31,7 @@ static vector<shared_ptr<SinglesState>> GetStatesForRow(string_view noteStr)
 	return vector(states.GetStates());
 }
 
-static string ToString(const vector<shared_ptr<SinglesState>>& states)
+static string ToString(const vector<SinglesState>& states)
 {
 	stringstream ss;
 	ss << "[";
@@ -42,7 +42,7 @@ static string ToString(const vector<shared_ptr<SinglesState>>& states)
 		{
 			ss << ", ";
 		}
-		ss << *state;
+		ss << state;
 		first = false;
 	}
 	ss << "]";

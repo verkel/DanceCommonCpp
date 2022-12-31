@@ -16,7 +16,12 @@ export namespace DanceCommon
 			return PlayStyles::CenterPanelCount(PlayStyles::GetStyle(rowSize));
 		}
 
-		TValue values[rowSize + GetIndexOffset()];
+		static constexpr int Size()
+		{
+			return rowSize + GetIndexOffset();
+		}
+
+		TValue values[Size()];
 
 	public:
 		constexpr PadPanels() :
@@ -77,7 +82,7 @@ export namespace DanceCommon
 
 		friend bool operator==(const PadPanels& lhs, const PadPanels& rhs)
 		{
-			for (size_t i = 0; i < rowSize; i++)
+			for (size_t i = 0; i < Size(); i++)
 			{
 				if (lhs.values[i] != rhs.values[i])
 					return false;
@@ -89,6 +94,27 @@ export namespace DanceCommon
 		friend bool operator!=(const PadPanels& lhs, const PadPanels& rhs)
 		{
 			return !(lhs == rhs);
+		}
+
+		bool operator<(const PadPanels& rhs) const
+		{
+			for (size_t i = 0; i < Size()-1; i++)
+			{
+				if (values[i] != rhs.values[i])
+					return values[i] < rhs.values[i];
+			}
+
+			return values[Size()-1] < rhs.values[Size()-1];
+		}
+
+		int GetHashCode() const
+		{
+			int hash = Size();
+			for (size_t i = 0; i < Size(); i++)
+			{
+				hash = hash * 314159 + static_cast<int>(values[i]);
+			}
+			return hash;
 		}
 	};
 }

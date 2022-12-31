@@ -34,6 +34,7 @@ namespace DanceCommon
 
 	public:
 		//friend ostream& operator<<(ostream& os, const State<rowSize>& state);
+		friend std::hash<State>;
 
 		constexpr State() :
 			State(TLimbsOnPad{}, Limb::None, Limbs::All)
@@ -79,6 +80,35 @@ namespace DanceCommon
 		friend bool operator!=(const State& lhs, const State& rhs)
 		{
 			return !(lhs == rhs);
+		}
+
+		bool operator<(const State& rhs) const
+		{
+			if (cost != rhs.cost)
+				return cost < rhs.cost;
+
+			if (doublestep != rhs.doublestep)
+				return doublestep < rhs.doublestep;
+
+			if (airDoublestep != rhs.airDoublestep)
+				return airDoublestep < rhs.airDoublestep;
+
+			if (spin != rhs.spin)
+				return spin < rhs.spin;
+
+			if (angleDelta != rhs.angleDelta)
+				return angleDelta < rhs.angleDelta;
+
+			if (movedLegsAmount != rhs.movedLegsAmount)
+				return movedLegsAmount < rhs.movedLegsAmount;
+
+			if (freeLimbs != rhs.freeLimbs)
+				return freeLimbs < rhs.freeLimbs;
+
+			if (occupiedPanels != rhs.occupiedPanels)
+				return occupiedPanels < rhs.occupiedPanels;
+
+			return lastLeg < rhs.lastLeg;
 		}
 
 		State Before(const TNoteRow& noteRow) const
@@ -592,10 +622,10 @@ namespace std
 	export template <size_t rowSize>
 	struct hash<DanceCommon::State<rowSize>>
 	{
-		size_t operator()(const DanceCommon::State<rowSize>& k) const
+		size_t operator()(const DanceCommon::State<rowSize>& s) const
 		{
 			// TODO implement
-			return 0;
+			//return 0;
 
 			/*using size_t;
 				using hash;
@@ -608,6 +638,20 @@ namespace std
 				return ((hash<string>()(k.first)
 					^ (hash<string>()(k.second) << 1)) >> 1)
 					^ (hash<int>()(k.third) << 1);*/
+
+			constexpr int prime = 31;
+			int result = 1;
+			result = prime * result + s.angleDelta;
+			result = prime * result + (s.doublestep ? 1231 : 1237);
+			result = prime * result + (s.airDoublestep ? 1231 : 1237);
+			result = prime * result + static_cast<int>(s.freeLimbs);
+			result = prime * result + static_cast<int>(s.lastLeg);
+			result = prime * result + (s.leftLegFreed ? 1231 : 1237);
+			result = prime * result + s.movedLegsAmount;
+			result = prime * result + s.occupiedPanels.GetHashCode();
+			result = prime * result + (s.rightLegFreed ? 1231 : 1237);
+			result = prime * result + (s.spin ? 1231 : 1237);
+			return result;
 		}
 	};
 }

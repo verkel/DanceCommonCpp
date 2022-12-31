@@ -23,22 +23,22 @@ namespace DanceCommon
 			if (stateLinks.linksFrom.size() == 0) return 0;
 
 			int lowestCost = INT_MAX;
-			for (const shared_ptr<TState>& state : stateLinks.linksFrom)
+			for (const TState& state : stateLinks.linksFrom)
 			{
-				int cost = childStates.GetStateLinks(*state).costToGoal;
+				int cost = childStates.GetStateLinks(state).costToGoal;
 				if (cost < lowestCost) lowestCost = cost;
 			}
 
 			return lowestCost;
 		}
 
-		static shared_ptr<TState> GetCheapestChild(const TStateLinks& stateLinks, const TNoteRowPossibleStates& childStates)
+		static const TState& GetCheapestChild(const TStateLinks& stateLinks, const TNoteRowPossibleStates& childStates)
 		{
 			int lowestCost = INT_MAX;
-			shared_ptr<TState> lowestChild = nullptr;
-			for (const shared_ptr<TState>& state : stateLinks.linksFrom)
+			optional<reference_wrapper<const TState>> lowestChild = nullopt;
+			for (const TState& state : stateLinks.linksFrom)
 			{
-				int cost = childStates.GetStateLinks(*state).costToGoal;
+				int cost = childStates.GetStateLinks(state).costToGoal;
 				if (cost < lowestCost) 
 				{
 					lowestCost = cost;
@@ -46,7 +46,10 @@ namespace DanceCommon
 				}
 			}
 
-			return lowestChild;
+			if (lowestChild)
+				return lowestChild.value();
+			else
+				throw range_error("no children");
 		}
 	};
 }

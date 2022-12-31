@@ -10,8 +10,8 @@ namespace DanceCommon
 		using TState = State<rowSize>;
 
 	public:
-		set<shared_ptr<TState>> linksTo;
-		set<shared_ptr<TState>> linksFrom;
+		set<TState> linksTo;
+		set<TState> linksFrom;
 		int costToGoal = -1;
 	};
 }
