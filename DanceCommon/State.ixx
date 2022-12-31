@@ -35,12 +35,17 @@ namespace DanceCommon
 	public:
 		//friend ostream& operator<<(ostream& os, const State<rowSize>& state);
 
-		State(const LimbsOnPad<rowSize>& occupiedPanels, Limb lastLeg, Limb freeLimbs) :
+		constexpr State() :
+			State(TLimbsOnPad{}, Limb::None, Limbs::All)
+		{
+		}
+
+		constexpr State(const TLimbsOnPad& occupiedPanels, Limb lastLeg, Limb freeLimbs) :
 			State(occupiedPanels, lastLeg, freeLimbs, false, false, 0, 0, false, false, false)
 		{
 		}
 
-		State(const LimbsOnPad<rowSize>& occupiedPanels, Limb lastLeg, Limb freeLimbs, bool doublestep,	bool airDoublestep,
+		constexpr State(const TLimbsOnPad& occupiedPanels, Limb lastLeg, Limb freeLimbs, bool doublestep, bool airDoublestep,
 				int movedLegsAmount, int angleDelta, bool spin, bool leftLegFreed, bool rightLegFreed) :
 			occupiedPanels(occupiedPanels),
 			lastLeg(lastLeg),
@@ -548,7 +553,9 @@ namespace DanceCommon
 	class States
 	{
 	private:
-		static inline const State<rowSize> Empty = State{LimbsOnPad<rowSize>{}, Limb::None, Limbs::All};
+		// I'm seeing some memory corruption happening with this. freeLimbs = 88 instead of 15=Limbs:All
+		// and TestNoteRowPossibleStates randomly failing because of this.
+		static inline constexpr State<rowSize> Empty = State{LimbsOnPad<rowSize>{}, Limb::None, Limbs::All};
 
 	public:
 		static const State<rowSize>& GetDefault();
@@ -559,7 +566,7 @@ namespace DanceCommon
 		}
 	};
 
-	const State<NoteRowSize::Single> DefaultStateSingle{LimbsOnPad<NoteRowSize::Single>{
+	static inline constexpr State DefaultStateSingle{LimbsOnPad<NoteRowSize::Single>{
 		Limb::None, Limb::LeftLeg, Limb::None, Limb::None, Limb::RightLeg},
 		Limb::None, Limbs::All };
 
@@ -569,7 +576,7 @@ namespace DanceCommon
 		return DefaultStateSingle;
 	}
 
-	const State<NoteRowSize::Double> DefaultStateDouble{LimbsOnPad<NoteRowSize::Double>{
+	static inline constexpr State DefaultStateDouble{LimbsOnPad<NoteRowSize::Double>{
 		Limb::None, Limb::None, Limb::LeftLeg, Limb::None, Limb::None, Limb::RightLeg, Limb::None, Limb::None, Limb::None, Limb::None},
 		Limb::None, Limbs::All };
 

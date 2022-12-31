@@ -2,13 +2,16 @@
 import StdCore;
 import State;
 
-export namespace DanceCommon
+namespace DanceCommon
 {
 	export template<size_t rowSize>
 	class StateLinks
 	{
+		using TState = State<rowSize>;
+
 	public:
-		set<shared_ptr<State<rowSize>>> linksTo;
-		set<shared_ptr<State<rowSize>>> linksFrom;
+		set<shared_ptr<TState>> linksTo;
+		set<shared_ptr<TState>> linksFrom;
+		int costToGoal = -1;
 	};
 }

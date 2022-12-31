@@ -19,11 +19,11 @@ export namespace DanceCommon
 		TValue values[rowSize + GetIndexOffset()];
 
 	public:
-		PadPanels() :
+		constexpr PadPanels() :
 			values {}
 		{ }
 
-		PadPanels(initializer_list<TValue> list) :
+		constexpr PadPanels(initializer_list<TValue> list) :
 			values {}
 		{
 			size_t i = 0;

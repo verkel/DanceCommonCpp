@@ -191,6 +191,7 @@
     <ClCompile Include="SongUtils.ixx" />
     <ClCompile Include="State.ixx" />
     <ClCompile Include="StateLinks.ixx" />
+    <ClCompile Include="StateLinksUtils.ixx" />
     <ClCompile Include="StdCore.ixx" />
     <ClCompile Include="StringUtils.ixx" />
   </ItemGroup>

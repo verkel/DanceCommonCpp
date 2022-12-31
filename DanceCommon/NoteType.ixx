@@ -16,17 +16,17 @@ export namespace DanceCommon
 		VirtualTap = 1 << 6
 	};
 
-	inline NoteType operator|(NoteType a, NoteType b)
+	constexpr NoteType operator|(NoteType a, NoteType b)
 	{
 	    return static_cast<NoteType>(static_cast<int>(a) | static_cast<int>(b));
 	}
 
-	inline NoteType operator&(NoteType a, NoteType b)
+	constexpr NoteType operator&(NoteType a, NoteType b)
 	{
 	    return static_cast<NoteType>(static_cast<int>(a) & static_cast<int>(b));
 	}
 
-	inline NoteType operator~(NoteType a)
+	constexpr NoteType operator~(NoteType a)
 	{
 	    return static_cast<NoteType>(~static_cast<int>(a));
 	}
@@ -34,9 +34,9 @@ export namespace DanceCommon
 	export class NoteTypes
 	{
 	public:
-		static inline const NoteType Holdable = NoteType::HoldStart | NoteType::RollStart;
-		static inline const NoteType Tap = NoteType::Tap | NoteType::VirtualTap;
-		static inline const NoteType Tappable = Tap | Holdable;
+		static inline constexpr NoteType Holdable = NoteType::HoldStart | NoteType::RollStart;
+		static inline constexpr NoteType Tap = NoteType::Tap | NoteType::VirtualTap;
+		static inline constexpr NoteType Tappable = Tap | Holdable;
 
 		static NoteType Get(char c)
 		{

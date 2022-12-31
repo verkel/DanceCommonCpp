@@ -1,5 +1,6 @@
 ﻿export module StdCore;
 
+export import <algorithm>;
 export import <array>;
 export import <charconv>;
 export import <cmath>;
@@ -10,6 +11,7 @@ export import <functional>;
 export import <initializer_list>;
 export import <iostream>;
 export import <istream>;
+export import <limits>;
 export import <map>;
 export import <memory>;
 export import <optional>;

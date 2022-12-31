@@ -12,17 +12,17 @@ namespace DanceCommon
 		RightHand = 1 << 3,
 	};
 
-	inline Limb operator|(Limb a, Limb b)
+	constexpr Limb operator|(Limb a, Limb b)
 	{
 	    return static_cast<Limb>(static_cast<int>(a) | static_cast<int>(b));
 	}
 
-	inline Limb operator&(Limb a, Limb b)
+	constexpr Limb operator&(Limb a, Limb b)
 	{
 	    return static_cast<Limb>(static_cast<int>(a) & static_cast<int>(b));
 	}
 
-	inline Limb operator~(Limb a)
+	constexpr Limb operator~(Limb a)
 	{
 	    return static_cast<Limb>(~static_cast<int>(a));
 	}
@@ -30,8 +30,8 @@ namespace DanceCommon
 	export class Limbs
 	{
 	public:
-		static inline const Limb BothLegs = Limb::LeftLeg | Limb::RightLeg;
-		static inline const Limb All = Limb::LeftLeg | Limb::RightLeg | Limb::LeftHand | Limb::RightHand;
+		static inline constexpr Limb BothLegs = Limb::LeftLeg | Limb::RightLeg;
+		static inline constexpr Limb All = Limb::LeftLeg | Limb::RightLeg | Limb::LeftHand | Limb::RightHand;
 
 		static bool IsLeg(Limb limb)
 		{

@@ -67,6 +67,6 @@ export namespace DanceCommon
 	class LimbsOnPads
 	{
 	public:
-		static inline const LimbsOnPad<rowSize> Empty{};
+		static inline constexpr LimbsOnPad<rowSize> Empty{};
 	};
 }

@@ -25,7 +25,7 @@ static vector<shared_ptr<SinglesState>> GetStatesForRow(string_view noteStr)
 	SinglesChart chart{};
 	NoteRow<NoteRowSize::Single> row{noteStr};
 	chart.SetNoteRow(0, row, true);
-	auto parent = make_shared<map<NotePos, NoteRowPossibleStates<NoteRowSize::Single>>>();
+	map<NotePos, shared_ptr<NoteRowPossibleStates<NoteRowSize::Single>>> parent;
 	NoteRowPossibleStates<NoteRowSize::Single> states{0, -1, parent, chart, true};
 	states.InsertPossibleStates();
 	return vector(states.GetStates());

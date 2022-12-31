@@ -9,6 +9,9 @@ import NoteType;
 import Chart;
 import Computations;
 import FeetPlacement;
+import LimbsOnPad;
+import Limb;
+import Panel;
 
 namespace DanceCommon
 {
@@ -25,7 +28,7 @@ namespace DanceCommon
 	private:
 		vector<shared_ptr<TState>> states;
 		unordered_map<TState, TStateLinks> statesToLinks;
-		shared_ptr<map<NotePos, NoteRowPossibleStates>> parent;
+		map<NotePos, shared_ptr<NoteRowPossibleStates>>& parent;
 
 		NotePos previousPosition;
 		NotePos position;
@@ -33,7 +36,7 @@ namespace DanceCommon
 		bool allowDoublesteps;
 
 	public:
-		NoteRowPossibleStates(NotePos position, NotePos previousPosition, shared_ptr<map<NotePos, NoteRowPossibleStates>> parent,
+		NoteRowPossibleStates(NotePos position, NotePos previousPosition, map<NotePos, shared_ptr<NoteRowPossibleStates>>& parent,
 			const Chart<rowSize>& chart, bool allowDoublesteps);
 
 		void InsertPossibleStates()
@@ -45,10 +48,10 @@ namespace DanceCommon
 			}
 			else
 			{
-				NoteRowPossibleStates& previousStates = parent->at(previousPosition);
-				for (const auto& previousState : previousStates.GetStates())
+				shared_ptr<NoteRowPossibleStates> previousStates = parent.at(previousPosition);
+				for (const auto& previousState : previousStates->GetStates())
 				{
-					auto previousStateLinks = previousStates.GetStateLinks(*previousState);
+					auto previousStateLinks = previousStates->GetStateLinks(*previousState);
 					InsertPossibleStatesFor(previousState, previousStateLinks);
 				}
 			}
@@ -309,19 +312,39 @@ namespace DanceCommon
 			childLinks.linksTo.insert(parent);
 		}
 
-		const auto GetStates() const
+		const vector<shared_ptr<TState>>& GetStates() const
 		{
 			return states;
 		}
 
-		const TStateLinks& GetStateLinks(const TState& state)
+		const TStateLinks& GetStateLinks(const TState& state) const
 		{
 			return statesToLinks.at(state);
+		}
+
+		const TState& GetCheapestState()
+		{
+			int lowestCost = INT_MAX;
+			auto lowest = statesToLinks.end();
+			for (auto it = statesToLinks.begin(); it != statesToLinks.end(); it++)
+			{
+				int cost = it->second.costToGoal;
+				if (cost < lowestCost)
+				{
+					lowestCost = cost;
+					lowest = it;
+				}
+			}
+			
+			if (lowest != statesToLinks.end())
+				return lowest->first;
+
+			throw range_error("statesToLinks is empty");
 		}
 	};
 
 	template<size_t rowSize>
-	NoteRowPossibleStates<rowSize>::NoteRowPossibleStates(NotePos position, NotePos previousPosition, shared_ptr<map<NotePos, NoteRowPossibleStates>> parent,
+	NoteRowPossibleStates<rowSize>::NoteRowPossibleStates(NotePos position, NotePos previousPosition, map<NotePos, shared_ptr<NoteRowPossibleStates>>& parent,
 			const Chart<rowSize>& chart, bool allowDoublesteps) :
 		states{},
 		statesToLinks{},
