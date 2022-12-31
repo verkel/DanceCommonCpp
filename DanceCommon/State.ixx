@@ -24,9 +24,9 @@ namespace DanceCommon
 		TLimbsOnPad occupiedPanels;
 		Limb lastLeg;
 		Limb /*bitmask*/ freeLimbs;
-		int movedLegsAmount;
-		int angleDelta;
-		int cost;
+		unsigned char movedLegsAmount;
+		short angleDelta;
+		short cost;
 		bool leftLegFreed, rightLegFreed;
 		bool doublestep;
 		bool airDoublestep;
@@ -46,7 +46,7 @@ namespace DanceCommon
 		}
 
 		constexpr State(const TLimbsOnPad& occupiedPanels, Limb lastLeg, Limb freeLimbs, bool doublestep, bool airDoublestep,
-				int movedLegsAmount, int angleDelta, bool spin, bool leftLegFreed, bool rightLegFreed) :
+				unsigned char movedLegsAmount, short angleDelta, bool spin, bool leftLegFreed, bool rightLegFreed) :
 			occupiedPanels(occupiedPanels),
 			lastLeg(lastLeg),
 			freeLimbs(freeLimbs),
@@ -114,7 +114,7 @@ namespace DanceCommon
 
 		int ComputeCost() const
 		{
-			int cost = 0;
+			short cost = 0;
 
 			Panel leftLegPanel = GetOccupyingPanel(Limb::LeftLeg);
 			Panel rightLegPanel = GetOccupyingPanel(Limb::RightLeg);
@@ -125,7 +125,7 @@ namespace DanceCommon
 			FacingType facingType = placement.GetFacingType();
 
 			int angle = abs(GetAngle());
-			int angleDelta = abs(GetAngleDelta());
+			short angleDelta = abs(GetAngleDelta());
 
 			if (angle >= 135) cost += 1;
 
@@ -389,7 +389,7 @@ namespace DanceCommon
 			int previousAngle = this->GetAngle();
 			int angle = state.GetAngle();
 
-			int angleDelta = angle - previousAngle;
+			short angleDelta = angle - previousAngle;
 			int properAngleDelta = angleDelta + ((angleDelta > 180) ? -360 : (angleDelta < -180) ? 360 : 0);
 
 			state.angleDelta = properAngleDelta;
