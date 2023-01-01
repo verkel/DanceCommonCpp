@@ -37,6 +37,7 @@
     <ClCompile Include="TestNotePos.cpp" />
     <ClCompile Include="TestNoteRowPossibleStates.cpp" />
     <ClCompile Include="TestPlanningBot.cpp" />
+    <ClCompile Include="TestRobotPlaysDT.cpp" />
     <ClCompile Include="TestSong.cpp" />
     <ClCompile Include="TestSongMetadataComputations.cpp" />
   </ItemGroup>

@@ -29,17 +29,30 @@ export namespace DanceCommon
 			return Song(parser);
 		}
 
+		static shared_ptr<Song> LoadAsSharedPtr(istream& stream)
+		{
+			Parser parser{ stream, 1 };
+			return make_shared<Song>(parser);
+		}
+
+		Song(Parser& parser) :
+			metadata{parser},
+			musicLength{0.0}
+		{
+			DoLoad(parser);
+		}
+
 		const SongMetadata& GetMetadata() const
 		{
 			return metadata;
 		}
 
-		const auto GetSinglesCharts() const
+		const auto& GetSinglesCharts() const
 		{
 			return singlesCharts;
 		}
 
-		const auto GetDoublesCharts() const
+		const auto& GetDoublesCharts() const
 		{
 			return doublesCharts;
 		}
@@ -144,13 +157,6 @@ export namespace DanceCommon
 		}
 
 	private:
-		Song(Parser& parser) :
-			metadata{parser},
-			musicLength{0.0}
-		{
-			DoLoad(parser);
-		}
-
 		void DoLoad(Parser& parser)
 		{
 			string line;

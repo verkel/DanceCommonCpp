@@ -119,7 +119,7 @@ export namespace DanceCommon
 			return description < rhs.description;
 		}
 
-		string GetDescription() const
+		const string& GetDescription() const
 		{
 			return description;
 		}

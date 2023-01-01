@@ -35,7 +35,7 @@ static Song GetSilikon()
 TEST(Song, Load)
 {
 	Song song = GetVertexDelta();
-	auto m = song.GetMetadata();
+	const auto& m = song.GetMetadata();
 	EXPECT_EQ("Vertex Delta", m.GetTitle());
 	EXPECT_EQ("Silvia", m.GetArtist());
 	EXPECT_EQ("Steps by Verkel", m.GetCredit());
@@ -48,11 +48,11 @@ TEST(Song, Load)
 	EXPECT_NEAR(12.000, m.GetSamplelength(), Epsilon);
 	EXPECT_EQ("YES", m.GetSelectable());
 
-	auto charts = song.GetSinglesCharts();
+	const auto& charts = song.GetSinglesCharts();
 	EXPECT_EQ(5, charts.size());
 	
 	size_t i = 0;
-	for (auto chart : charts)
+	for (const auto& chart : charts)
 	{
 		EXPECT_EQ("Verkel", chart->GetDescription());
 

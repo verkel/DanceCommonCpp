@@ -157,6 +157,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\..\Users\verkel\Downloads\json.hpp" />
     <ClInclude Include="framework.h" />
   </ItemGroup>
   <ItemGroup>

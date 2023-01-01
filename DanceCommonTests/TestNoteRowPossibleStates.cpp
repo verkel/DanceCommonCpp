@@ -36,7 +36,7 @@ static string ToString(const vector<SinglesState>& states)
 	stringstream ss;
 	ss << "[";
 	bool first = true;
-	for (auto state : states)
+	for (const auto& state : states)
 	{
 		if (!first)
 		{
