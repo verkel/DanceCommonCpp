@@ -18,6 +18,12 @@ static SinglesChart GetSilikonExpert()
 	return SinglesChart{ stream, ChartMatchInfo{ PlayStyle::Single, Difficulty::Expert, nullopt, nullopt } };
 }
 
+static SinglesChart GetAuyTranceHard()
+{
+	ifstream stream{ "ayutrance2.sm" };
+	return SinglesChart{ stream, ChartMatchInfo{ PlayStyle::Single, Difficulty::Hard, nullopt, nullopt } };
+}
+
 TEST(PlanningBot, PlaySilikon)
 {
 	array<string, 10> Expected =
@@ -70,4 +76,12 @@ TEST(PlanningBot, PlaySilikon)
 	}
 	
 	EXPECT_EQ(4248, position);
+}
+
+TEST(PlanningBot, PlayAyuTrance)
+{
+	SinglesChart chart = GetAuyTranceHard();
+	SinglesPlanningBot bot;
+	bot.SetAllowDoublesteps(true);
+	auto play = bot.Play(chart);
 }
