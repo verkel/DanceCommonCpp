@@ -14,7 +14,7 @@ namespace DanceCommon
 		StateLinks(const StateLinks&) = delete;
 		StateLinks& operator=(const StateLinks&) = delete;
 
-		set<TState> linksTo;
+		//set<TState> linksTo;
 		set<TState> linksFrom;
 		int costToGoal = -1;
 	};

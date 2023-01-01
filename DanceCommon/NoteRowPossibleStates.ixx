@@ -304,7 +304,7 @@ namespace DanceCommon
 		static void LinkStates(const TState& parent, TStateLinks& parentLinks, const TState& child, TStateLinks& childLinks)
 		{
 			parentLinks.linksFrom.insert(child);
-			childLinks.linksTo.insert(parent);
+			//childLinks.linksTo.insert(parent);
 		}
 
 		const vector<TState>& GetStates() const
