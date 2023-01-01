@@ -72,7 +72,7 @@ namespace DanceCommon
 				shared_ptr<TNoteRowPossibleStates> states = it->second;
 				for (auto& state : states->GetStates())
 				{
-					auto stateLinks = states->GetStateLinks(state);
+					auto& stateLinks = states->GetStateLinks(state);
 					int lowestCost = previousStates != nullptr
 						? TStateLinksUtils::GetCheapestChildCost(stateLinks, *previousStates)
 						: 0;

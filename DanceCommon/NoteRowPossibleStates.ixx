@@ -39,24 +39,28 @@ namespace DanceCommon
 		NoteRowPossibleStates(NotePos position, NotePos previousPosition, map<NotePos, shared_ptr<NoteRowPossibleStates>>& parent,
 			const Chart<rowSize>& chart, bool allowDoublesteps);
 
+		NoteRowPossibleStates (const NoteRowPossibleStates&) = delete;
+		NoteRowPossibleStates& operator= (const NoteRowPossibleStates&) = delete;
+
 		void InsertPossibleStates()
 		{
 			if (previousPosition == -1)
 			{
-				InsertPossibleStatesFor(TStates::GetEmpty(), nullopt);
+				TStateLinks emptyLinks;
+				InsertPossibleStatesFor(TStates::GetEmpty(), emptyLinks);
 			}
 			else
 			{
 				shared_ptr<NoteRowPossibleStates> previousStates = parent.at(previousPosition);
-				for (const auto& previousState : previousStates->GetStates())
+				for (auto& previousState : previousStates->GetStates())
 				{
-					auto previousStateLinks = previousStates->GetStateLinks(previousState);
+					auto& previousStateLinks = previousStates->GetStateLinks(previousState);
 					InsertPossibleStatesFor(previousState, previousStateLinks);
 				}
 			}
 		}
 
-		void InsertPossibleStatesFor(const TState& previousState, TOptionalStateLinks previousStateLinks)
+		void InsertPossibleStatesFor(const TState& previousState, TStateLinks& previousStateLinks)
 		{
 			auto [tappables, tappablesCount] = noteRow.GetTappablesWithCount();
 
@@ -74,7 +78,7 @@ namespace DanceCommon
 			}
 		}
 
-		void InsertSingleTapStates(const TState& previousState, TOptionalStateLinks previousStateLinks)
+		void InsertSingleTapStates(const TState& previousState, TStateLinks& previousStateLinks)
 		{
 			TState beforeTapState = previousState.Before(noteRow);
 
@@ -143,7 +147,7 @@ namespace DanceCommon
 			TapAndInsertState(previousState, beforeTapState, previousStateLinks, panel, hand);
 		}
 
-		void InsertMultipleTapsStates(const TState& previousState, TOptionalStateLinks previousStateLinks)
+		void InsertMultipleTapsStates(const TState& previousState, TStateLinks& previousStateLinks)
 		{
 			TState beforeTapState = previousState.Before(noteRow);
 			auto freeLimbs = beforeTapState.GetFreeLimbs();
@@ -193,7 +197,7 @@ namespace DanceCommon
 		}
 
 		void FillHandsAndInsert(Panel tapPanel1, Panel tapPanel2, Limb/*bitmask*/ freeLimbs,
-			int handsOffset, const TState& previousState, const TState& beforeTapState, TOptionalStateLinks previousStateLinks)
+			int handsOffset, const TState& previousState, const TState& beforeTapState, TStateLinks& previousStateLinks)
 		{
 			TLimbsOnPad limbsUsed;
 
@@ -270,7 +274,7 @@ namespace DanceCommon
 			TapAndInsertState(previousState, beforeTapState, previousStateLinks, limbsUsed);
 		}
 
-		void TapAndInsertState(const TState& previousState, const TState& beforeTapState, TOptionalStateLinks previousStateLinks,
+		void TapAndInsertState(const TState& previousState, const TState& beforeTapState, TStateLinks& previousStateLinks,
 			Panel panel, Limb limb)
 		{
 			TLimbsOnPad limbsUsed;
@@ -278,27 +282,22 @@ namespace DanceCommon
 			TapAndInsertState(previousState, beforeTapState, previousStateLinks, limbsUsed);
 		}
 
-		void TapAndInsertState(const TState& previousState, const TState& beforeTapState, TOptionalStateLinks previousStateLinks, const TLimbsOnPad& limbsUsed)
+		void TapAndInsertState(const TState& previousState, const TState& beforeTapState, TStateLinks& previousStateLinks, const TLimbsOnPad& limbsUsed)
 		{
 			TState state = beforeTapState.Tap(noteRow, limbsUsed);
 
 			auto stateLinksItr = statesToLinks.find(state);
 			if (stateLinksItr == statesToLinks.end())
 			{
-				statesToLinks[state] = TStateLinks{};
+				statesToLinks.try_emplace(state); // insert empty StateLinks
 				states.push_back(state);
 
-				if (previousStateLinks)
-				{
-					LinkStates(previousState, previousStateLinks.value(), state, statesToLinks[state]);
-				}
+				LinkStates(previousState, previousStateLinks, state, statesToLinks[state]);
+
 			}
 			else
 			{
-				if (previousStateLinks)
-				{
-					LinkStates(previousState, previousStateLinks.value(), state, stateLinksItr->second);
-				}
+				LinkStates(previousState, previousStateLinks, state, stateLinksItr->second);
 			}
 		}
 
@@ -313,7 +312,17 @@ namespace DanceCommon
 			return states;
 		}
 
+		vector<TState>& GetStates()
+		{
+			return states;
+		}
+
 		const TStateLinks& GetStateLinks(const TState& state) const
+		{
+			return statesToLinks.at(state);
+		}
+
+		TStateLinks& GetStateLinks(const TState& state)
 		{
 			return statesToLinks.at(state);
 		}
