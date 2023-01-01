@@ -25,7 +25,7 @@ static const double TimeEpsilon = 0.001;
 
 static Song GetSilikon()
 {
-	ifstream stream{ "silikon.sm" };
+	ifstream stream{ "songs/silikon.sm" };
 	return Song::Load(stream);
 }
 

@@ -22,13 +22,13 @@ static const double TimeEpsilon = 0.001;
 
 static Song GetVertexDelta()
 {
-	ifstream stream{ "Vertex_Delta.sm" };
+	ifstream stream{ "songs/Vertex_Delta.sm" };
 	return Song::Load(stream);
 }
 
 static Song GetSilikon()
 {
-	ifstream stream{ "silikon.sm" };
+	ifstream stream{ "songs/silikon.sm" };
 	return Song::Load(stream);
 }
 

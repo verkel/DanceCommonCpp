@@ -14,13 +14,13 @@ using namespace DanceCommon;
 
 static SinglesChart GetSilikonExpert()
 {
-	ifstream stream{ "silikon.sm" };
+	ifstream stream{ "songs/silikon.sm" };
 	return SinglesChart{ stream, ChartMatchInfo{ PlayStyle::Single, Difficulty::Expert, nullopt, nullopt } };
 }
 
 static SinglesChart GetAuyTranceHard()
 {
-	ifstream stream{ "ayutrance2.sm" };
+	ifstream stream{ "songs/ayutrance2.sm" };
 	return SinglesChart{ stream, ChartMatchInfo{ PlayStyle::Single, Difficulty::Hard, nullopt, nullopt } };
 }
 
