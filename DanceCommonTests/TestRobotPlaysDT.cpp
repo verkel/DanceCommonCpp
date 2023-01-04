@@ -10,18 +10,25 @@ import Chart;
 import PlayStyle;
 import Difficulty;
 import PlanningBot;
+import Play;
 
 using namespace DanceCommon;
 namespace fs = std::filesystem;
-using TSongAndChart = pair<shared_ptr<Song>, shared_ptr<SinglesChart>>;
 
-class TestRobotPlaysDT : public testing::TestWithParam<TSongAndChart>
+struct ChartEntry
+{
+	shared_ptr<Song> song;
+	shared_ptr<SinglesChart> chart;
+	string songPath;
+};
+
+class TestRobotPlaysDT : public testing::TestWithParam<ChartEntry>
 {
 };
 
-static vector<TSongAndChart> GetCharts()
+static vector<ChartEntry> GetCharts()
 {
-	vector<TSongAndChart> results;
+	vector<ChartEntry> results;
 	for (const auto& songDir : fs::directory_iterator{ "songs/DanceTricks" })
 	{
 		if (songDir.is_directory())
@@ -36,7 +43,7 @@ static vector<TSongAndChart> GetCharts()
 					const auto& charts = song->GetSinglesCharts();
 					for (const auto& chart : charts)
 					{
-						results.push_back({ song, chart });
+						results.push_back(ChartEntry{song, chart, path});
 					}
 				}
 			}
@@ -46,13 +53,26 @@ static vector<TSongAndChart> GetCharts()
 	return results;
 }
 
+static string GetChartPlayPath(const string& songPath, const SinglesChart& chart)
+{
+	return ""; // TODO
+}
+
+static SinglesPlay LoadPlay(const ChartEntry& entry)
+{
+	string playPath = GetChartPlayPath(entry.songPath, *entry.chart);
+	ifstream stream{playPath};
+	return SinglesPlay{stream};
+}
+
 TEST_P(TestRobotPlaysDT, Chart)
 {
 	const auto& param = GetParam();
-	auto& chart = param.second;
+	auto& chart = param.chart;
 	SinglesPlanningBot bot;
 	bot.SetAllowDoublesteps(true);
-	auto play = bot.Play(*chart);
+	auto existingPlay = LoadPlay(param);
+	auto newPlay = bot.Play(*chart);
 	FAIL() << "TODO compare to expected play";
 }
 
@@ -63,10 +83,10 @@ INSTANTIATE_TEST_CASE_P(
 	// Show readable names for charts
 	// But this causes these warnings on test discovery, for every chart:
 	// Warning: Could not find source location for test TestRobotPlaysDT/TestRobotPlaysDT.Chart/Bodybuilder_Verkel_Expert_9
-	[](const testing::TestParamInfo<TSongAndChart>& info)
+	[](const testing::TestParamInfo<ChartEntry>& info)
 	{
-		auto& song = info.param.first;
-		auto& chart = info.param.second;
+		auto& song = info.param.song;
+		auto& chart = info.param.chart;
 		string name = format("{} {} {} {}", song->GetMetadata().GetTitle(), chart->GetDescription(), Difficulties::GetName(chart->GetDifficulty()), chart->GetRating());
 		std::ranges::replace(name, ' ', '_');
 		name.erase(std::remove_if(name.begin(), name.end(), []( auto const& c ) -> bool { return c != '_' && !std::isalnum(c); }), name.end());
