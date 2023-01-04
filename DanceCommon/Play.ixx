@@ -1,4 +1,5 @@
 ﻿export module Play;
+import StdCore;
 import State;
 import NotePos;
 
@@ -9,10 +10,22 @@ namespace DanceCommon
 	{
 		using TState = State<rowSize>;
 
-	public:
-		virtual ~Play() = default;
-		virtual size_t GetCount() = 0;
+		map<NotePos, TState> states;
 
-		virtual const TState& operator[](NotePos pos) const = 0;
+	public:
+		size_t GetCount()
+		{
+			return states.size();
+		}
+
+		const TState& operator[](NotePos pos) const
+		{
+			return states.at(pos);
+		}
+
+		TState& operator[](NotePos pos)
+		{
+			return states.at(pos);
+		}
 	};
 }

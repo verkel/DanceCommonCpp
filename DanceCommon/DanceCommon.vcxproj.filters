@@ -116,9 +116,6 @@
     <ClCompile Include="Play.ixx">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="RobotPlay.ixx">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="StdCore.ixx">
       <Filter>Source Files</Filter>
     </ClCompile>

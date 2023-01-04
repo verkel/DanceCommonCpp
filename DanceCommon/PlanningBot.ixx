@@ -2,7 +2,7 @@
 
 import StdCore;
 import Chart;
-import RobotPlay;
+import Play;
 import PlayStyle;
 import NotePos;
 import NoteRowPossibleStates;
@@ -16,16 +16,16 @@ namespace DanceCommon
 	class PlanningBot
 	{
 		using TChart = Chart<rowSize>;
-		using TRobotPlay = RobotPlay<rowSize>;
 		using TNoteRowPossibleStates = NoteRowPossibleStates<rowSize>;
 		using TStateLinks = StateLinks<rowSize>;
 		using TStateLinksUtils = StateLinksUtils<rowSize>;
 		using TState = State<rowSize>;
+		using TPlay = Play<rowSize>;
 
 		bool allowDoublesteps = false;
 
 	public:
-		TRobotPlay Play(const TChart& chart)
+		TPlay Play(const TChart& chart)
 		{
 			// We want roll taps in the chart
 			//if (!(chart is RollTapsChartDecorator))
@@ -34,8 +34,7 @@ namespace DanceCommon
 
 			auto rowPossibleStates = GenerateStateGraph(chart);
 			CalculateCostsToGoal(rowPossibleStates);
-
-			return TRobotPlay(rowPossibleStates);
+			return ComputeOptimalPlay(rowPossibleStates);
 		}
 
 		void SetAllowDoublesteps(bool allowDoublesteps)
@@ -61,7 +60,7 @@ namespace DanceCommon
 			return rowPossibleStates;
 		}
 
-		void CalculateCostsToGoal(const map<NotePos, shared_ptr<TNoteRowPossibleStates>>& rowPossibleStates)
+		static void CalculateCostsToGoal(const map<NotePos, shared_ptr<TNoteRowPossibleStates>>& rowPossibleStates)
 		{
 			if (rowPossibleStates.size() == 0) return;
 
@@ -81,6 +80,52 @@ namespace DanceCommon
 
 				previousStates = states;
 			}
+		}
+
+		static TPlay ComputeOptimalPlay(const map<NotePos, shared_ptr<TNoteRowPossibleStates>>& rowPossibleStates)
+		{
+			TPlay play;
+
+			if (rowPossibleStates.size() > 0)
+			{
+				auto it = rowPossibleStates.begin();
+
+				NotePos position = it->first;
+				shared_ptr<TNoteRowPossibleStates> row1PossibleStates = it->second;
+				reference_wrapper<const TState> state = std::ref(row1PossibleStates->GetCheapestState());
+				reference_wrapper<const TStateLinks> stateLinks = std::ref(row1PossibleStates->GetStateLinks(state));
+				play[position] = state;
+				SortCheapestStateFirst(*row1PossibleStates, state);
+				it++;
+
+				for (; it != rowPossibleStates.end(); it++)
+				{
+					position = it->first;
+					shared_ptr<TNoteRowPossibleStates> states = it->second;
+					state = StateLinksUtils<rowSize>::GetCheapestChild(stateLinks, *states);
+					stateLinks = states->GetStateLinks(state);
+					play[position] = state;
+					SortCheapestStateFirst(*states, state);
+				}
+			}
+
+			return play;
+		}
+
+		static void SortCheapestStateFirst(TNoteRowPossibleStates& states, const TState& cheapest)
+		{
+			auto statesList = states.GetStates();
+			if (statesList.size() < 2) return;
+			auto it = std::find(statesList.begin(), statesList.end(), cheapest);
+			if (it != statesList.end())
+			{
+				statesList.erase(it);
+			}
+			else
+			{
+				throw exception("Failed to reorder states");
+			}
+			statesList.insert(statesList.begin(), cheapest);
 		}
 	};
 
