@@ -583,8 +583,6 @@ namespace DanceCommon
 	class States
 	{
 	private:
-		// I'm seeing some memory corruption happening with this. freeLimbs = 88 instead of 15=Limbs:All
-		// and TestNoteRowPossibleStates randomly failing because of this.
 		static inline constexpr State<rowSize> Empty = State{LimbsOnPad<rowSize>{}, Limb::None, Limbs::All};
 
 	public:
