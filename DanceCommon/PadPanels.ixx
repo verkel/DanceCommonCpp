@@ -116,5 +116,31 @@ export namespace DanceCommon
 			}
 			return hash;
 		}
+
+		friend ostream& operator<<(ostream& os, const PadPanels& panels);
+				
+		ostream& Append(ostream& os) const
+		{
+			os << "[";
+			bool first = true;
+			for (const auto& value : values)
+			{
+				if (!first)
+					os << ", ";
+
+				os << value;
+
+				first = false;
+			}
+			os << "]";
+	        return os;
+		}
 	};
+
+	export template<typename TValue, size_t rowSize>
+	ostream& operator<<(ostream& os, const PadPanels<TValue, rowSize>& panels)
+	{
+		panels.Append(os);
+        return os;
+	}
 }

@@ -111,6 +111,44 @@ namespace DanceCommon
 			return lastLeg < rhs.lastLeg;
 		}
 
+		void Diff(const State& rhs, ostream& stream) const
+		{
+			if (cost != rhs.cost)
+				stream << "\tCost differs: " << cost << " vs " << rhs.cost << std::endl;
+
+			if (doublestep != rhs.doublestep)
+				stream << "\tDoublestep differs: " << doublestep << " vs " << rhs.doublestep << std::endl;
+
+			if (airDoublestep != rhs.airDoublestep)
+				stream << "\tAir doublestep differs: " << airDoublestep << " vs " << rhs.airDoublestep << std::endl;
+
+			if (spin != rhs.spin)
+				stream << "\tSpin differs: " << spin << " vs " << rhs.spin << std::endl;
+
+			if (angleDelta != rhs.angleDelta)
+				stream << "\tAngle delta differs: " << angleDelta << " vs " << rhs.angleDelta << std::endl;
+
+			if (movedLegsAmount != rhs.movedLegsAmount)
+				stream << "\tMoved legs differs: " << static_cast<int>(movedLegsAmount) << " vs " << static_cast<int>(rhs.movedLegsAmount) << std::endl;
+
+			if (freeLimbs != rhs.freeLimbs)
+				stream << "\tFree limbs differs: " << freeLimbs << " vs " << rhs.freeLimbs << std::endl;
+
+			if (occupiedPanels != rhs.occupiedPanels)
+			{
+				stream << "\tOccupied panels differs: ";
+				occupiedPanels.Append(stream);
+				stream << " vs ";
+				rhs.occupiedPanels.Append(stream);
+				stream << std::endl;
+				// This gives us an "unresolved externals" error
+				//stream << "\tOccupied panels differs: " << occupiedPanels << " vs " << rhs.occupiedPanels;
+			}
+
+			if (lastLeg != rhs.lastLeg)
+				stream << "\tLast leg differs: " << lastLeg << " vs " << rhs.lastLeg << std::endl;
+		}
+
 		State Before(const TNoteRow& noteRow) const
 		{
 			auto newState = *this;

@@ -12,6 +12,8 @@ import PlayStyle;
 import Difficulty;
 import PlanningBot;
 import Play;
+import PadPanels;
+import LimbsOnPad;
 
 using namespace DanceCommon;
 namespace fs = std::filesystem;
@@ -73,7 +75,13 @@ TEST_P(TestRobotPlaysDT, Chart)
 	bot.SetAllowDoublesteps(true);
 	auto existingPlay = LoadPlay(param);
 	auto newPlay = bot.Play(*chart);
-	FAIL() << "TODO compare to expected play";
+	if (existingPlay != newPlay)
+	{
+		//FAIL() << "Plays are not equal";
+		stringstream errors;
+		existingPlay.Diff(newPlay, errors);
+		FAIL() << errors.str();
+	}
 }
 
 INSTANTIATE_TEST_CASE_P(

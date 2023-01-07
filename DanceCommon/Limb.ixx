@@ -30,6 +30,14 @@ namespace DanceCommon
 	export class Limbs
 	{
 	public:
+		static inline constexpr array<Limb, 4> Values =
+		{
+			Limb::LeftLeg,
+			Limb::RightLeg,
+			Limb::LeftHand,
+			Limb::RightHand
+		};
+
 		static inline constexpr Limb BothLegs = Limb::LeftLeg | Limb::RightLeg;
 		static inline constexpr Limb All = Limb::LeftLeg | Limb::RightLeg | Limb::LeftHand | Limb::RightHand;
 
@@ -87,4 +95,36 @@ namespace DanceCommon
 			}
 		}
 	};
+
+	export ostream& operator<<(ostream& os, const Limb limbs)
+	{
+		switch (limbs)
+		{
+			case Limb::None:
+			case Limb::LeftLeg:
+			case Limb::RightLeg:
+			case Limb::LeftHand:
+			case Limb::RightHand:
+				os << Limbs::GetCompactName(limbs);
+				break;
+			default:
+				os << "[";
+				bool first = true;
+				for (Limb value : Limbs::Values)
+				{
+					if (Limbs::Contains(limbs, value))
+					{
+						if (!first)
+							os << ", ";
+
+						os << Limbs::GetCompactName(value);
+						first = false;
+					}
+				}
+				os << "]";
+				break;
+		}
+
+		return os;
+	}
 }

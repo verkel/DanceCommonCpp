@@ -2,8 +2,6 @@
 
 #include "rapidjson/document.h"
 #include "rapidjson/istreamwrapper.h"
-#include "rapidjson/stringbuffer.h"
-#include "rapidjson/writer.h"
 
 export module Play;
 import StdCore;
@@ -78,15 +76,51 @@ namespace DanceCommon
 		{
 			return states.size();
 		}
-
-		const TState& operator[](NotePos pos) const
+		
+		bool Contains(NotePos pos) const
 		{
-			return states[pos];
+			return states.contains(pos);
+		}
+
+		const TState& Get(NotePos pos) const
+		{
+			return states.at(pos);
 		}
 
 		TState& operator[](NotePos pos)
 		{
 			return states[pos];
+		}
+
+		friend bool operator==(const Play& lhs, const Play& rhs)
+		{
+			return lhs.states == rhs.states;
+		}
+
+		friend bool operator!=(const Play& lhs, const Play& rhs)
+		{
+			return !(lhs == rhs);
+		}
+
+		void Diff(const Play& other, ostream& stream) const
+		{
+			for (auto& [pos, state] : states)
+			{
+				bool stateExistsInOther = other.Contains(pos);
+				bool ok = stateExistsInOther && (state == other.Get(pos));
+				if (!ok)
+				{
+					stream << "Measure " << NotePositions::ToMeasures(pos) << ":" << std::endl;
+					if (!stateExistsInOther)
+					{
+						stream << "\tNo state at this measure the second play" << std::endl;
+					}
+					else /* states are not equal */
+					{
+						state.Diff(other.Get(pos), stream);
+					}
+				}
+			}
 		}
 	};
 
