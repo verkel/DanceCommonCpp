@@ -7,6 +7,7 @@
 import StdCore;
 import Song;
 import Chart;
+import ChartUtils;
 import PlayStyle;
 import Difficulty;
 import PlanningBot;
@@ -29,7 +30,7 @@ class TestRobotPlaysDT : public testing::TestWithParam<ChartEntry>
 static vector<ChartEntry> GetCharts()
 {
 	vector<ChartEntry> results;
-	for (const auto& songDir : fs::directory_iterator{ "songs/DanceTricks" })
+	for (const auto& songDir : fs::directory_iterator{ "songs\\DanceTricks" })
 	{
 		if (songDir.is_directory())
 		{
@@ -53,15 +54,14 @@ static vector<ChartEntry> GetCharts()
 	return results;
 }
 
-static string GetChartPlayPath(const string& songPath, const SinglesChart& chart)
-{
-	return ""; // TODO
-}
-
 static SinglesPlay LoadPlay(const ChartEntry& entry)
 {
-	string playPath = GetChartPlayPath(entry.songPath, *entry.chart);
+	string playPath = ChartUtils::GetChartPlayPath(entry.songPath, *entry.song, *entry.chart);
 	ifstream stream{playPath};
+
+	if (!stream)
+		throw logic_error("Could not construct path for play");
+
 	return SinglesPlay{stream};
 }
 

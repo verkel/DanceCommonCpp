@@ -2,6 +2,8 @@
 
 #include "rapidjson/document.h"
 #include "rapidjson/istreamwrapper.h"
+#include "rapidjson/stringbuffer.h"
+#include "rapidjson/writer.h"
 
 export module Play;
 import StdCore;
@@ -10,6 +12,8 @@ import NotePos;
 import Limb;
 import PlayStyle;
 import LimbsOnPad;
+import StringUtils;
+import ParseException;
 
 namespace DanceCommon
 {
@@ -36,8 +40,11 @@ namespace DanceCommon
 
 			for (rapidjson::Value::ConstMemberIterator it = jsonStates.MemberBegin(); it != jsonStates.MemberEnd(); ++it)
 			{
-				NotePos pos = it->name.GetInt();
-				states[pos] = ParseState(it->value);
+				int pos;
+				if (!StringUtils::TryParseInt(it->name.GetString(), pos))
+					throw ParseException("Cannot parse position key");
+
+				states.insert({pos, ParseState(it->value)});
 			}
 		}
 

@@ -5,6 +5,7 @@ export import <array>;
 export import <charconv>;
 export import <cmath>;
 export import <deque>;
+export import <filesystem>;
 export import <format>;
 export import <fstream>;
 export import <functional>;

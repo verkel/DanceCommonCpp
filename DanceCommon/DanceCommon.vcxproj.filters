@@ -224,5 +224,8 @@
     <ClCompile Include="StateLinksUtils.ixx">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ChartUtils.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

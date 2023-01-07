@@ -197,6 +197,7 @@
   <ItemGroup>
     <ClCompile Include="Chart.ixx" />
     <ClCompile Include="ChartInfo.ixx" />
+    <ClCompile Include="ChartUtils.ixx" />
     <ClCompile Include="Computations.ixx" />
     <ClCompile Include="Difficulty.ixx" />
     <ClCompile Include="FacingType.ixx" />

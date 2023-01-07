@@ -11,6 +11,7 @@ import ParseException;
 import PlayStyle;
 import Chart;
 import ChartInfo;
+import Difficulty;
 
 export namespace DanceCommon
 {
@@ -154,6 +155,27 @@ export namespace DanceCommon
 				return time - metadata.GetOffset();
 			else
 				return time;
+		}
+
+		template<size_t rowSize>
+		string GetChartName(const Chart<rowSize>& chart, bool displayType = true) const
+		{
+			stringstream ss;
+
+			constexpr PlayStyle style = PlayStyles::GetStyle(rowSize);
+
+			ss << GetMetadata().GetTitle();
+			ss << " " << Difficulties::GetName(chart.GetDifficulty());
+			ss << " " << chart.GetRating();
+
+			if (displayType)
+				ss << " " << PlayStyles::GetName(style);
+
+			auto& description = chart.GetDescription();
+			if (description.size() > 0)
+				ss << " (" << description << ")";
+
+			return ss.str();
 		}
 
 	private:
