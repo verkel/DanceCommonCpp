@@ -48,6 +48,24 @@ namespace DanceCommon
 			}
 		}
 
+		// Disallow copy
+		Play(const Play& other) = delete;
+		Play& operator=(const Play& other) = delete;
+
+		// Implement move
+		Play(Play&& other) noexcept
+			: states{std::move(other.states)}
+		{
+		}
+
+		Play& operator=(Play&& other) noexcept
+		{
+			if (this == &other)
+				return *this;
+			states = std::move(other.states);
+			return *this;
+		}
+
 		TState ParseState(const rapidjson::Value& obj)
 		{
 			return TState{
