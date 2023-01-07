@@ -77,7 +77,6 @@ TEST_P(TestRobotPlaysDT, Chart)
 	auto newPlay = bot.Play(*chart);
 	if (existingPlay != newPlay)
 	{
-		//FAIL() << "Plays are not equal";
 		stringstream errors;
 		existingPlay.Diff(newPlay, errors);
 		FAIL() << errors.str();

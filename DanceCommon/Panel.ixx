@@ -158,25 +158,5 @@ export namespace DanceCommon
 		{
 			return MathUtils::BitCount(static_cast<int>(panel));
 		}
-
-		/**
-		 * Get the elements in this bitmask
-		 */
-
-		/*static IEnumerable<Panel> GetElements(Panel mask)
-		{
-			foreach (Panel p in PanelsDouble) {
-				if ((mask & p) != 0) yield return p;
-			}
-		}
-
-		static Panel GetFirstElement(this Panel mask)
-		{
-			foreach (Panel p in PanelsDouble)
-			{
-				if ((mask & p) != 0) return p;
-			}
-			return Panel::None;
-		}*/
 	};
 }

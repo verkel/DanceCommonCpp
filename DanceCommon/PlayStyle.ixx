@@ -10,13 +10,6 @@ export namespace DanceCommon
 		Double = 1,
 	};
 
-	// cannot use scoped enums as template parameters
-	/*export enum class NoteRowSize : size_t
-	{
-		Single = 4,
-		Double = 8
-	};*/
-
 	export class NoteRowSize
 	{
 	public:

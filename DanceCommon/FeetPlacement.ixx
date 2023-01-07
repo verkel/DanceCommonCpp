@@ -301,8 +301,6 @@ namespace DanceCommon
 				}
 			}
 
-			//return byLeftLegAndRightLeg[leftLegPanel][rightLegPanel];
-
 			return Get(Panel::Left, Panel::Right);
 		}
 

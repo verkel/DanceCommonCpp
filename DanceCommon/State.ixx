@@ -33,7 +33,6 @@ namespace DanceCommon
 		bool spin;
 
 	public:
-		//friend ostream& operator<<(ostream& os, const State<rowSize>& state);
 		friend std::hash<State>;
 
 		constexpr State() :
@@ -164,7 +163,6 @@ namespace DanceCommon
 
 			auto [tappables, tappablesCount] = noteRow.GetTappablesWithCount();
 			auto firstTappable = noteRow.GetFirstTappable();
-			//auto holdables = noteRow.GetHoldables();
 
 			UpdateLastLeg(newState, limbsUsed, tappablesCount, firstTappable);
 			CheckDoublesteps(newState, limbsUsed, noteRow, tappablesCount, firstTappable);
@@ -660,21 +658,6 @@ namespace std
 	{
 		size_t operator()(const DanceCommon::State<rowSize>& s) const
 		{
-			// TODO implement
-			//return 0;
-
-			/*using size_t;
-				using hash;
-				using string;
-
-				// Compute individual hash values for first,
-				// second and third and combine them using XOR
-				// and bit shifting:
-
-				return ((hash<string>()(k.first)
-					^ (hash<string>()(k.second) << 1)) >> 1)
-					^ (hash<int>()(k.third) << 1);*/
-
 			constexpr int prime = 31;
 			int result = 1;
 			result = prime * result + s.angleDelta;
