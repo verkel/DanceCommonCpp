@@ -63,12 +63,12 @@ namespace DanceCommon
 
 		const TState& operator[](NotePos pos) const
 		{
-			return states.at(pos);
+			return states[pos];
 		}
 
 		TState& operator[](NotePos pos)
 		{
-			return states.at(pos);
+			return states[pos];
 		}
 	};
 
