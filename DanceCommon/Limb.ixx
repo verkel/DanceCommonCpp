@@ -12,17 +12,17 @@ namespace DanceCommon
 		RightHand = 1 << 3,
 	};
 
-	constexpr Limb operator|(Limb a, Limb b)
+	export constexpr Limb operator|(Limb a, Limb b)
 	{
 	    return static_cast<Limb>(static_cast<int>(a) | static_cast<int>(b));
 	}
 
-	constexpr Limb operator&(Limb a, Limb b)
+	export constexpr Limb operator&(Limb a, Limb b)
 	{
 	    return static_cast<Limb>(static_cast<int>(a) & static_cast<int>(b));
 	}
 
-	constexpr Limb operator~(Limb a)
+	export constexpr Limb operator~(Limb a)
 	{
 	    return static_cast<Limb>(~static_cast<int>(a));
 	}
@@ -93,6 +93,15 @@ namespace DanceCommon
 				case Limb::RightHand: return "RH";
 				default: return "-";
 			}
+		}
+
+		static Limb ParseCompactName(string_view sv)
+		{
+			if (sv == "L") return Limb::LeftLeg;
+			if (sv == "R") return Limb::RightLeg;
+			if (sv == "LH") return Limb::LeftHand;
+			if (sv == "RH") return Limb::RightHand;
+			return Limb::None;
 		}
 	};
 

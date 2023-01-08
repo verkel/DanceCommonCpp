@@ -66,10 +66,59 @@ namespace DanceCommon
 
 		TState ParseState(const rapidjson::Value& obj)
 		{
-			return TState{
-				TLimbsOnPads::Empty,
-				Limb::LeftLeg,
-				Limbs::BothLegs};
+			const auto& occupiedPanelsJson = obj["occupiedPanels"];
+			TLimbsOnPad occupiedPanels;
+			int i = -TLimbsOnPad::GetIndexOffset();
+			for (auto& limb : occupiedPanelsJson.GetArray())
+			{
+				occupiedPanels[i] = Limbs::ParseCompactName(limb.GetString());
+				i++;
+			}
+
+			const auto& lastLegJson = obj["lastLeg"];
+			Limb lastLeg = Limbs::ParseCompactName(lastLegJson.GetString());
+
+			const auto& freeLimbsJson = obj["freeLimbs"];
+			Limb freeLimbs = Limb::None;
+			for (auto& limb : freeLimbsJson.GetArray())
+			{
+				freeLimbs = freeLimbs | Limbs::ParseCompactName(limb.GetString());
+			}
+
+			const auto& leftLegFreedJson = obj["leftLegFreed"];
+			bool leftLegFreed = leftLegFreedJson.GetBool();
+			
+			const auto& rightLegFreedJson = obj["rightLegFreed"];
+			bool rightLegFreed = rightLegFreedJson.GetBool();
+
+			const auto& movedLegsAmountJson = obj["movedLegsAmount"];
+			int movedLegsAmount = movedLegsAmountJson.GetInt();
+			
+			const auto& angleDeltaJson = obj["angleDelta"];
+			int angleDelta = angleDeltaJson.GetInt();
+
+			const auto& doublestepJson = obj["doublestep"];
+			bool doublestep = doublestepJson.GetBool();
+
+			const auto& airDoublestepJson = obj["airDoublestep"];
+			bool airDoublestep = airDoublestepJson.GetBool();
+			
+			const auto& spinJson = obj["spin"];
+			bool spin = spinJson.GetBool();
+
+			return TState
+			{
+				occupiedPanels,
+				lastLeg,
+				freeLimbs,
+				doublestep,
+				airDoublestep,
+				static_cast<unsigned char>(movedLegsAmount),
+				static_cast<short>(angleDelta),
+				spin,
+				leftLegFreed,
+				rightLegFreed
+			};
 		}
 
 		size_t GetCount()

@@ -10,7 +10,7 @@ export namespace DanceCommon
 	export template<typename TValue, size_t rowSize>
 	class PadPanels
 	{
-	private:
+	public:
 		static constexpr int GetIndexOffset()
 		{
 			return PlayStyles::CenterPanelCount(PlayStyles::GetStyle(rowSize));
@@ -21,6 +21,7 @@ export namespace DanceCommon
 			return rowSize + GetIndexOffset();
 		}
 
+	private:
 		TValue values[Size()];
 
 	public:
