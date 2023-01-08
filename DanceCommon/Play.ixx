@@ -162,7 +162,7 @@ namespace DanceCommon
 					stream << "Measure " << NotePositions::ToMeasures(pos) << ":" << std::endl;
 					if (!stateExistsInOther)
 					{
-						stream << "\tNo state at this measure the second play" << std::endl;
+						stream << "\tNo state at this measure in the second play" << std::endl;
 					}
 					else /* states are not equal */
 					{
