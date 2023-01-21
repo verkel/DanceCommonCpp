@@ -10,10 +10,12 @@ namespace DanceCommon
 	public:
 		static string GetChartPlayPath(const string& songPath, const Song& song, const SinglesChart& chart)
 		{
+			string chartName = song.GetChartName(chart, true);
+			FilterFilenameIllegalCharacters(chartName);
 			size_t filenameIndex = songPath.rfind('\\');
 			return songPath.substr(0, filenameIndex)
 				+ '\\'
-				+ song.GetChartName(chart, true) + ".play";
+				+ chartName + ".play";
 		}
 
 		static void FilterFilenameIllegalCharacters(string& filename) {
