@@ -159,7 +159,7 @@ namespace DanceCommon
 				bool ok = stateExistsInOther && (state == other.Get(pos));
 				if (!ok)
 				{
-					stream << "Measure " << NotePositions::ToMeasures(pos) << ":" << std::endl;
+					stream << "Measure " << NotePositions::ToMeasures(pos) << " (pos " << pos << "):" << std::endl;
 					if (!stateExistsInOther)
 					{
 						stream << "\tNo state at this measure in the second play" << std::endl;
