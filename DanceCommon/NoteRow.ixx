@@ -75,6 +75,11 @@ export namespace DanceCommon
 			return GetPanelsWith(NoteType::HoldEnd);
 		}
 
+		Panel GetFirstRollStart() const
+		{
+			return GetFirstPanelWith(NoteType::RollStart);
+		}
+
 		template<typename TFunc>
 		void ForEachTappable(TFunc f) const
 		{
