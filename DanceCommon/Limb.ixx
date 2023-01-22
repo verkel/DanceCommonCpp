@@ -101,6 +101,7 @@ namespace DanceCommon
 			if (sv == "R") return Limb::RightLeg;
 			if (sv == "LH") return Limb::LeftHand;
 			if (sv == "RH") return Limb::RightHand;
+			if (sv == "LR") return BothLegs;
 			return Limb::None;
 		}
 	};
