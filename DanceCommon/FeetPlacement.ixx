@@ -13,7 +13,7 @@ namespace DanceCommon
 	{
 	private:
 		int angle = -1;
-		Panel leftLegPanel = Panel::None, rightLegPanel = Panel::None;
+		Panel leftLegPanel = Panel::Center, rightLegPanel = Panel::Center;
 		Panel leftHandPanel = Panel::None, rightHandPanel = Panel::None;
 		FacingType facingType = FacingType::FaceIn;
 

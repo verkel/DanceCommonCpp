@@ -34,6 +34,7 @@
   <PropertyGroup Label="UserMacros" />
   <ItemGroup>
     <ClCompile Include="TestChart.cpp" />
+    <ClCompile Include="TestFeetPlacement.cpp" />
     <ClCompile Include="TestNotePos.cpp" />
     <ClCompile Include="TestNoteRowPossibleStates.cpp" />
     <ClCompile Include="TestPlanningBot.cpp" />
