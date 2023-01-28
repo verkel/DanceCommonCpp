@@ -68,7 +68,7 @@ namespace DanceCommon
 				&& lhs.freeLimbs == rhs.freeLimbs
 				&& lhs.movedLegsAmount == rhs.movedLegsAmount
 				&& lhs.angleDelta == rhs.angleDelta
-				&& lhs.cost == rhs.cost
+				&& (!lhs.HasCost() || !rhs.HasCost() || lhs.cost == rhs.cost)
 				&& lhs.leftLegFreed == rhs.leftLegFreed
 				&& lhs.rightLegFreed == rhs.rightLegFreed
 				&& lhs.doublestep == rhs.doublestep
@@ -83,8 +83,8 @@ namespace DanceCommon
 
 		bool operator<(const State& rhs) const
 		{
-			if (cost != rhs.cost)
-				return cost < rhs.cost;
+			if (GetCost() != rhs.GetCost())
+				return GetCost() < rhs.GetCost();
 
 			if (doublestep != rhs.doublestep)
 				return doublestep < rhs.doublestep;
@@ -102,7 +102,7 @@ namespace DanceCommon
 				return movedLegsAmount < rhs.movedLegsAmount;
 
 			if (freeLimbs != rhs.freeLimbs)
-				return freeLimbs < rhs.freeLimbs;
+				return Limbs::IsLimbSetLessThan(freeLimbs, rhs.freeLimbs);
 
 			if (occupiedPanels != rhs.occupiedPanels)
 				return occupiedPanels < rhs.occupiedPanels;
@@ -110,10 +110,13 @@ namespace DanceCommon
 			return lastLeg < rhs.lastLeg;
 		}
 
-		void Diff(const State& rhs, ostream& stream) const
+		void Diff(const State& rhs, ostream& stream, bool includeCost = false) const
 		{
-			if (cost != rhs.cost)
-				stream << "\tCost differs: " << cost << " vs " << rhs.cost << std::endl;
+			if (includeCost)
+			{
+				if (GetCost() != rhs.GetCost())
+					stream << "\tCost differs: " << GetCost() << " vs " << rhs.GetCost() << std::endl;
+			}
 
 			if (doublestep != rhs.doublestep)
 				stream << "\tDoublestep differs: " << doublestep << " vs " << rhs.doublestep << std::endl;
@@ -154,6 +157,7 @@ namespace DanceCommon
 			ReleaseHoldEnds(newState, noteRow);
 			UnoccupyHands(newState);
 			AvoidMines(newState, noteRow);
+			newState.ResetCost();
 			return newState;
 		}
 
@@ -174,6 +178,7 @@ namespace DanceCommon
 			ReserveLimbs(newState, limbsUsed, noteRow);
 			ComputeMovedLegs(newState);
 			ComputeAngleDeltaAndSpin(newState);
+			newState.ResetCost();
 
 			return newState;
 		}
@@ -225,6 +230,11 @@ namespace DanceCommon
 			if (!IsFree(Limb::RightHand)) cost += 1;
 
 			return cost;
+		}
+
+		void ResetCost()
+		{
+			cost = -1;
 		}
 
 		static int GetFacingCost(FacingType facingType)
@@ -295,12 +305,27 @@ namespace DanceCommon
 			return movedLegsAmount;
 		}
 
-		int GetCost()
+		int AssignCostIfMissing()
 		{
 			if (cost == -1)
 				cost = ComputeCost();
 
 			return cost;
+		}
+
+		int GetCost() const
+		{
+			if (cost == -1) 
+				throw exception("zero cost");
+
+			assert(cost != -1);
+
+			return cost;
+		}
+
+		bool HasCost() const
+		{
+			return cost != -1;
 		}
 
 		bool IsDoublestep() const

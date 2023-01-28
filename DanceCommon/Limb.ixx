@@ -14,17 +14,17 @@ namespace DanceCommon
 
 	export constexpr Limb operator|(Limb a, Limb b)
 	{
-	    return static_cast<Limb>(static_cast<int>(a) | static_cast<int>(b));
+		return static_cast<Limb>(static_cast<int>(a) | static_cast<int>(b));
 	}
 
 	export constexpr Limb operator&(Limb a, Limb b)
 	{
-	    return static_cast<Limb>(static_cast<int>(a) & static_cast<int>(b));
+		return static_cast<Limb>(static_cast<int>(a) & static_cast<int>(b));
 	}
 
 	export constexpr Limb operator~(Limb a)
 	{
-	    return static_cast<Limb>(~static_cast<int>(a));
+		return static_cast<Limb>(~static_cast<int>(a));
 	}
 
 	export class Limbs
@@ -69,6 +69,20 @@ namespace DanceCommon
 		static Limb FilterLegs(Limb limbAsMask)
 		{
 			return limbAsMask & BothLegs;
+		}
+
+		// Note: not implemented as operator<, as we don't want to necessarily compare single Limb values this way
+		static bool IsLimbSetLessThan(Limb limbs1, Limb limbs2)
+		{
+			for (Limb limb : Limbs::Values)
+			{
+				if ((limbs1 & limb) == Limb::None && (limbs2 & limb) != Limb::None)
+					return true;
+				else if ((limbs1 & limb) != Limb::None && (limbs2 & limb) == Limb::None)
+					return false;
+			}
+
+			return false;
 		}
 
 		static Limb GetPair(Limb limb)

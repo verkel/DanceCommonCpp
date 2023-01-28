@@ -3,6 +3,7 @@
 export import <algorithm>;
 export import <array>;
 export import <charconv>;
+export import <cassert>;
 export import <cmath>;
 export import <deque>;
 export import <filesystem>;

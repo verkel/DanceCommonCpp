@@ -285,6 +285,7 @@ namespace DanceCommon
 		void TapAndInsertState(const TState& previousState, const TState& beforeTapState, TStateLinks& previousStateLinks, const TLimbsOnPad& limbsUsed)
 		{
 			TState state = beforeTapState.Tap(noteRow, limbsUsed);
+			state.AssignCostIfMissing();
 
 			auto stateLinksItr = statesToLinks.find(state);
 			if (stateLinksItr == statesToLinks.end())
