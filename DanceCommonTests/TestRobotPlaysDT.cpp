@@ -69,31 +69,11 @@ static SinglesPlay LoadPlay(const ChartEntry& entry)
 	return SinglesPlay{stream};
 }
 
-static bool HasRolls(const SinglesChart& chart)
-{
-	for (NotePos position = 0; chart.Contains(position); position = chart.NextPosition(position))
-	{
-		auto noteRow = chart.GetNoteRow(position);
-		
-		if (noteRow.GetFirstRollStart() != Panel::None)
-			return true;
-	}
-
-	return false;
-}
-
 TEST_P(TestRobotPlaysDT, Chart)
 {
 	const auto& param = GetParam();
 	auto& song = param.song;
 	auto& chart = param.chart;
-
-	// TODO remove after implementing roll taps generation
-	if (HasRolls(*chart))
-	{
-		SUCCEED() << "Skipping all tests that have rolls";
-		return;
-	}
 
 	SinglesPlanningBot bot;
 	bot.SetAllowDoublesteps(true);

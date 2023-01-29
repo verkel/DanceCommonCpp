@@ -29,7 +29,7 @@ namespace DanceCommon
 	public:
 		TPlay Play(const Song& song, const TChart& chart)
 		{
-			TRollTapsChart rollTapsChart{song, chart};
+			TRollTapsChart rollTapsChart{song, chart, false};
 			return Play(rollTapsChart);
 		}
 

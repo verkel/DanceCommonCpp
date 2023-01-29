@@ -38,6 +38,21 @@ export namespace DanceCommon
 		{
 			return notes[index];
 		}
+		
+		NoteType& operator[](Panel panel)
+		{
+			return (*this)[Panels::Index(panel)];
+		}
+
+		NoteType& operator[](int index)
+		{
+			return notes[index];
+		}
+		
+		NoteType& operator[](size_t index)
+		{
+			return notes[index];
+		}
 
 		bool IsEmpty() const
 		{

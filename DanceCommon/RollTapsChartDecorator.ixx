@@ -4,6 +4,7 @@ import StdCore;
 import Song;
 import Chart;
 import NotePos;
+import NoteType;
 import NoteRow;
 import NoteData;
 import Panel;
@@ -29,13 +30,17 @@ namespace DanceCommon
 
 		const Song& song;
 		const TChart& c;
+		NoteType rollTapType;
 		NoteData<rowSize> rollTaps;
 
 	public:
-		RollTapsChartDecorator(const Song& song, const TChart& chart) :
+		RollTapsChartDecorator(const Song& song, const TChart& chart, bool virtualTaps) :
 			song{song},
-			c{chart}
-		{}
+			c{chart},
+			rollTapType{virtualTaps ? NoteType::VirtualTap : NoteType::Tap}
+		{
+			InsertAllRollTaps();
+		}
 
 		void InsertAllRollTaps()
 		{
@@ -46,7 +51,7 @@ namespace DanceCommon
 				{
 					noteRow.ForEachRollStart([&](Panel panel)
 					{
-						NotePos rollEndPosition = c.FindHoldEnd(position, false, (int)panel);
+						NotePos rollEndPosition = c.FindHoldEnd(position, false, Panels::Index(panel));
 
 						if (rollEndPosition == -1) 
 							throw invalid_argument("Could not find roll end");
@@ -63,12 +68,12 @@ namespace DanceCommon
 
 			for (NotePos pos = rollStartPosition; pos <= rollEndPosition; pos += distance)
 			{
-				rollTaps.SetNote(pos, NoteType.VirtualTap, (int)panel, false);
+				rollTaps.SetNote(pos, rollTapType, Panels::Index(panel), false);
 			}
 
-			if (rollTaps.GetNote(rollEndPosition, (int)panel) == NoteType.Empty)
+			if (rollTaps.GetNote(rollEndPosition, Panels::Index(panel)) == NoteType::Empty)
 			{
-				rollTaps.SetNote(rollEndPosition, NoteType.HoldEnd, (int)panel, false);
+				rollTaps.SetNote(rollEndPosition, NoteType::HoldEnd, Panels::Index(panel), false);
 			}
 		}
 
@@ -79,9 +84,9 @@ namespace DanceCommon
 
 			for (NoteLength distance : RollTapDistances)
 			{
-				if (secondsPerBeat * NotePositions::ToBeatsDouble((NotePos)distance) <= RollReleaseDuration)
+				if (secondsPerBeat * NotePositions::ToBeatsDouble(static_cast<NotePos>(distance)) <= RollReleaseDuration)
 				{
-					return (int)distance;
+					return static_cast<int>(distance);
 				}
 			}
 
@@ -90,7 +95,37 @@ namespace DanceCommon
 
 		TNoteRow GetNoteRow(NotePos pos) const
 		{
-			return c.GetNoteRow(pos);
+			TNoteRow rollTapsRow = rollTaps.GetNoteRow(pos);
+			TNoteRow noteRow = c.GetNoteRow(pos);
+			return MergeRows(noteRow, rollTapsRow);
+		}
+
+		TNoteRow MergeRows(TNoteRow noteRow, TNoteRow rollTapsRow) const
+		{
+			if (rollTapsRow.IsEmpty()) 
+				return noteRow;
+
+			if (noteRow.IsEmpty()) 
+				return rollTapsRow;
+
+			TNoteRow mergedRow;
+			for (int i = 0; i < rowSize; i++)
+			{
+				if (rollTapsRow[i] == rollTapType)
+				{
+					mergedRow[i] = rollTapType;
+				}
+				else if (noteRow[i] == NoteType::HoldEnd && rollTapsRow[i] == NoteType::HoldEnd)
+				{
+					mergedRow[i] = NoteType::Empty;
+				}
+				else
+				{
+					mergedRow[i] = noteRow[i];
+				}
+			}
+
+			return mergedRow;
 		}
 
 		bool Contains(NotePos pos) const
@@ -98,9 +133,16 @@ namespace DanceCommon
 			return c.Contains(pos);
 		}
 
-		NotePos NextPosition(NotePos pos) const
+		NotePos NextPosition(NotePos position) const
 		{
-			return c.NextPosition(pos);
+			return NextPosition(position, -1);
+		}
+
+		NotePos NextPosition(NotePos position, int skipEmptyPanel) const
+		{
+			NotePos nextPos = c.NextPosition(position, skipEmptyPanel);
+			NotePos rollTapsNextPos = rollTaps.NextPosition(position, skipEmptyPanel, nextPos);
+			return std::min(static_cast<int>(rollTapsNextPos), static_cast<int>(nextPos));
 		}
 	};
 }

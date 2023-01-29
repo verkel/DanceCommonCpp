@@ -41,9 +41,16 @@ export namespace DanceCommon
 			if (cleanupHolds) CleanupHolds(notePosition, oldRow, newRow);
 		}
 
-		NoteType GetNote(NotePos notePosition, int panel)
+		NoteType GetNote(NotePos notePosition, int panel) const
 		{
 			return GetNoteRow(notePosition)[panel];
+		}
+
+		void SetNote(NotePos notePosition, NoteType noteType, int panel, bool cleanupHolds)
+		{
+			NoteRow row = GetNoteRow(notePosition);
+			row[panel] = noteType;
+			SetNoteRow(notePosition, row, cleanupHolds);
 		}
 
 		bool Contains(NotePos position) const
@@ -59,6 +66,33 @@ export namespace DanceCommon
 			{
 				pos++;
 			}
+			return pos;
+		}
+
+		NotePos NextPosition(NotePos position, int skipEmptyPanel) const
+		{
+			return NextPosition(position, skipEmptyPanel, GetLength());
+		}
+
+		NotePos NextPosition(NotePos position, int skipEmptyPanel, NotePos upperBound) const
+		{
+			NotePos pos = position + 1;
+
+			if (skipEmptyPanel == -1)
+			{
+				while (pos < upperBound && GetNoteRow(pos).IsEmpty())
+				{
+					pos++;
+				}
+			}
+			else
+			{
+				while (pos < upperBound && GetNoteRow(pos)[skipEmptyPanel] == NoteType::Empty)
+				{
+					pos++;
+				}
+			}
+
 			return pos;
 		}
 
@@ -78,14 +112,14 @@ export namespace DanceCommon
 
 			if (skipEmptyPanel == -1)
 			{
-				while (GetNoteRow(pos).IsEmpty() && pos > lowerBound)
+				while (pos > lowerBound && GetNoteRow(pos).IsEmpty())
 				{
 					pos--;
 				}
 			}
 			else
 			{
-				while (GetNoteRow(pos)[skipEmptyPanel] == NoteType::Empty && pos > lowerBound)
+				while (pos > lowerBound && GetNoteRow(pos)[skipEmptyPanel] == NoteType::Empty)
 				{
 					pos--;
 				}
@@ -110,7 +144,7 @@ export namespace DanceCommon
 			}
 		}
 		
-		NotePos FindHoldEnd(NotePos notePosition, bool includeThisPosition, int panel)
+		NotePos FindHoldEnd(NotePos notePosition, bool includeThisPosition, int panel) const
 		{
 			if (!Contains(notePosition)) 
 				return NotePositions::Invalid;

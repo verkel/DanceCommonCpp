@@ -169,6 +169,16 @@ export namespace DanceCommon
 			return noteData.NextPosition(pos);
 		}
 
+		NotePos NextPosition(NotePos position, int skipEmptyPanel) const
+		{
+			return noteData.NextPosition(position, skipEmptyPanel);
+		}
+
+		NotePos NextPosition(NotePos position, int skipEmptyPanel, NotePos upperBound) const
+		{
+			return noteData.NextPosition(position, skipEmptyPanel, upperBound);
+		}
+
 		NotePos PreviousPosition(NotePos pos) const
 		{
 			return noteData.PreviousPosition(pos);
@@ -179,7 +189,7 @@ export namespace DanceCommon
 			return noteData.GetLastPosition();
 		}
 
-		NotePos FindHoldEnd(NotePos notePosition, bool includeThisPosition, int panel)
+		NotePos FindHoldEnd(NotePos notePosition, bool includeThisPosition, int panel) const
 		{
 			return noteData.FindHoldEnd(notePosition, includeThisPosition, panel);
 		}

@@ -7,6 +7,7 @@ import SongConstants;
 import StringUtils;
 import ParseException;
 import SongMetadataComputations;
+import NotePos;
 
 export namespace DanceCommon
 {
@@ -189,6 +190,15 @@ export namespace DanceCommon
 			if (!computations.IsComputed())
 				computations.ComputeEvents(bpms, stops, offset);
 			return computations;
+		}
+
+		double GetBpm(NotePos notePosition) const
+		{
+			double beats = NotePositions::ToBeatsDouble(notePosition);
+		    auto it = bpms.upper_bound(beats);
+		    if (it == bpms.cbegin())
+		        throw invalid_argument("No bpm found");
+		    return (--it)->second;
 		}
 	};
 }
