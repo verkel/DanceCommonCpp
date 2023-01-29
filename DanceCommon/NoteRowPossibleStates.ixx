@@ -37,7 +37,7 @@ namespace DanceCommon
 
 	public:
 		NoteRowPossibleStates(NotePos position, NotePos previousPosition, map<NotePos, shared_ptr<NoteRowPossibleStates>>& parent,
-			const Chart<rowSize>& chart, bool allowDoublesteps);
+			NoteRow<rowSize> noteRow, bool allowDoublesteps);
 
 		NoteRowPossibleStates (const NoteRowPossibleStates&) = delete;
 		NoteRowPossibleStates& operator= (const NoteRowPossibleStates&) = delete;
@@ -351,14 +351,14 @@ namespace DanceCommon
 
 	template<size_t rowSize>
 	NoteRowPossibleStates<rowSize>::NoteRowPossibleStates(NotePos position, NotePos previousPosition, map<NotePos, shared_ptr<NoteRowPossibleStates>>& parent,
-			const Chart<rowSize>& chart, bool allowDoublesteps) :
+			NoteRow<rowSize> noteRow, bool allowDoublesteps) :
 		states{},
 		statesToLinks{},
 		parent{parent},
 		previousPosition{previousPosition},
 		position{position},
+		noteRow{noteRow},
 		allowDoublesteps{allowDoublesteps}
 	{
-		noteRow = chart.GetNoteRow(position);
 	}
 }

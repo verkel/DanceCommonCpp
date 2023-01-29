@@ -219,6 +219,7 @@
     <ClCompile Include="PlanningBot.ixx" />
     <ClCompile Include="Play.ixx" />
     <ClCompile Include="PlayStyle.ixx" />
+    <ClCompile Include="RollTapsChartDecorator.ixx" />
     <ClCompile Include="Song.ixx" />
     <ClCompile Include="SongConstants.ixx" />
     <ClCompile Include="SongMetadata.ixx" />

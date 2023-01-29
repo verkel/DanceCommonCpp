@@ -2,6 +2,7 @@
 
 import StdCore;
 import Chart;
+import RollTapsChartDecorator;
 import Play;
 import PlayStyle;
 import NotePos;
@@ -15,7 +16,7 @@ namespace DanceCommon
 	export template<size_t rowSize>
 	class PlanningBot
 	{
-		using TChart = Chart<rowSize>;
+		using TChart = RollTapsChartDecorator<rowSize>;
 		using TNoteRowPossibleStates = NoteRowPossibleStates<rowSize>;
 		using TStateLinks = StateLinks<rowSize>;
 		using TStateLinksUtils = StateLinksUtils<rowSize>;
@@ -27,11 +28,6 @@ namespace DanceCommon
 	public:
 		TPlay Play(const TChart& chart)
 		{
-			// We want roll taps in the chart
-			//if (!(chart is RollTapsChartDecorator))
-			//	chart = new RollTapsChartDecorator(chart);
-			// TODO roll taps
-
 			auto rowPossibleStates = GenerateStateGraph(chart);
 			CalculateCostsToGoal(rowPossibleStates);
 			return ComputeOptimalPlay(rowPossibleStates);
@@ -50,7 +46,7 @@ namespace DanceCommon
 			NotePos previousPosition = -1;
 			for (NotePos position = 0; chart.Contains(position); position = chart.NextPosition(position))
 			{
-				auto rowStates = make_shared<TNoteRowPossibleStates>(position, previousPosition, rowPossibleStates, chart, allowDoublesteps);
+				auto rowStates = make_shared<TNoteRowPossibleStates>(position, previousPosition, rowPossibleStates, chart.GetNoteRow(position), allowDoublesteps);
 				rowStates->InsertPossibleStates();
 				rowPossibleStates[position] = rowStates;
 

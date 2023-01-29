@@ -227,5 +227,8 @@
     <ClCompile Include="ChartUtils.ixx">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="RollTapsChartDecorator.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
