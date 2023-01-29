@@ -12,18 +12,6 @@ import Difficulty;
 import PlanningBot;
 using namespace DanceCommon;
 
-static SinglesChart GetSilikonExpert()
-{
-	ifstream stream{ "songs/silikon.sm" };
-	return SinglesChart{ stream, ChartMatchInfo{ PlayStyle::Single, Difficulty::Expert, nullopt, nullopt } };
-}
-
-static SinglesChart GetAuyTranceHard()
-{
-	ifstream stream{ "songs/ayutrance2.sm" };
-	return SinglesChart{ stream, ChartMatchInfo{ PlayStyle::Single, Difficulty::Hard, nullopt, nullopt } };
-}
-
 TEST(PlanningBot, PlaySilikon)
 {
 	array<string, 10> Expected =
@@ -42,17 +30,20 @@ TEST(PlanningBot, PlaySilikon)
 		"State { [L*] [R ] [  ] [  ], cost=0, angle=45, dAngle=-45, dstep=False, airDstep=False, spin=False, movedLegs=1, llFreed=False, rlFreed=False }",
 	};
 
-	SinglesChart chart = GetSilikonExpert();
+	ifstream stream{ "songs/silikon.sm" };
+	auto song = Song::Load(stream);
+	auto chart = song.GetMatchingSinglesChart({Difficulty::Expert, nullopt, nullopt});
+
 	SinglesPlanningBot bot;
 	bot.SetAllowDoublesteps(true);
-	auto play = bot.Play(chart);
+	auto play = bot.Play(song, *chart);
 
 	EXPECT_EQ(play.GetCount(), 825);
 
 	int i = 0;
 	NotePos position = 0;
 	
-	for (; chart.Contains(position); position = chart.NextPosition(position))
+	for (; chart->Contains(position); position = chart->NextPosition(position))
 	{
 		if (i == 5)
 			break;
@@ -63,10 +54,10 @@ TEST(PlanningBot, PlaySilikon)
 
 	for (int n = 0; n < 300; n++)
 	{
-		position = chart.NextPosition(position);
+		position = chart->NextPosition(position);
 	}
 	
-	for (; chart.Contains(position); position = chart.NextPosition(position))
+	for (; chart->Contains(position); position = chart->NextPosition(position))
 	{
 		if (i == 10)
 			break;
@@ -80,8 +71,11 @@ TEST(PlanningBot, PlaySilikon)
 
 TEST(PlanningBot, PlayAyuTrance)
 {
-	SinglesChart chart = GetAuyTranceHard();
+	ifstream stream{ "songs/ayutrance2.sm" };
+	auto song = Song::Load(stream);
+	auto chart = song.GetMatchingSinglesChart({Difficulty::Hard, nullopt, nullopt});
+
 	SinglesPlanningBot bot;
 	bot.SetAllowDoublesteps(true);
-	auto play = bot.Play(chart);
+	auto play = bot.Play(song, *chart);
 }

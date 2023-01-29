@@ -9,7 +9,6 @@ namespace DanceCommon
 	{
 		static const ChartMatchInfo Any;
 
-		optional<PlayStyle> style;
 		optional<Difficulty> difficulty;
 		optional<int> rating;
 		optional<string> description;
@@ -17,16 +16,12 @@ namespace DanceCommon
 
 	export struct ChartInfo
 	{
-		PlayStyle style;
 		Difficulty difficulty;
 		int rating;
 		string description;
 
-		bool Matches(const ChartMatchInfo& matchInfo)
+		bool Matches(const ChartMatchInfo& matchInfo) const
 		{
-			if (matchInfo.style && style != matchInfo.style)
-				return false;
-
 			if (matchInfo.difficulty && difficulty != matchInfo.difficulty)
 				return false;
 
@@ -38,7 +33,18 @@ namespace DanceCommon
 
 			return true;
 		}
+
+		bool operator<(const ChartInfo& rhs) const
+		{
+			if (difficulty != rhs.difficulty)
+				return difficulty < rhs.difficulty;
+
+			if (rating != rhs.rating)
+				return rating < rhs.rating;
+
+			return description < rhs.description;
+		}
 	};
 
-	const ChartMatchInfo ChartMatchInfo::Any{ nullopt, nullopt, nullopt, nullopt };
+	const ChartMatchInfo ChartMatchInfo::Any{ nullopt, nullopt, nullopt };
 }

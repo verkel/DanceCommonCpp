@@ -58,6 +58,16 @@ export namespace DanceCommon
 			return doublesCharts;
 		}
 
+		shared_ptr<SinglesChart> GetMatchingSinglesChart(const ChartMatchInfo& matchInfo)
+		{
+			for (const auto& chart : singlesCharts)
+			{
+				if (chart->Matches(matchInfo)) 
+					return chart;
+			}
+			return nullptr;
+		}
+
 		double GetPosition(double time)
 		{
 			auto& computations = metadata.GetComputations();

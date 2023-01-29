@@ -41,6 +41,11 @@ export namespace DanceCommon
 			if (cleanupHolds) CleanupHolds(notePosition, oldRow, newRow);
 		}
 
+		NoteType GetNote(NotePos notePosition, int panel)
+		{
+			return GetNoteRow(notePosition)[panel];
+		}
+
 		bool Contains(NotePos position) const
 		{
 			return position >= 0 && position < noteRows.size();
@@ -103,6 +108,27 @@ export namespace DanceCommon
 			{
 				return pos;
 			}
+		}
+		
+		NotePos FindHoldEnd(NotePos notePosition, bool includeThisPosition, int panel)
+		{
+			if (!Contains(notePosition)) 
+				return NotePositions::Invalid;
+
+			if (includeThisPosition && GetNote(notePosition, panel) == NoteType::HoldEnd)
+				return notePosition;
+
+			NotePos nextPosition = NextPosition(notePosition, panel);
+
+			if (!Contains(nextPosition)) 
+				return NotePositions::Invalid;
+
+			NoteType note = GetNote(nextPosition, panel);
+
+			if (note == NoteType::HoldEnd) 
+				return nextPosition;
+			else 
+				return NotePositions::Invalid;
 		}
 
 		void EnsureNoteRowsCapacity(NotePos notePosition)

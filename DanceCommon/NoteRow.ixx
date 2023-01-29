@@ -91,6 +91,12 @@ export namespace DanceCommon
 		{
 			ForEachPanelWith(NoteTypes::Holdable, f);
 		}
+		
+		template<typename TFunc>
+		void ForEachRollStart(TFunc f) const
+		{
+			ForEachPanelWith(NoteType::RollStart, f);
+		}
 
 		template<typename TFunc>
 		void ForEachHoldEnd(TFunc f) const

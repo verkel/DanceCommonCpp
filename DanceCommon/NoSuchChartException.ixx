@@ -17,8 +17,6 @@ export namespace DanceCommon
 		{
 			stringstream ss;
 			ss << "No such chart:";
-			if (info.style)
-				ss << " Style=" << PlayStyles::GetName(info.style.value());
 			if (info.difficulty)
 				ss << " Difficulty=" << Difficulties::GetName(info.difficulty.value());
 			if (info.rating)

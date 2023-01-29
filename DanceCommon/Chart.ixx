@@ -44,9 +44,7 @@ export namespace DanceCommon
 		using TNoteRow = NoteRow<rowSize>;
 
 		NoteData<rowSize> noteData;
-		string description;
-		Difficulty difficulty;
-		int rating;
+		ChartInfo info;
 
 		shared_ptr<Song> parent;
 
@@ -65,9 +63,7 @@ export namespace DanceCommon
 		*/
 		Chart() :
 			noteData{ },
-			difficulty{ Difficulty::Easy },
-			rating{ 0 },
-			parent{ nullptr }
+			info { Difficulty::Easy, 0, "" }
 		{
 		}
 
@@ -110,28 +106,32 @@ export namespace DanceCommon
 
 		bool operator<(const Chart& rhs) const
 		{
-			if (difficulty != rhs.difficulty)
-				return difficulty < rhs.difficulty;
+			return info < rhs.info;
+		}
 
-			if (rating != rhs.rating)
-				return rating < rhs.rating;
-
-			return description < rhs.description;
+		const ChartInfo& GetInfo() const
+		{
+			return info;
 		}
 
 		const string& GetDescription() const
 		{
-			return description;
+			return info.description;
 		}
 
 		Difficulty GetDifficulty() const
 		{
-			return difficulty;
+			return info.difficulty;
 		}
 
 		int GetRating() const
 		{
-			return rating;
+			return info.rating;
+		}
+
+		bool Matches(const ChartMatchInfo& matchInfo) const
+		{
+			return info.Matches(matchInfo);
 		}
 
 		shared_ptr<Song> GetParent() const
@@ -179,6 +179,11 @@ export namespace DanceCommon
 			return noteData.GetLastPosition();
 		}
 
+		NotePos FindHoldEnd(NotePos notePosition, bool includeThisPosition, int panel)
+		{
+			return noteData.FindHoldEnd(notePosition, includeThisPosition, panel);
+		}
+
 		bool DoLoad(Parser& parser, const ChartMatchInfo& matchInfo, ChartReadMode readMode)
 		{
 			constexpr auto style = PlayStyles::GetStyle(rowSize);
@@ -200,7 +205,7 @@ export namespace DanceCommon
 
 				Difficulty difficulty = Difficulties::FromFormatString(difficultyClassStrView);
 
-				ChartInfo info{ style, difficulty, rating, string(descriptionStrView) };
+				ChartInfo info{ difficulty, rating, string(descriptionStrView) };
 
 				if (readMode == ChartReadMode::ReadMatchingChart)
 				{
@@ -208,9 +213,7 @@ export namespace DanceCommon
 						return false;
 				}
 
-				this->description = string(descriptionStrView);
-				this->difficulty = difficulty;
-				this->rating = rating;
+				this->info = info;
 			}
 
 			// Now read the actual steps data

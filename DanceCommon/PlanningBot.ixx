@@ -16,7 +16,8 @@ namespace DanceCommon
 	export template<size_t rowSize>
 	class PlanningBot
 	{
-		using TChart = RollTapsChartDecorator<rowSize>;
+		using TChart = Chart<rowSize>;
+		using TRollTapsChart = RollTapsChartDecorator<rowSize>;
 		using TNoteRowPossibleStates = NoteRowPossibleStates<rowSize>;
 		using TStateLinks = StateLinks<rowSize>;
 		using TStateLinksUtils = StateLinksUtils<rowSize>;
@@ -26,7 +27,13 @@ namespace DanceCommon
 		bool allowDoublesteps = false;
 
 	public:
-		TPlay Play(const TChart& chart)
+		TPlay Play(const Song& song, const TChart& chart)
+		{
+			TRollTapsChart rollTapsChart{song, chart};
+			return Play(rollTapsChart);
+		}
+
+		TPlay Play(const TRollTapsChart& chart)
 		{
 			auto rowPossibleStates = GenerateStateGraph(chart);
 			CalculateCostsToGoal(rowPossibleStates);
@@ -39,7 +46,7 @@ namespace DanceCommon
 		}
 
 	private:
-		map<NotePos, shared_ptr<TNoteRowPossibleStates>> GenerateStateGraph(const TChart& chart)
+		map<NotePos, shared_ptr<TNoteRowPossibleStates>> GenerateStateGraph(const TRollTapsChart& chart)
 		{
 			map<NotePos, shared_ptr<TNoteRowPossibleStates>> rowPossibleStates;
 

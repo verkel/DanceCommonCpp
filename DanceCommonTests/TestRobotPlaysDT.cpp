@@ -85,6 +85,7 @@ static bool HasRolls(const SinglesChart& chart)
 TEST_P(TestRobotPlaysDT, Chart)
 {
 	const auto& param = GetParam();
+	auto& song = param.song;
 	auto& chart = param.chart;
 
 	// TODO remove after implementing roll taps generation
@@ -97,7 +98,7 @@ TEST_P(TestRobotPlaysDT, Chart)
 	SinglesPlanningBot bot;
 	bot.SetAllowDoublesteps(true);
 	auto existingPlay = LoadPlay(param);
-	auto newPlay = bot.Play(*chart);
+	auto newPlay = bot.Play(*song, *chart);
 	if (existingPlay != newPlay)
 	{
 		stringstream errors;
